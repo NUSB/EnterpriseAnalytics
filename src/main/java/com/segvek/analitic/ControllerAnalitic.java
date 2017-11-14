@@ -27,4 +27,8 @@ public class ControllerAnalitic {
         return "login";
     }
     
+    @RequestMapping(value = "/admin/userList")
+    public String userList(){
+        return "userList";
+    }
 }

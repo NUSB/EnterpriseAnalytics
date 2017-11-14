@@ -7,25 +7,28 @@
     http://www.springframework.org/schema/beans 
     http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
 
+		<!--<intercept-url pattern="/admin**" access="hasRole('ROLE_ADMIN')" />-->
+    
    
-    <http auto-config="true" >
-        <intercept-url pattern="/admin**" access="ROLE_ADMIN" />
-        <intercept-url pattern="/user**" access="ROLE_ADMIN, ROLE_USER" />
-        <!--        <form-login
-        login-page="/login"
-        default-target-url="/"
-        authentication-failure-url="/login?error"
-        username-parameter="username"
-        password-parameter="password"/>-->
-        <!--
-        <logout logout-success-url="/login?logout" />-->
+    <http auto-config="true" path-type="regex" use-expressions="true">
+        <intercept-url pattern="/admin.*" access="hasRole('ROLE_ADMIN')" />
+        <intercept-url pattern="/user.*" access="hasRole('ROLE_ADMIN')"  />
+        <intercept-url pattern="/user.*" access="hasRole('ROLE_USER')"  />
+        <form-login
+            login-page="/login"
+            default-target-url="/user"
+            authentication-failure-url="/login?error"
+            username-parameter="username"
+            password-parameter="password"/>
+        
+        <logout logout-success-url="/login?logout" />
     </http>
     
     <authentication-manager>
         <authentication-provider>
             <jdbc-user-service data-source-ref="dataSource"
-                users-by-username-query= "select username,password, enabled from users where username=?"
-                authorities-by-username-query= "select username, role from user_roles where username =?  " />
+                               users-by-username-query= "select username,password, enabled from users where username=?"
+                               authorities-by-username-query= "select username, role from user_roles where username =?  " />
         </authentication-provider>
     </authentication-manager>
 
