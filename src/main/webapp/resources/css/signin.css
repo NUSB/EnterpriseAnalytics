@@ -1,84 +1,119 @@
 @import url(https://fonts.googleapis.com/css?family=Tenor+Sans);
+
+:root {
+    --hight-header:50px;
+}
+
+/*heder style*/
+header{
+    background-color: #5D92B0;
+    width: 100%;
+    height: var(--hight-header);
+}
+.horisontal-menu{
+    text-align: right;
+    height: var(--hight-header);  
+}
+.horisontal-menu a{
+    float:right;
+    display: block;
+    color: white;
+    padding: 14px 16px; 
+}
+.horisontal-menu a:hover{
+    color: rgba(183, 4, 4, 0.65);   
+}
+.horisontal-menu h1{
+    font-family: sans-serif;
+    font-size: 30px;
+    text-align: left;
+    display: block;
+    color: rgba(72, 17, 17, 0.42);
+    padding: 10px 16px;
+}
+
+
+/*end header style*/
+
 html {
-  background-color: #5D92BA;
-  font-family: "Tenor Sans", sans-serif;
+    font-family: "Tenor Sans", sans-serif;
 }
 
 .container {
-  width: 500px;
-  height: 400px;
-  margin: 0 auto;
+    width: 500px;
+    height: 400px;
+    margin: 0 auto;
 }
 
 .login {
-  margin-top: 50px;
-  width: 450px;
+    margin-top: 50px;
+    width: 450px;
 }
 
 .login-heading {
-  font: 1.8em/48px "Tenor Sans", sans-serif;
-  color: white;
+    font: 1.8em/48px "Tenor Sans", sans-serif;
+    color: white;
 }
 
 .input-txt {
-  width: 100%;
-  padding: 20px 10px;
-  background: #5D92BA;
-  border: none;
-  font-size: 1em;
-  color: white;
-  margin-top: 5px;
-  border-bottom: 1px dotted rgba(250, 250, 250, 0.4);
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  -moz-transition: background-color 0.5s ease-in-out;
-  -o-transition: background-color 0.5s ease-in-out;
-  -webkit-transition: background-color 0.5s ease-in-out;
-  transition: background-color 0.5s ease-in-out;
+    width: 100%;
+    padding: 20px 10px;
+    background: #5D92BA;
+    border: none;
+    font-size: 1em;
+    color: white;
+    margin-top: 5px;
+    border-bottom: 1px dotted rgba(250, 250, 250, 0.4);
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -moz-transition: background-color 0.5s ease-in-out;
+    -o-transition: background-color 0.5s ease-in-out;
+    -webkit-transition: background-color 0.5s ease-in-out;
+    transition: background-color 0.5s ease-in-out;
 }
 .input-txt:-moz-placeholder {
-  color: #81aac9;
+    color: #81aac9;
 }
 .input-txt:-ms-input-placeholder {
-  color: #81aac9;
+    color: #81aac9;
 }
 .input-txt::-webkit-input-placeholder {
-  color: #81aac9;
+    color: #81aac9;
 }
 .input-txt:focus {
-  background-color: #4478a0;
+    background-color: #4478a0;
 }
 
 .login-footer {
-  margin: 10px 0;
-  overlow: hidden;
-  float: left;
-  width: 100%;
+    margin: 10px 0;
+    overlow: hidden;
+    float: left;
+    width: 100%;
 }
 
 .btn {
-  padding: 15px 30px;
-  border: none;
-  background: white;
-  color: #5D92BA;
+    padding: 15px 30px;
+    border: none;
+    background: white;
+    color: #5D92BA;
 }
 
 .btn--right {
-  float: right;
+    float: right;
 }
 
 .icon {
-  display: inline-block;
+    display: inline-block;
 }
 
 .icon--min {
-  font-size: .9em;
+    font-size: .9em;
 }
 
 .lnk {
-  font-size: .8em;
-  line-height: 3em;
-  color: white;
-  text-decoration: none;
+    font-size: .8em;
+    line-height: 3em;
+    color: white;
+    text-decoration: none;
 }

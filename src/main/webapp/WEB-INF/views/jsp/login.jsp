@@ -5,14 +5,8 @@
 
 <!DOCTYPE html>
 <html >
-    <head>
-        <meta charset="UTF-8">
-        <title>Analitic</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-        <c:url value="resources/css/signin.css" var="formstyle"/>
-        <link rel="stylesheet" href="${formstyle}">
-    </head>
-    <body>
+    <%@include file="jspf/head.jspf" %>
+    <body style="background-color: #5D92B0">
         <div class="container">
             <div class="login">
                 <h1 class="login-heading">

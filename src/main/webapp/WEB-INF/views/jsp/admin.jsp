@@ -8,12 +8,11 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>admin Page</title>
-    </head>
+    <%@include file="jspf/head.jspf" %>
     <body>
-        <h1>Hello admin!</h1>
+        
+        <%@include file="jspf/header.jspf" %>
+        панель администратора 
         <c:url value="admin\userList" var="linkUserList"/>
         <a href="${linkUserList}">Пользователи</a>
     </body>
