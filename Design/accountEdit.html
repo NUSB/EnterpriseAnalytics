@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Enterprise analytics</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+    <h1><a href="#">Enterprise Analytics</a></h1>
+</header>
+<div class="grid-container">
+
+    <nav>
+        <ul>
+            <li><a href="#">Item 1</a></li>
+            <li><a href="#">Item 2</a></li>
+            <li><a href="#">Item 3</a></li>
+            <li><a href="#">Item 4</a></li>
+            <li><a href="#">Item 5</a></li>
+            <li><a href="#">Item 6</a></li>
+        </ul>
+    </nav>
+
+
+    <form action="#">
+        <div class="form-head">
+            <h1>Редактирование счета</h1>
+        </div>
+        <div class="grid-container">
+            <div class="form-name">
+                <p class="vertical-alignment">Название: </p>
+            </div>
+            <div class="form-input">
+                <input type="text" required>
+            </div>
+
+            <div class="form-name">
+                <p>Тип счета :</p>
+            </div>
+            <div class="form-input">
+                <p><input type="radio" name="type" value="active" checked> Активный</p>
+
+                <p><input type="radio" name="type" value="passive"> Пассивный</p>
+
+                <p><input type="radio" name="type" value="active"> Активный/Пассивный</p>
+
+            </div>
+
+
+            <div class="form-name">
+                <p>Родитель:</p>
+            </div>
+            <div class="form-input">
+                <input list="parents">
+                <datalist id="parents" aria-required="true">
+                    <option value="Родитель 1"></option>
+                    <option value="Родитель 2"></option>
+                    <option value="Родитель 3"></option>
+                </datalist>
+            </div>
+
+            <div class="form-name">
+                <p>Группа:</p>
+            </div>
+            <div class="form-input">
+                <input type="checkbox" name="group">
+            </div>
+
+
+            <div class="form-name">
+                <p>Описание:</p>
+            </div>
+
+            <div class="form-input">
+                <textarea name="description" id="description" cols="30" rows="10" required></textarea>
+                <input class="save_button" type="submit" value="Сохранить">
+            </div>
+
+
+        </div>
+
+    </form>
+</div>
+
+
+<footer>
+    <p><a href="index.html">Enterprise Analytics</a>, All Right Reserved &copy;</p>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+<script src="js/script.js"></script>
+</body>
+</html>

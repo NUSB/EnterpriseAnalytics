@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    console.log($("table tr td").children()[0].tagName !== "A");
+    // console.log($("table tr td").children()[0].tagName !== "A");
 
         $("table tr:gt(0) td").click(function () {
             if ($(this).children()[0] === undefined ||  $(this).children().length >= 2) {
