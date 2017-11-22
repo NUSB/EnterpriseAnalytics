@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Enterprise analytics</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+    <h1><a href="#">Enterprise Analytics</a></h1>
+</header>
+<div class="grid-container">
+
+    <nav>
+        <ul>
+            <li><a href="#">Item 1</a></li>
+            <li><a href="#">Item 2</a></li>
+            <li><a href="#">Item 3</a></li>
+            <li><a href="#">Item 4</a></li>
+            <li><a href="#">Item 5</a></li>
+            <li><a href="#">Item 6</a></li>
+        </ul>
+    </nav>
+
+    <div class="table-section">
+        <button class="button_add">Добавить</button>
+        <table>
+            <tr>
+                <th>№</th>
+                <th>Наименование</th>
+                <th>А/П</th>
+                <th>Родитель</th>
+                <th>Группа</th>
+                <th>Действие</th>
+            </tr>
+            <tr accountNumber="1">
+                <td>1</td>
+                <td>Наименование 1</td>
+                <td>А</td>
+                <td><a href="#">Родитель 1</a></td>
+                <td>Группа1</td>
+                <td>
+                    <button>Просмотр</button>
+                    <button>Удалить</button>
+                </td>
+            </tr>
+
+            <tr accountNumber="2" test="12">
+                <td>2</td>
+                <td>Наименование 2</td>
+                <td>А</td>
+                <td><a href="#" accountLink="1">1</a></td>
+                <td>Группа2</td>
+                <td>
+                    <button>Просмотр</button>
+                    <button>Удалить</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+</div>
+<footer>
+    <p><a href="index.html">Enterprise Analytics</a>, All Right Reserved &copy;</p>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+<script src="js/script.js"></script>
+</body>
+</html>
