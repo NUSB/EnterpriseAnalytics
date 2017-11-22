@@ -1,6 +1,8 @@
 package com.segvek.analitic.model;
 
-public class Acount {
+import java.awt.Dimension;
+
+public class Acount extends GraphicElement{
     private int id;
     private String name;
     private String type;
@@ -9,8 +11,20 @@ public class Acount {
     private String code;
     private String anotation;
 
-    public Acount(int id, String name, String type, boolean group, Acount parent, String code, String anotation) {
+    public Acount(int id, String name, String type, boolean group, Acount parent, String code, String anotation, Dimension position) {
+        super(position);
         this.id = id;
+        this.name = name;
+        this.type = type;
+        this.group = group;
+        this.parent = parent;
+        this.code = code;
+        this.anotation = anotation;
+    }
+ 
+     
+    
+    public Acount(String name, String type, boolean group, Acount parent, String code, String anotation) {
         this.name = name;
         this.type = type;
         this.group = group;

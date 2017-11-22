@@ -1,0 +1,6 @@
+<%-- any content can be specified here e.g.: --%>
+<%@ page pageEncoding="UTF-8" %>
+<menu>
+<a href="${pageContext.request.contextPath}/admin/acount">Счета</a><br>
+<a href="${pageContext.request.contextPath}/admin/user">Пользователи</a>
+</menu>

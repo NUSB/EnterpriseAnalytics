@@ -13,7 +13,7 @@
 
 <header>
     <menu class="horisontal-menu">
-        <a href="<c:url value="${pageContext.request.contextPath}/j_spring_security_logout" />" > Logout</a>
+        <a href="${pageContext.request.contextPath}/j_spring_security_logout" > Logout</a>
         <sec:authorize access="hasRole('ROLE_ADMIN')">
             <c:if test="${adminpage ne true }">
                 <a href="<c:url value="admin"/>">Администратор </a> 
@@ -22,9 +22,8 @@
                 <a href="<c:url value="user"/>">Пользователь</a> 
             </c:if>
             <c:if test="${adminpage eq true and count ne 1}">
-                <a href="<c:url value=".."/>">Главная</a> 
+                <a href="${pageContext.request.contextPath}/admin">Главная</a> 
             </c:if>
         </sec:authorize>       
     </menu>
-
 </header>

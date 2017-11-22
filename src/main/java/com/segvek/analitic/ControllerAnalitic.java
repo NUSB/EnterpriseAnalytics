@@ -21,8 +21,6 @@ public class ControllerAnalitic {
     public ModelAndView admin() {
         ModelAndView model = new ModelAndView();
         model.addObject("title", "Панель администратора");
-        model.addObject("acounts", acountMysqlDao.getAllAcount());
-        model.setViewName("admin");
         return model;
     }
 
@@ -39,8 +37,4 @@ public class ControllerAnalitic {
         return "login";
     }
 
-    @RequestMapping(value = "/admin/userList")
-    public String userList() {
-        return "userList";
-    }
 }

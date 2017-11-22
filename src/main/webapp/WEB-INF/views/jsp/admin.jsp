@@ -6,12 +6,15 @@
     <body>
         
         <%@include file="jspf/header.jspf" %>
-        панель администратора 
-        <c:url value="admin\userList" var="linkUserList"/>
-        <a href="${linkUserList}">Пользователи</a>
-        <c:forEach items="${acounts}" var="ac">
-            ${ac.name} <br>
-        </c:forEach>
+        <%@include  file="jspf/adminMenu.jspf" %>
+        
+        <section>
+            панель администратора 
+            <form action="">
+                
+                
+            </form>
+        </section>
         
     </body>
 </html>
