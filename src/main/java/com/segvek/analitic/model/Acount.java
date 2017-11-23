@@ -5,11 +5,11 @@ import java.awt.Dimension;
 public class Acount extends GraphicElement{
     private int id;
     private String name;
-    private String type;
+    private String type = "П/А";
     private boolean group;
     private Acount parent;
     private String code;
-    private String anotation;
+    private String annotation;
 
     public Acount(int id, String name, String type, boolean group, Acount parent, String code, String anotation, Dimension position) {
         super(position);
@@ -19,7 +19,7 @@ public class Acount extends GraphicElement{
         this.group = group;
         this.parent = parent;
         this.code = code;
-        this.anotation = anotation;
+        this.annotation = anotation;
     }
  
      
@@ -30,7 +30,10 @@ public class Acount extends GraphicElement{
         this.group = group;
         this.parent = parent;
         this.code = code;
-        this.anotation = anotation;
+        this.annotation = anotation;
+    }
+
+    public Acount() {
     }
 
     public int getId() {
@@ -82,11 +85,11 @@ public class Acount extends GraphicElement{
     }
 
     public String getAnotation() {
-        return anotation;
+        return annotation;
     }
 
     public void setAnotation(String anotation) {
-        this.anotation = anotation;
+        this.annotation = anotation;
     }
    
     

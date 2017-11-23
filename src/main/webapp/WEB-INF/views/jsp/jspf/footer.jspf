@@ -1,0 +1,7 @@
+<%-- any content can be specified here e.g.: --%>
+<%@ page pageEncoding="UTF-8" %>
+<footer>
+    <p><a href="index.html">Enterprise Analytics</a>, All Right Reserved &copy;</p>
+</footer>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>                    
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/script.js"></script>

@@ -9,6 +9,7 @@ header{
     background-color: #5D92B0;
     width: 100%;
     height: var(--hight-header);
+    font-family: "Tenor Sans", sans-serif;
 }
 .horisontal-menu{
     text-align: right;
@@ -35,9 +36,6 @@ header{
 
 /*end header style*/
 
-html {
-    font-family: "Tenor Sans", sans-serif;
-}
 
 .container {
     width: 500px;
@@ -116,4 +114,15 @@ html {
     line-height: 3em;
     color: white;
     text-decoration: none;
+}
+
+
+
+footer {
+    position: relative;
+    z-index: 999;
+    height: 30px;
+    width: 100%;
+    background: #5D92B0;
+    text-align: center;
 }
