@@ -9,6 +9,7 @@ public class BisnesRole extends GraphicElement {
     private String name;
     private String annotation;
     private List<Document> documents;
+    private BisnesRole parent;
 
     public BisnesRole(int id, String name, String annotation, Point position) {
         super(position);
@@ -20,6 +21,10 @@ public class BisnesRole extends GraphicElement {
     public BisnesRole(String name, String annotation) {
         this.name = name;
         this.annotation = annotation;
+    }
+
+    public BisnesRole() {
+        
     }
 
     public List<Document> getDocuments() {
@@ -50,4 +55,11 @@ public class BisnesRole extends GraphicElement {
         this.name = name;
     }
 
+    public BisnesRole getParent() {
+        return parent;
+    }
+
+    public void setParent(BisnesRole parent) {
+        this.parent = parent;
+    }
 }
