@@ -60,6 +60,12 @@ public class AcountMysqlDao implements AcountDAO{
                 , acount.getPosition().x
                 , acount.getPosition().y);
     }
+
+    @Override
+    public void deleteAcountById(int id) {
+        String sql = "DELETE FROM acount WHERE id=?";
+        template.update(sql,id);
+    }
 }
 
 @Service

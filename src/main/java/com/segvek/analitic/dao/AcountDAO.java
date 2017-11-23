@@ -12,4 +12,6 @@ public interface AcountDAO {
     public Acount getAcountByName(String name);
 
     public void save(Acount acount);
+
+    public void deleteAcountById(int id);
 }

@@ -31,7 +31,7 @@
                             </td>
                             <td>
                                 <button>Просмотр</button>
-                                <button>Удалить</button>
+                                <button class="button_add"  onClick='location.href = "${pageContext.request.contextPath}/admin/acount/delete/${acount.id}"'>Удалить</button>
                             </td>
                         </tr>
                     </c:forEach>
