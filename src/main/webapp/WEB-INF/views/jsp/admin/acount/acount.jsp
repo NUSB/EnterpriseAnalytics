@@ -8,7 +8,7 @@
         <%@include file="../../jspf/header.jspf" %>
         <div class="grid-container">
             <%@include file="../../jspf/adminMenu.jspf" %>
-            <form:form method="POST" action="add" class="data-form" modelAttribute="acount" >
+            <form:form method="POST" action="${sendTo}" class="data-form" modelAttribute="acount" >
                 <div class="form-head">
                     <h1>${title}</h1>
                 </div>
@@ -29,15 +29,15 @@
                         <p>Тип счета:</p>
                     </div>
                     <div class="form-input">
-                        <p><form:radiobutton path="type" value="А"/> Активный</p>
-                        <p><form:radiobutton path="type" value="П"/> Пассивный</p>
-                        <p><form:radiobutton path="type" value="П/А" checked="checked"/> Активно-пассивный</p>
+                        <p><form:radiobutton path="type" value="А"   checked="${acount.type eq 'A'?'checked':''}"/> Активный</p>
+                        <p><form:radiobutton path="type" value="П"   checked="${acount.type eq 'П'?'checked':''}"/> Пассивный</p>
+                        <p><form:radiobutton path="type" value="П/А" checked="${acount.type eq 'А/П'?'checked':''}"/> Активно-пассивный</p>
                     </div>
                     <div class="form-name">
                         <p>Родитель:</p>
                     </div>
                     <div class="form-input">
-                        <input list="parents" name="parent" />
+                        <input list="parents" name="parent" value="${acount.parent.name}"/>
                         <datalist id="parents" aria-required="true">
                             <c:forEach items="${acounts}" var="current_parrent">
                                 <option value="${current_parrent.name}">${current_parrent.code}</option>

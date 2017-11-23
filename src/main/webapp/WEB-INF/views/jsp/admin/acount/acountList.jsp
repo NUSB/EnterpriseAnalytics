@@ -30,7 +30,7 @@
                             <td>${acount.group}
                             </td>
                             <td>
-                                <button>Просмотр</button>
+                                <button class="button_add"  onClick='location.href = "${pageContext.request.contextPath}/admin/acount/${acount.id}"'>Просмотр</button>
                                 <button class="button_add"  onClick='location.href = "${pageContext.request.contextPath}/admin/acount/delete/${acount.id}"'>Удалить</button>
                             </td>
                         </tr>

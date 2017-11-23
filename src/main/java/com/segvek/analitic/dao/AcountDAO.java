@@ -14,4 +14,8 @@ public interface AcountDAO {
     public void save(Acount acount);
 
     public void deleteAcountById(int id);
+
+    public Acount getAcountById(int id);
+
+    public void update(Acount acount);
 }
