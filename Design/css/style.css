@@ -4,6 +4,45 @@
     padding: 0;
 }
 
+
+/*NEW CODE*/
+
+i {
+    font-size: 25px;
+}
+.icon-trash-empty:hover {
+    color:red;
+}
+
+.icon-doc-add {
+    font-size:28px;
+}
+
+.icon-doc-add:hover {
+    color: #00ae00;
+}
+
+.icon-edit:hover {
+    color: #00e100;
+}
+
+.icons_table:active, .icons_table:visited {
+    color: #2a2a2a;
+}
+
+
+table th {
+    background: #e67700;
+}
+
+.page_title {
+    font-weight: bold;
+    font-size:24px;
+    margin-bottom:15px;
+    border-bottom:2px solid #787878;
+}
+/*NEW CODE*/
+
 body {
     background: rgba(224, 224, 224, 0.69);
 }
@@ -58,7 +97,6 @@ nav ul li a:hover {
 }
 table {
     width: 100%;
-    margin-top: 10px;
     background: #d1ebf3;
 }
 
@@ -73,17 +111,6 @@ table, th, td {
     background: green;
 }
 
-button {
-    background: #2196F3;
-    border-radius: 10px;
-    border: none;
-    padding: 10px;
-    color: #353634;
-}
-
-button:hover {
-    cursor: pointer;
-}
 
 /*Form edit*/
 form .grid-container {
@@ -157,41 +184,9 @@ form .form-name p {
     line-height: 30px;
 }
 
-/*form .form-content {*/
-/*margin: 30px;*/
-/*}*/
 
-/*form .form-content p{*/
-/*color: #2a2a2a;*/
-/*}*/
 
-/*form .form-content input {*/
-/*padding:5px;*/
-/*}*/
 
-/*form div {*/
-/*margin: 10px 2px;*/
-
-/*}*/
-
-/*form .input-text input, form .input-datalist input {*/
-/*width: 80%;*/
-/*}*/
-
-/*form .input-textarea textarea {*/
-/*width: 92%;*/
-/*}*/
-
-/*form .group-radio {*/
-/*margin-top:-20px;*/
-/*margin-left: 85px;*/
-/*}*/
-/*form .input-text p, form .input-datalist p {*/
-/*display: inline;*/
-/*}*/
-/*form .form-content .form-type input {*/
-/*display:block;*/
-/*}*/
 
 footer {
     position: relative;
