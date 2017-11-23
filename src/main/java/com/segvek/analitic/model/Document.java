@@ -1,13 +1,13 @@
 package com.segvek.analitic.model;
 
-import java.awt.Dimension;
+import java.awt.Point;
 
 public class Document extends GraphicElement{
     private int id;
     private String name;
     private String annotation;
 
-    public Document(int id, String name, String annotation,Dimension position) {
+    public Document(int id, String name, String annotation,Point position) {
         super(position);
         this.id = id;
         this.name = name;

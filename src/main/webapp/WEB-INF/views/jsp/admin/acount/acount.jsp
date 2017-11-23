@@ -37,7 +37,7 @@
                         <p>Родитель:</p>
                     </div>
                     <div class="form-input">
-                        <form:input path="parent" list="parents"/>
+                        <input list="parents" name="parent" />
                         <datalist id="parents" aria-required="true">
                             <c:forEach items="${acounts}" var="current_parrent">
                                 <option value="${current_parrent.name}">${current_parrent.code}</option>

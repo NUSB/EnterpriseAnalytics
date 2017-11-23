@@ -1,24 +1,24 @@
 
 package com.segvek.analitic.model;
 
-import java.awt.Dimension;
+import java.awt.Point;
 
 public class GraphicElement {
-    private Dimension position;
+    private Point position;
 
     public GraphicElement() {
-        position = new Dimension((int)(Math.random()*500), (int)(Math.random()*500));
+        position = new Point((int)(Math.random()*500), (int)(Math.random()*500));
     }
 
-    public GraphicElement(Dimension position) {
+    public GraphicElement(Point position) {
         this.position = position;
     }
 
-    public Dimension getPosition() {
+    public Point getPosition() {
         return position;
     }
 
-    public void setPosition(Dimension position) {
+    public void setPosition(Point position) {
         this.position = position;
     }
     

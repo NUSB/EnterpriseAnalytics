@@ -7,13 +7,13 @@ package com.segvek.analitic.dao.lazy;
 
 import com.segvek.analitic.dao.AcountDAO;
 import com.segvek.analitic.model.Acount;
-import java.awt.Dimension;
+import java.awt.Point;
 
 public class AcountLazy extends Acount {
 
     private AcountDAO acountDAO;
 
-    public AcountLazy(int id, String name, String type, boolean group, Acount parent, String code, String anotation, Dimension position) {
+    public AcountLazy(int id, String name, String type, boolean group, Acount parent, String code, String anotation, Point position) {
         super(id, name, type, group, parent, code, anotation, position);
     }
 

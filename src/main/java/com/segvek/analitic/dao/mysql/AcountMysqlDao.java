@@ -3,7 +3,7 @@ package com.segvek.analitic.dao.mysql;
 import com.segvek.analitic.dao.AcountDAO;
 import com.segvek.analitic.dao.lazy.AcountLazy;
 import com.segvek.analitic.model.Acount;
-import java.awt.Dimension;
+import java.awt.Point;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -40,6 +40,26 @@ public class AcountMysqlDao implements AcountDAO{
         String sql = "SELECT a1.* FROM acount a INNER JOIN acount a1 ON a.parentId = a1.id WHERE a.id=?";
         return DataAccessUtils.singleResult(template.query(sql, acountRowMapper, acount.getId()));
     }
+
+    @Override
+    public Acount getAcountByName(String name) {
+        String sql = "SELECT * FROM acount a WHERE a.name=?";
+        return template.queryForObject(sql, acountRowMapper, name);
+    }
+
+    @Override
+    public void save(Acount acount) {
+        String sql = "INSERT INTO acount(name, type, `group`, code, parentId, anotation, positionX, positionY)\n" +
+                        "  VALUES ( ?,?,?,?,?,?,?,?);";
+        template.update(sql, acount.getName()
+                ,acount.getType()
+                , acount.isGroup()
+                ,acount.getCode()
+                ,acount.getParent()!=null?acount.getParent().getId():null
+                ,acount.getAnotation()
+                , acount.getPosition().x
+                , acount.getPosition().y);
+    }
 }
 
 @Service
@@ -52,7 +72,7 @@ class AcountRowMapper implements RowMapper<AcountLazy>{
                 , rs.getBoolean("group")
                 , null,rs.getString("code")
                 , rs.getString("anotation")
-                , new Dimension(
+                , new Point(
                         rs.getInt("positionX"),
                         rs.getInt("positionY")
                 ));

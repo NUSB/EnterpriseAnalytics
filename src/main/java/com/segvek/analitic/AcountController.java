@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -34,11 +35,14 @@ public class AcountController {
     }
 
     @RequestMapping(value = "/admin/acount/add", method = RequestMethod.POST)
-    public ModelAndView acountAddAction(@ModelAttribute("acount") Acount acount,
+    public ModelAndView acountAddAction(WebRequest request,@ModelAttribute("acount") Acount acount,
             BindingResult result, ModelMap model) {
-
-        ModelAndView view = new ModelAndView("index");
-        view.addObject("acount", acount);
-        return view;
+        String parentName = request.getParameter("parent");
+        if(parentName!=null && parentName.length()>0){
+            Acount parent =acountDAO.getAcountByName(parentName);
+            acount.setParent(parent);
+        }
+        acountDAO.save(acount);
+        return acountList();
     }
 }

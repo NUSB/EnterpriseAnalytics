@@ -8,4 +8,8 @@ public interface AcountDAO {
     List<Acount> getAllAcount();
 
     public Acount getParentByAcount(Acount acount);
+
+    public Acount getAcountByName(String name);
+
+    public void save(Acount acount);
 }

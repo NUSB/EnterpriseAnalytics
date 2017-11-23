@@ -1,6 +1,6 @@
 package com.segvek.analitic.model;
 
-import java.awt.Dimension;
+import java.awt.Point;
 import java.util.List;
 
 public class BisnesRole extends GraphicElement {
@@ -10,7 +10,7 @@ public class BisnesRole extends GraphicElement {
     private String annotation;
     private List<Document> documents;
 
-    public BisnesRole(int id, String name, String annotation, Dimension position) {
+    public BisnesRole(int id, String name, String annotation, Point position) {
         super(position);
         this.id = id;
         this.name = name;
