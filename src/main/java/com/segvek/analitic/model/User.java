@@ -12,6 +12,9 @@ public class User {
         this.enabled = enabled;
     }
 
+    public User() {
+    }
+
     public boolean isEnabled() {
         return enabled;
     }

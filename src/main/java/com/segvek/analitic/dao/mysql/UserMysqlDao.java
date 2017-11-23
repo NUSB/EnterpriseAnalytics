@@ -25,6 +25,13 @@ public class UserMysqlDao implements UserDAO{
         String sql = "SELECT * FROM users";
         return jdbcTemplate.query(sql, userRowMapper);
     }
+
+    @Override
+    public void save(User user) {
+        String sql="INSERT INTO users(username, password, enabled)VALUES (?,?,?);";
+        jdbcTemplate.update(sql,user.getName(),user.getPassword(),user.isEnabled());
+    }
+    
     
 }
 

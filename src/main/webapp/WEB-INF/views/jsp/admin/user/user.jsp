@@ -8,43 +8,41 @@
         <%@include file="../../jspf/header.jspf" %>
         <div class="grid-container">
             <%@include file="../../jspf/adminMenu.jspf" %>
-            <form:form method="POST" action="${sendTo}" class="data-form" modelAttribute="bisnesRole" >
+            <form:form method="POST" action="${sendTo}" class="data-form" modelAttribute="user" >
                 <div class="form-head">
                     <h1>${title}</h1>
                 </div>
                 <div class="grid-container">
+                                      
                     <div class="form-name">
-                        <p class="vertical-alignment">Номер:</p>
-                    </div>
-                    <div class="form-input">
-                        <input type="text" value="${bisnesRole.id}" disabled="disabled"/>
-                    </div>
-                    
-                    <div class="form-name">
-                        <p class="vertical-alignment">Название: </p>
+                        <p class="vertical-alignment">Логин:</p>
                     </div>
                     <div class="form-input">
                         <form:input path="name" required="required"/>
                     </div>
-                    
-                    
                     <div class="form-name">
-                        <p>Подчинен</p>
+                        <p class="vertical-alignment">Пароль:</p>
                     </div>
                     <div class="form-input">
-                        <input list="parents1" name="subordination" value="${bisnesRole.parent.name}"/>
-                        <datalist id="parents1" aria-required="true">
-                            <c:forEach items="${bisnesRoles}" var="current_parrent">
-                                <option value="${current_parrent.name}">${current_parrent.id}</option>
-                            </c:forEach>
-                        </datalist>
+                        <form:input path="password" required="required"/>
                     </div>
-                        
                     <div class="form-name">
-                        <p>Описание:</p>
+                        <p>Права:</p>
                     </div>
                     <div class="form-input">
-                        <form:textarea path="annotation" cols="30" rows="10" required="required" />
+                        <p><input type="checkbox" /> Администрирование</p>
+                        <p><input type="checkbox" /> Бухгалтерия</p>
+                        <p><input type="checkbox" /> Документооборот</p>
+                        <p><input type="checkbox" /> Подчиненность</p>
+                    </div>
+                    <div class="form-name">
+                        <p>Активный:</p>
+                    </div>
+                    <div class="form-input">
+                        <form:checkbox path="enabled"/>
+                    </div>
+                    <div></div>
+                    <div class="form-input">
                         <input class="save_button" type="submit" value="Сохранить">
                     </div>
                 </div>
