@@ -10,7 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class ControllerAnalitic {
 
     @Autowired
-    AcountMysqlDao acountMysqlDao;
+    AcountMysqlDao acountDAO;
     
     @RequestMapping(value = "/")
     public String index() {

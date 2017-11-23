@@ -15,12 +15,12 @@ import org.springframework.web.servlet.ModelAndView;
 public class AcountController {
 
     @Autowired
-    AcountDAO acountMysqlDao;
+    AcountDAO acountDAO;
 
     @RequestMapping(value = "/admin/acount", method = RequestMethod.GET)
     public ModelAndView acountList() {
         ModelAndView view = new ModelAndView("admin/acount/acountList");
-        view.addObject("acounts", acountMysqlDao.getAllAcount());
+        view.addObject("acounts", acountDAO.getAllAcount());
         return view;
     }
 
@@ -29,7 +29,7 @@ public class AcountController {
         ModelAndView view = new ModelAndView("admin/acount/acount");
         view.addObject("title", "Создать счет");
         view.addObject("acount", new Acount());
-        view.addObject("acounts", acountMysqlDao.getAllAcount());
+        view.addObject("acounts", acountDAO.getAllAcount());
         return view;
     }
 

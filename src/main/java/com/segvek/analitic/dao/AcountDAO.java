@@ -6,4 +6,6 @@ import java.util.List;
 public interface AcountDAO {
     
     List<Acount> getAllAcount();
+
+    public Acount getParentByAcount(Acount acount);
 }

@@ -9,7 +9,7 @@
 
             <%@include file="../../jspf/adminMenu.jspf" %>
             <div class="table-section">
-                <button class="button_add"  onClick='location.href="${pageContext.request.contextPath}/admin/acount/add"'>Добавить</button>
+                <button class="button_add"  onClick='location.href = "${pageContext.request.contextPath}/admin/acount/add"'>Добавить</button>
                 <table>
                     <tr>
                         <th>№</th>
@@ -19,15 +19,16 @@
                         <th>Группа</th>
                         <th>Действие</th>
                     </tr>
-
                     <c:forEach items="${acounts}" var="acount">
-
-                        <tr  > <!--accountNumber="${acount.id}"-->
+                        <tr accountNumber="${acount.id}"> 
                             <td>${acount.code}</td>
                             <td>${acount.name}</td>
                             <td>${acount.type}</td>
-                            <td><a href="#" >${acount.parent}</a></td> <!--accountLink="${acount.parent.id}"-->
-                            <td>${acount.group}</td>
+                            <td>
+                                <a href="#" accountLink="${acount.parent.id}">${acount.parent.code}</a> 
+                            </td>
+                            <td>${acount.group}
+                            </td>
                             <td>
                                 <button>Просмотр</button>
                                 <button>Удалить</button>
