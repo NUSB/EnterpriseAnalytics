@@ -8,8 +8,8 @@
         <div class="grid-container">
             <%@include file="../../jspf/adminMenu.jspf" %>
             <div class="table-section">
-                <h1>Список пользователей системы</h1>
-                <button class="button_add"  onClick='location.href = "${pageContext.request.contextPath}/admin/user/add"'>Добавить</button>
+                <h1 class="page_title">Список пользователей системы</h1>
+                <a class="icons_table" href="${pageContext.request.contextPath}/admin/user/add"><i class="demo-icon icon-doc-add"></i></a>
                 <table>
                     <tr>
                         <th>Логин</th>
@@ -23,8 +23,8 @@
                             <td>${user.password}</td>
                             <td>${user.enabled}</td>
                             <td>
-                                <button class="button_add"  onClick='location.href = "${pageContext.request.contextPath}/admin/user/${user.name}"'>Просмотр</button>
-                                <button class="button_add"  onClick='location.href = "${pageContext.request.contextPath}/admin/user/delete/${user.name}"'>Удалить</button>
+                                <a class="icons_table" href="${pageContext.request.contextPath}/admin/user/${user.name}"><i class="demo-icon icon-edit"></i></a>
+                                <a class="icons_table" href="${pageContext.request.contextPath}/admin/user/delete/${user.name}"><i class="demo-icon icon-trash-empty"></i></a>
                             </td>
                         </tr>
                     </c:forEach>

@@ -64,7 +64,7 @@ table, th, td {
 }
 
 .table-row-clicked {
-    background: green;
+    background:#d9e7d9
 }
 
 button {
@@ -102,7 +102,7 @@ form .form-head {
 }
 
 form .form-head h1 {
-    color: #4649c1;
+    color: #914d4d;
     font-size: 2.5em;
 }
 
@@ -149,4 +149,47 @@ form .form-name p {
 
 .vertical-alignment {
     line-height: 30px;
+}
+
+
+
+
+i {
+    font-size: 25px;
+}
+.icon-trash-empty, .icon-edit {
+    color:#444;
+}
+
+.icon-trash-empty:hover {
+    color:#ec5d5d;
+}
+
+.icon-doc-add {
+    font-size:28px;
+}
+
+.icon-doc-add:hover {
+    color: #00ae00;
+}
+
+.icon-edit:hover {
+    color: #7dd17d;
+}
+
+.icons_table:active, .icons_table:visited {
+    color: #2a2a2a;
+}
+
+
+table th {
+    background: #434343;
+    color:#a9a9a9;
+}
+
+.page_title {
+    font-weight: bold;
+    font-size:24px;
+    margin-bottom:15px;
+    border-bottom:2px solid #787878;
 }

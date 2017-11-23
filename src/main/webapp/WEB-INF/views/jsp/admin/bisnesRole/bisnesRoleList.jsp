@@ -9,7 +9,8 @@
 
             <%@include file="../../jspf/adminMenu.jspf" %>
             <div class="table-section">
-                <button class="button_add"  onClick='location.href = "${pageContext.request.contextPath}/admin/bisnesRole/add"'>Добавить</button>
+                <h1 class="page_title">Роли учасников бизнес процессов</h1>
+                <a class="icons_table" href="${pageContext.request.contextPath}/admin/bisnesRole/add"><i class="demo-icon icon-doc-add"></i></a>
                 <table>
                     <tr>
                         <th>№</th>
@@ -25,8 +26,8 @@
                                 <a href="#" accountLink="${bisnesRole.parent.id}">${bisnesRole.parent.id}</a> 
                             </td>
                             <td>
-                                <button class="button_add"  onClick='location.href = "${pageContext.request.contextPath}/admin/bisnesRole/${bisnesRole.id}"'>Просмотр</button>
-                                <button class="button_add"  onClick='location.href = "${pageContext.request.contextPath}/admin/bisnesRole/delete/${bisnesRole.id}"'>Удалить</button>
+                                <a class="icons_table" href="${pageContext.request.contextPath}/admin/bisnesRole/${bisnesRole.id}"><i class="demo-icon icon-edit"></i></a>
+                                <a class="icons_table" href="${pageContext.request.contextPath}/admin/bisnesRole/delete/${bisnesRole.id}"><i class="demo-icon icon-trash-empty"></i></a>
                             </td>
                         </tr>
                     </c:forEach>

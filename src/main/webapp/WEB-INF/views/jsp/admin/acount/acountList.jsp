@@ -6,10 +6,10 @@
     <body>
         <%@include file="../../jspf/header.jspf" %>
         <div class="grid-container">
-
             <%@include file="../../jspf/adminMenu.jspf" %>
             <div class="table-section">
-                <button class="button_add"  onClick='location.href = "${pageContext.request.contextPath}/admin/acount/add"'>Добавить</button>
+                <h1 class="page_title">План счетов</h1>
+                <a class="icons_table" href="${pageContext.request.contextPath}/admin/acount/add"><i class="demo-icon icon-doc-add"></i></a>
                 <table>
                     <tr>
                         <th>№</th>
@@ -30,8 +30,8 @@
                             <td>${acount.group}
                             </td>
                             <td>
-                                <button class="button_add"  onClick='location.href = "${pageContext.request.contextPath}/admin/acount/${acount.id}"'>Просмотр</button>
-                                <button class="button_add"  onClick='location.href = "${pageContext.request.contextPath}/admin/acount/delete/${acount.id}"'>Удалить</button>
+                                <a class="icons_table" href="${pageContext.request.contextPath}/admin/acount/${acount.id}"><i class="demo-icon icon-edit"></i></a>
+                                <a class="icons_table" href="${pageContext.request.contextPath}/admin/acount/delete/${acount.id}"><i class="demo-icon icon-trash-empty"></i></a>
                             </td>
                         </tr>
                     </c:forEach>
