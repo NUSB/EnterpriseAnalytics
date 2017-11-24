@@ -1,0 +1,44 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<!DOCTYPE html>
+<html>
+    <%@include file="../../jspf/head.jspf" %>
+    <body>
+        <%@include file="../../jspf/header.jspf" %>
+        <div class="grid-container">
+            <%@include file="../../jspf/adminMenu.jspf" %>
+            <div >
+                <%@include file="../../jspf/messages.jspf" %>
+                <form:form method="POST" action="${sendTo}" class="data-form" modelAttribute="document" >
+                    <div class="form-head">
+                        <h1>${title}</h1>
+                    </div>
+                    <div class="grid-container">
+                        <div class="form-name">
+                            <p class="vertical-alignment">Номер:</p>
+                        </div>
+                        <div class="form-input">
+                            <input type="text" value="${document.id}" disabled="disabled"/>
+                        </div>
+
+                        <div class="form-name">
+                            <p class="vertical-alignment">Название: </p>
+                        </div>
+                        <div class="form-input">
+                            <form:input path="name" required="required"/>
+                        </div>
+                        <div class="form-name">
+                            <p>Описание:</p>
+                        </div>
+                        <div class="form-input">
+                            <form:textarea path="annotation" cols="30" rows="10" required="required" />
+                            <input class="save_button" type="submit" value="Сохранить">
+                        </div>
+                    </div>
+                </form:form>
+            </div>
+        </div>
+        <%@include file="../../jspf/footer.jspf" %>
+    </body>
+</html>
