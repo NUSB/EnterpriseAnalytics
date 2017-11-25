@@ -8,10 +8,29 @@ body {
     background: rgba(224, 224, 224, 0.69);
 }
 
+.right-alignment {
+    float: right;
+}
+
 .grid-container {
     display: grid;
     grid-template-columns: 250px 1fr;
     grid-gap: 20px;
+}
+
+.grid-container-full {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-row-gap:5px;
+
+}
+
+.grid-container-cols-3 {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-row-gap:30px;
+    grid-column-gap: 10%;
+    padding:3px 20px;
 }
 
 /*NAVIGATION*/
@@ -80,47 +99,60 @@ button:hover {
 }
 
 /*Form edit*/
-form .grid-container {
-    padding: 50px;
+.form-design .grid-container {
+    padding: 20px;
     display: grid;
     grid-template-columns: 20% 1fr;
     grid-template-rows: auto;
-
 }
-
-.data-form{
+    
+.form-design {
     background: white;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 20px;
     width: 70%;
-    margin: 20px auto auto auto;
+    margin: 20px auto;
 }
 
-form .form-head {
+.form-head {
     border-bottom: 1px solid grey;
     padding: 10px 20px;
 }
 
-form .form-head h1 {
-    color: #914d4d;
+.form-head-embeded h1 {
+    color: #4649c1;
+
+    font-size: 22px;
+    border-top: 1px solid #333;
+    max-width: max-content;
+    margin-left: 20px;
+    padding-left: 0;
+    padding-top: 10px;
+    margin-bottom: 10px;
+    min-width: 135px;
+
+}
+
+.form-head h1 {
+    color: #4649c1;
     font-size: 2.5em;
 }
 
-form input[type=checkbox] {
+.form-design input[type=checkbox] {
     height: 20px;
     width: 20px;
 }
 
-form .form-input input[type=text], .form-input input[list] {
+.form-design .form-input input[type=text], .form-input input[list] {
     width: 97%;
 }
 
-form .form-input textarea {
+.form-design .form-input textarea {
     width: 100%;
     margin-bottom: 10px;
 }
 
-form p {
+.form-design p {
     font-size: 1.1em;
 }
 
@@ -131,11 +163,10 @@ form p {
 
 .save_button {
     background: #67a46d;
-    border-radius: 10px;
+    border-radius: 6px;
     border: none;
-    padding: 13px;
+    padding: 8px 12px;
     color: #ffffff;
-
 }
 
 .save_button:hover {
@@ -143,8 +174,9 @@ form p {
     background: #76b97c;
 }
 
-form .form-name p {
+.form-design .form-name p {
     float: right;
+    width: 100%;
 }
 
 .vertical-alignment {
@@ -234,3 +266,15 @@ table th {
     background-color: #fdb544;
 }
 /*конец сообщения пользователю*/
+
+
+footer {
+    position: relative;
+    z-index: 999;
+    height: 30px;
+    line-height: 30px;
+    width: 100%;
+    background: #2196F3;
+    text-align: center;
+    margin-top: -5px;
+}
