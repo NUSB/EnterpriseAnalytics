@@ -1,6 +1,7 @@
 package com.segvek.analitic;
 
 import com.segvek.analitic.dao.DocumentDAO;
+import com.segvek.analitic.model.BisnesRole;
 import com.segvek.analitic.model.Document;
 import com.segvek.analitic.model.Message;
 import java.util.ArrayList;
@@ -24,7 +25,19 @@ public class DocumentController {
         messages.add(new Message("", "Сообщение которое не важно"));
         messages.add(new Message(Message.TYPE_WARNING, "Сообщение Очень очень важно"));
         view.addObject("messages", messages);
-        view.addObject("documents", documentDAO.getAllDocument());
+        List<Document> documents = documentDAO.getAllDocument();
+        for(Document d:documents){
+            StringBuilder sb = new StringBuilder(d.getName());
+            for(BisnesRole br:d.getBisnesRoles().keySet()){
+                sb.append("   ");
+                sb.append(br.getName());
+                sb.append("   ");
+                sb.append(br.getAnnotation());
+            }
+            d.setName(sb.toString());
+        }
+        
+        view.addObject("documents", documents);
         return view;
     }
     

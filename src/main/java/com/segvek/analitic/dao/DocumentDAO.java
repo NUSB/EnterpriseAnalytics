@@ -1,7 +1,9 @@
 package com.segvek.analitic.dao;
 
+import com.segvek.analitic.model.BisnesRole;
 import com.segvek.analitic.model.Document;
 import java.util.List;
+import java.util.Map;
 
 public interface DocumentDAO {
 
@@ -16,4 +18,6 @@ public interface DocumentDAO {
     public Document getDocumentById(int id);
 
     public void update(Document acount);
+
+    public Map<BisnesRole, String> getBisnesRolesByDocument(Document aThis);
 }

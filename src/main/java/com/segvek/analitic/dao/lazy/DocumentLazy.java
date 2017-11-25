@@ -6,8 +6,10 @@
 package com.segvek.analitic.dao.lazy;
 
 import com.segvek.analitic.dao.DocumentDAO;
+import com.segvek.analitic.model.BisnesRole;
 import com.segvek.analitic.model.Document;
 import java.awt.Point;
+import java.util.Map;
 
 public class DocumentLazy extends Document{
     
@@ -20,5 +22,14 @@ public class DocumentLazy extends Document{
     public void setDocumentDAO(DocumentDAO documentDAO) {
         this.documentDAO = documentDAO;
     }
+
+    @Override
+    public Map<BisnesRole, String> getBisnesRoles() {
+        if(super.getBisnesRoles()==null){
+            return documentDAO.getBisnesRolesByDocument(this);
+        }
+        return super.getBisnesRoles();
+    }
+    
     
 }
