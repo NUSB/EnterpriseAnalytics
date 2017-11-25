@@ -25,7 +25,7 @@
                             <td>${acount.name}</td>
                             <td>${acount.type}</td>
                             <td>
-                                <a href="#" accountLink="${acount.parent.id}">${acount.parent.code}</a> 
+                                <a href="#" accountLink="${acount.parent.id}">${acount.parent.code} ${acount.parent.name}</a> 
                             </td>
                             <td>${acount.group}
                             </td>

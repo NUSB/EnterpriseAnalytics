@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
@@ -58,7 +59,10 @@ public class DocumentMysqlDao implements DocumentDAO {
 
     @Override
     public Document getDocumentById(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String sql = "SELECT * FROM documents WHERE id=?";
+        DocumentLazy a = DataAccessUtils.singleResult(jdbcTemplate.query(sql, documentRowMapper, id));
+        a.setDocumentDAO(this);
+        return a;
     }
 
     @Override

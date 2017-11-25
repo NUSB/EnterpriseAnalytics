@@ -56,27 +56,36 @@ public class CorrespondenceMysqlDao implements CorrespondenceDAO {
     public Acount getDebetAcountByCorrespondence(Correspondence correspondence) {
         String sql = "SELECT a.id FROM acount a INNER JOIN correspondence c ON a.id = c.debet WHERE c.id=?";
         return DataAccessUtils.singleResult(
-                jdbcTemplate.query(sql, (rs, i) -> 
-                        acountDAO.getAcountById(rs.getInt("id"))
-                , correspondence.getId()));
+                jdbcTemplate.query(sql, new RowMapper<Acount>() {
+            @Override
+            public Acount mapRow(ResultSet rs, int i) throws SQLException {
+                return acountDAO.getAcountById(rs.getInt("id"));
+            }
+        }, correspondence.getId()));
     }
 
     @Override
     public Acount getCreditAcountByCorrespondence(Correspondence correspondence) {
         String sql = "SELECT a.id FROM acount a INNER JOIN correspondence c ON a.id = c.credit WHERE c.id=?";
         return DataAccessUtils.singleResult(
-                jdbcTemplate.query(sql, (rs, i) -> 
-                        acountDAO.getAcountById(rs.getInt("id"))
-                , correspondence.getId()));
+                jdbcTemplate.query(sql, new RowMapper<Acount>() {
+            @Override
+            public Acount mapRow(ResultSet rs, int i) throws SQLException {
+                return acountDAO.getAcountById(rs.getInt("id"));
+            }
+        }, correspondence.getId()));
     }
 
     @Override
     public Document getDocumentByCorrespondence(Correspondence document) {
         String sql = "SELECT d.id FROM documents d INNER JOIN correspondence c ON d.id = c.documentId WHERE c.id=?";
         return DataAccessUtils.singleResult(
-                jdbcTemplate.query(sql, (rs, i) -> 
-                        documentDAO.getDocumentById(rs.getInt("id"))
-                , document.getId()));
+                jdbcTemplate.query(sql, new RowMapper<Document>() {
+            @Override
+            public Document mapRow(ResultSet rs, int i) throws SQLException {
+                return documentDAO.getDocumentById(rs.getInt("id"));
+            }
+        }, document.getId()));
     }
 
 }
