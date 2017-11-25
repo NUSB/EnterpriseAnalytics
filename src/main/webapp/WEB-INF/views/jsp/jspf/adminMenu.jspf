@@ -5,7 +5,7 @@
         <ul>
             <li><a href="${pageContext.request.contextPath}/admin/acount">Счета</a></li>
             <li><a href="${pageContext.request.contextPath}/admin/bisnesRole">Бизнес роли</a></li>
-            <li><a href="#">Item 4</a></li>
+            <li><a href="${pageContext.request.contextPath}/admin/document">Документы</a></li>
             <li><a href="#">Item 5</a></li>
             <li><a href="#">Item 6</a></li>
             <li><a href="${pageContext.request.contextPath}/admin/user">Пользователи</a></li>

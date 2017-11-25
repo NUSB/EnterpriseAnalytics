@@ -14,3 +14,6 @@ $("table tr td a").click(function () {
     }
 });
 
+$(".message-exit").click(function () {
+    $(this).parent().parent().css("display","none");
+});

@@ -1,12 +1,27 @@
 package com.segvek.analitic.model;
 
 import java.awt.Point;
+import java.util.Map;
 
 public class Document extends GraphicElement{
     private int id;
     private String name;
     private String annotation;
+    
+    private Map<BisnesRole,String> bisnesRoles; 
 
+    public Document() {
+    }
+
+    public Map<BisnesRole, String> getBisnesRoles() {
+        return bisnesRoles;
+    }
+
+    public void setBisnesRoles(Map<BisnesRole, String> bisnesRoles) {
+        this.bisnesRoles = bisnesRoles;
+    }
+
+ 
     public Document(int id, String name, String annotation,Point position) {
         super(position);
         this.id = id;

@@ -53,8 +53,8 @@
               <Parent>0</Parent>
             </CustomProperties>
             <Location>
-              <X>-10 px</X>
-              <Y>90 px</Y>
+              <X>-300 px</X>
+              <Y>80 px</Y>
             </Location>
             <Size>
               <Width>168 px</Width>
@@ -108,12 +108,12 @@
             </PortAnchors>
             <BendPoints>
               <PointD>
-                <X>-29 px</X>
-                <Y>204.5 px</Y>
+                <X>-319 px</X>
+                <Y>194.5 px</Y>
               </PointD>
               <PointD>
-                <X>-29 px</X>
-                <Y>261.75 px</Y>
+                <X>-319 px</X>
+                <Y>251.75 px</Y>
               </PointD>
             </BendPoints>
             <IsManuallyRouted>false</IsManuallyRouted>
@@ -160,7 +160,7 @@
             </Location>
             <Size>
               <Width>170 px</Width>
-              <Height>127 px</Height>
+              <Height>110 px</Height>
             </Size>
             <DbOid>
               <Path>enterpriceanalytics.users</Path>
@@ -220,7 +220,7 @@
               </Port>
               <Port>
                 <Location>
-                  <X>0 px</X>
+                  <X>Undefined</X>
                   <Y>95.25 px</Y>
                 </Location>
                 <Anchors>Top Bottom</Anchors>
@@ -270,7 +270,7 @@
               <Parent>0</Parent>
             </CustomProperties>
             <Location>
-              <X>320 px</X>
+              <X>460 px</X>
               <Y>90 px</Y>
             </Location>
             <Size>
@@ -325,11 +325,11 @@
             </PortAnchors>
             <BendPoints>
               <PointD>
-                <X>301 px</X>
+                <X>441 px</X>
                 <Y>179 px</Y>
               </PointD>
               <PointD>
-                <X>301 px</X>
+                <X>441 px</X>
                 <Y>223.5 px</Y>
               </PointD>
             </BendPoints>
@@ -366,13 +366,209 @@
               <Y>2 px</Y>
             </CommentOffset>
           </Model>
+          <Model xsi:type="TableModel">
+            <CustomProperties>
+              <OID>20</OID>
+              <Parent>0</Parent>
+            </CustomProperties>
+            <Location>
+              <X>20 px</X>
+              <Y>130 px</Y>
+            </Location>
+            <Size>
+              <Width>175 px</Width>
+              <Height>110 px</Height>
+            </Size>
+            <DbOid>
+              <Path>enterpriceanalytics.document</Path>
+              <TypeName>Table</TypeName>
+            </DbOid>
+            <Compartments>
+              <ConstraintsCollapsed>True</ConstraintsCollapsed>
+              <IndexesCollapsed>True</IndexesCollapsed>
+              <TriggersCollapsed>True</TriggersCollapsed>
+            </Compartments>
+          </Model>
+          <Model xsi:type="TableModel">
+            <CustomProperties>
+              <OID>21</OID>
+              <Parent>0</Parent>
+            </CustomProperties>
+            <Location>
+              <X>200 px</X>
+              <Y>300 px</Y>
+            </Location>
+            <Size>
+              <Width>251 px</Width>
+              <Height>127 px</Height>
+            </Size>
+            <DbOid>
+              <Path>enterpriceanalytics.`document-hash-bisnes_roles`</Path>
+              <TypeName>Table</TypeName>
+            </DbOid>
+            <Compartments>
+              <ConstraintsCollapsed>True</ConstraintsCollapsed>
+              <IndexesCollapsed>True</IndexesCollapsed>
+              <TriggersCollapsed>True</TriggersCollapsed>
+            </Compartments>
+          </Model>
+          <Model xsi:type="RelationLinkModel">
+            <CustomProperties>
+              <OID>22</OID>
+              <Comment>23</Comment>
+              <OutModel>21</OutModel>
+              <InModel>20</InModel>
+              <OutPort>24</OutPort>
+              <InPort>25</InPort>
+              <Parent>0</Parent>
+            </CustomProperties>
+            <PortAnchors>
+              <Port>
+                <Location>
+                  <X>0 px</X>
+                  <Y>63.5 px</Y>
+                </Location>
+                <Anchors>Top Bottom</Anchors>
+                <Align>Left</Align>
+                <CustomProperties>
+                  <OID>24</OID>
+                  <PortType>FloatAnchor</PortType>
+                </CustomProperties>
+              </Port>
+              <Port>
+                <Location>
+                  <X>87.5 px</X>
+                  <Y>0 px</Y>
+                </Location>
+                <Anchors>Left Right</Anchors>
+                <Align>Bottom</Align>
+                <CustomProperties>
+                  <OID>25</OID>
+                  <PortType>FloatAnchor</PortType>
+                </CustomProperties>
+              </Port>
+            </PortAnchors>
+            <BendPoints>
+              <PointD>
+                <X>107.5 px</X>
+                <Y>363.5 px</Y>
+              </PointD>
+            </BendPoints>
+            <IsManuallyRouted>false</IsManuallyRouted>
+            <DbOid>
+              <Path>enterpriceanalytics.`document-hash-bisnes_roles`.`FK_document-hash-bisnes_roles_document_id`</Path>
+              <TypeName>ForeignKey</TypeName>
+            </DbOid>
+          </Model>
+          <Model xsi:type="RelationCommentModel">
+            <CustomProperties>
+              <OID>23</OID>
+              <HolderModel>22</HolderModel>
+              <Port>26</Port>
+              <Parent>0</Parent>
+            </CustomProperties>
+            <PortAnchors>
+              <Port xsi:type="LinkPort">
+                <Location>
+                  <X>92.5 px</X>
+                  <Y>61.75 px</Y>
+                </Location>
+                <Anchors>None</Anchors>
+                <Align>Left</Align>
+                <CustomProperties>
+                  <OID>26</OID>
+                  <PortType>FixedAnchor</PortType>
+                </CustomProperties>
+                <LinkPortAnchor>OutPoint</LinkPortAnchor>
+              </Port>
+            </PortAnchors>
+            <CommentOffset>
+              <X>22 px</X>
+              <Y>2 px</Y>
+            </CommentOffset>
+          </Model>
+          <Model xsi:type="RelationLinkModel">
+            <CustomProperties>
+              <OID>27</OID>
+              <Comment>28</Comment>
+              <OutModel>21</OutModel>
+              <InModel>14</InModel>
+              <OutPort>29</OutPort>
+              <InPort>30</InPort>
+              <Parent>0</Parent>
+            </CustomProperties>
+            <PortAnchors>
+              <Port>
+                <Location>
+                  <X>125.5 px</X>
+                  <Y>0 px</Y>
+                </Location>
+                <Anchors>Left Right</Anchors>
+                <Align>Top</Align>
+                <CustomProperties>
+                  <OID>29</OID>
+                  <PortType>FloatAnchor</PortType>
+                </CustomProperties>
+              </Port>
+              <Port>
+                <Location>
+                  <X>0 px</X>
+                  <Y>44.5 px</Y>
+                </Location>
+                <Anchors>Top Bottom</Anchors>
+                <Align>Left</Align>
+                <CustomProperties>
+                  <OID>30</OID>
+                  <PortType>FloatAnchor</PortType>
+                </CustomProperties>
+              </Port>
+            </PortAnchors>
+            <BendPoints>
+              <PointD>
+                <X>325.5 px</X>
+                <Y>134.5 px</Y>
+              </PointD>
+            </BendPoints>
+            <IsManuallyRouted>false</IsManuallyRouted>
+            <DbOid>
+              <Path>enterpriceanalytics.`document-hash-bisnes_roles`.`FK_document-hash-bisnes_roles_bisnes_roles_id`</Path>
+              <TypeName>ForeignKey</TypeName>
+            </DbOid>
+          </Model>
+          <Model xsi:type="RelationCommentModel">
+            <CustomProperties>
+              <OID>28</OID>
+              <HolderModel>27</HolderModel>
+              <Port>31</Port>
+              <Parent>0</Parent>
+            </CustomProperties>
+            <PortAnchors>
+              <Port xsi:type="LinkPort">
+                <Location>
+                  <X>0 px</X>
+                  <Y>82.75 px</Y>
+                </Location>
+                <Anchors>None</Anchors>
+                <Align>Top</Align>
+                <CustomProperties>
+                  <OID>31</OID>
+                  <PortType>FixedAnchor</PortType>
+                </CustomProperties>
+                <LinkPortAnchor>OutPoint</LinkPortAnchor>
+              </Port>
+            </PortAnchors>
+            <CommentOffset>
+              <X>22 px</X>
+              <Y>2 px</Y>
+            </CommentOffset>
+          </Model>
         </Children>
         <ViewPort>
           <ScaleMode>Free</ScaleMode>
           <Scale>1</Scale>
           <Location>
-            <X>-201 px</X>
-            <Y>-132 px</Y>
+            <X>-396 px</X>
+            <Y>112 px</Y>
           </Location>
         </ViewPort>
       </Model>

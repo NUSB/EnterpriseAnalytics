@@ -76,7 +76,7 @@ button {
 }
 
 button:hover {
-    cursor: pointer;
+    curcusor: pointer;
 }
 
 /*Form edit*/
@@ -193,3 +193,44 @@ table th {
     margin-bottom:15px;
     border-bottom:2px solid #787878;
 }
+
+/*сообщения пользователю*/
+.message{
+    background-color: #dddddd;
+    padding: 10px 0 10px 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 5px 0 rgba(0, 0, 0, 0.19);
+    margin-bottom: 10px;
+}
+
+.message:hover{
+    margin-top: -3px;
+    padding: 13px 0 13px 13px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 4px 8px 0 rgba(0, 0, 0, 0.19);
+}
+
+.message:hover .message-exit{
+    margin-top: -7px;
+}
+
+.message-container {
+    display: grid;
+    grid-template-columns: 1fr 30px;
+}
+.message-text{
+    cursor: default;
+    float: left;
+}
+.message-exit{
+    float: right;
+    height: 20px;
+    margin-top: -5px;
+}
+.message-exit:hover{
+    cursor: pointer;
+}
+
+.warning{
+    background-color: #fdb544;
+}
+/*конец сообщения пользователю*/
