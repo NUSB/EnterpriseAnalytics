@@ -8,6 +8,9 @@
         <%@include file="../../jspf/header.jspf" %>
         <div class="grid-container">
             <%@include file="../../jspf/adminMenu.jspf" %>
+                        <div class="grid-container-full">
+<div class="form-design">
+            <div class="grid-container-full">
             <form:form method="POST" action="${sendTo}" class="data-form" modelAttribute="bisnesRole" >
                 <div class="form-head">
                     <h1>${title}</h1>
@@ -49,6 +52,9 @@
                     </div>
                 </div>
             </form:form>
+            </div>
+</div>
+                        </div>
         </div>
         <%@include file="../../jspf/footer.jspf" %>
     </body>
