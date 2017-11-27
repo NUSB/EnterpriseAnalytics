@@ -30,17 +30,21 @@ $(document).ready(function () {
 
 
 
-
+//    Working with docs
+    var clickedCheck = 0;
     $('a[pathUpdateCurrentRole]').click(function () {
-        var path = $(this).attr("pathUpdateCurrentRole");
-        $("#form_roles").attr("action", path);
-        rulesButtonsToggle();
-        document_role = $(this).parent().parent().find(".document-role").text();
-        document_description = $(this).parent().parent().find(".document-description").text();
-        $("#description_role").val(document_description);
-        $("#document-role").toggleClass("invisible");
-        $("#editDocumentRole").toggleClass("invisible");
-        $("#editDocumentRole").attr("value", document_role);
+        if (!clickedCheck) {
+            var path = $(this).attr("pathUpdateCurrentRole");
+            $("#form_roles").attr("action", path);
+            rulesButtonsToggle();
+            document_role = $(this).parent().parent().find(".document-role").text();
+            document_description = $(this).parent().parent().find(".document-description").text();
+            $("#description_role").val(document_description);
+            $("#document-role").toggleClass("invisible");
+            $("#editDocumentRole").toggleClass("invisible");
+            $("#editDocumentRole").attr("value", document_role);
+            clickedCheck = 1;
+        }
     });
 
     $("#roleCancelButton").click(function () {
@@ -50,6 +54,6 @@ $(document).ready(function () {
         $("#document-role").toggleClass("invisible");
         $("#editDocumentRole").toggleClass("invisible");
         rulesButtonsToggle();
-
+        clickedCheck = 0;
     });
 });
