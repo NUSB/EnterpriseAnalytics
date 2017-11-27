@@ -8,6 +8,10 @@ body {
     background: rgba(224, 224, 224, 0.69);
 }
 
+textarea {
+    resize: none;
+}
+
 .right-alignment {
     float: right;
 }
@@ -111,6 +115,7 @@ button:hover {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 20px;
     width: 70%;
+    height: max-content;
     margin: 20px auto;
 }
 
@@ -261,10 +266,15 @@ table th {
 }
 .message-exit:hover{
     cursor: pointer;
+    color: #ec5d5d;
 }
 
 .warning{
     background-color: #fdb544;
+}
+
+.error {
+    background-color: #ec5d5d;
 }
 /*конец сообщения пользователю*/
 
