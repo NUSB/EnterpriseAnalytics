@@ -41,62 +41,52 @@
                                 </div>
 
                             </form:form>
-
-                            <form action="#">
-                                <div class="form-head-embeded">
-                                    <h1>Роли</h1>
-                                </div>
-                                <div class="roles_document grid-container-cols-3">
-                                    <div class="form-input">
-                                        <p>Роли:</p>
-                                        <input list="roles_document" id="document-role">
-                                        <datalist id="roles_document" aria-required="true">
-                                            <option value="Роль 1"></option>
-                                            <option value="Роль 2"></option>
-                                            <option value="Роль 3"></option>
-                                        </datalist>
+                            <c:if test="${!isNewDocument}">
+                                <form action="#">
+                                    <div class="form-head-embeded">
+                                        <h1>Роли</h1>
                                     </div>
+                                    <div class="roles_document grid-container-cols-3">
+                                        <div class="form-input">
+                                            <p>Роли:</p>
+                                            <input list="roles_document" id="document-role">
+                                            <datalist id="roles_document" aria-required="true">
+                                                <c:forEach items="${bisnesRoles}" var="bisnesRole">
+                                                    <option value="${bisnesRole.name}"></option>
+                                                </c:forEach>
+                                            </datalist>
+                                        </div>
 
-                                    <div class="form-input">
-                                        <p>Описание:</p>
-                                        <textarea name="description" id="description_role" cols="50" rows="5" required></textarea>
+                                        <div class="form-input">
+                                            <p>Описание:</p>
+                                            <textarea name="description" id="description_role" cols="50" rows="5" required></textarea>
+                                        </div>
+
+                                        <div class="button">
+                                            <br>
+                                            <input class="save_button" type="submit" value="Добавить">
+                                        </div>
+
+
                                     </div>
+                                </form>
 
-                                    <div class="button">
-                                        <br>
-                                        <input class="save_button" type="submit" value="Добавить">
-                                    </div>
-
-
-                                </div>
-                            </form>
-
-                            <div class="table-section">
-                                <table>
-                                    <tr>
-                                        <th>Роль</th>
-                                        <th>Описание</th>
-                                        <th>Действие</th>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="document-role">Роль 1</td>
-                                        <td class="document-description">Пописание</td>
-                                        <td><a class="icons_table" href="#"><i class="demo-icon icon-trash-empty"></i></a></td>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="document-role">Роль 2</td>
-                                        <td class="document-description">Пописание</td>
-                                        <td><a class="icons_table" href="#"><i class="demo-icon icon-trash-empty"></i></a></td>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="document-role">Роль 3</td>
-                                        <td class="document-description">Пописание</td>
-                                        <td><a class="icons_table" href="#"><i class="demo-icon icon-trash-empty"></i></a></td>
-                                    </tr>
-                                </table>
+                                <div class="table-section">
+                                    <table>
+                                        <tr>
+                                            <th>Роль</th>
+                                            <th>Описание</th>
+                                            <th>Действие</th>
+                                        </tr>
+                                        <c:forEach items="${document.bisnesRoles}" var="item">
+                                            <tr>
+                                                <td class="document-role">${item.key.name}</td>
+                                                <td class="document-description">${item.value}</td>
+                                                <td><a class="icons_table" href="#"><i class="demo-icon icon-trash-empty"></i></a></td>
+                                            </tr>
+                                        </c:forEach>
+                                    </table>
+                                </c:if>
                             </div>
                         </div>
                     </div>
