@@ -51,9 +51,9 @@
                                             <p>Роли:</p>
                                             <input list="roles_document" id="document-role">
                                             <datalist id="roles_document" aria-required="true">
-                                                <option value="Роль 1"></option>
-                                                <option value="Роль 2"></option>
-                                                <option value="Роль 3"></option>
+                                                <c:forEach items="${bisnesRoles}" var="bisnesRole">
+                                                    <option value="${bisnesRole.name}"></option>
+                                                </c:forEach>
                                             </datalist>
                                         </div>
 
@@ -78,21 +78,13 @@
                                             <th>Описание</th>
                                             <th>Действие</th>
                                         </tr>
-                                        <tr>
-                                            <td class="document-role">Роль 1</td>
-                                            <td class="document-description">Пописание</td>
-                                            <td><a class="icons_table" href="#"><i class="demo-icon icon-trash-empty"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="document-role">Роль 2</td>
-                                            <td class="document-description">Пописание</td>
-                                            <td><a class="icons_table" href="#"><i class="demo-icon icon-trash-empty"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="document-role">Роль 3</td>
-                                            <td class="document-description">Пописание</td>
-                                            <td><a class="icons_table" href="#"><i class="demo-icon icon-trash-empty"></i></a></td>
-                                        </tr>
+                                        <c:forEach items="${document.bisnesRoles}" var="item">
+                                            <tr>
+                                                <td class="document-role">${item.key.name}</td>
+                                                <td class="document-description">${item.value}</td>
+                                                <td><a class="icons_table" href="#"><i class="demo-icon icon-trash-empty"></i></a></td>
+                                            </tr>
+                                        </c:forEach>
                                     </table>
                                 </c:if>
                             </div>

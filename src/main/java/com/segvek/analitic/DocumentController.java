@@ -1,5 +1,6 @@
 package com.segvek.analitic;
 
+import com.segvek.analitic.dao.BisnesRoleDAO;
 import com.segvek.analitic.dao.DocumentDAO;
 import com.segvek.analitic.model.BisnesRole;
 import com.segvek.analitic.model.Document;
@@ -8,9 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.WebRequest;
@@ -21,6 +24,9 @@ public class DocumentController {
 
     @Autowired
     DocumentDAO documentDAO;
+    
+    @Autowired
+    BisnesRoleDAO bisnesRoleDAO;
 
     @RequestMapping(value = "/admin/document", method = RequestMethod.GET)
     public ModelAndView documentList() {
@@ -66,5 +72,18 @@ public class DocumentController {
         return view;
     }
 
-    
+    @RequestMapping(value = "/admin/document/{id}", method = RequestMethod.GET)
+    public String documentView(Model model, @PathVariable Integer id) {
+
+        Document document = documentDAO.getDocumentById(id);
+        if (document == null) {
+            return "error";
+        }
+        model.addAttribute("title", "Докуент № " + document.getId());
+        model.addAttribute("isNewDocument", false);
+        model.addAttribute("document", document);
+        model.addAttribute("bisnesRoles", bisnesRoleDAO.getAllBisnesRole());
+        model.addAttribute("sendTo", "update/" + document.getId());
+        return "admin/document/document";
+    }
 }
