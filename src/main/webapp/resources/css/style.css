@@ -8,6 +8,14 @@ body {
     background: rgba(224, 224, 224, 0.69);
 }
 
+textarea {
+    resize: none;
+}
+
+
+.invisible {
+    display: none !important;
+}
 .right-alignment {
     float: right;
 }
@@ -38,6 +46,9 @@ a {
     text-decoration: none;
 }
 
+a:hover {
+    cursor: pointer;
+}
 
 nav {
     height: 100vh;
@@ -105,12 +116,13 @@ button:hover {
     grid-template-columns: 20% 1fr;
     grid-template-rows: auto;
 }
-    
+
 .form-design {
     background: white;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 20px;
     width: 70%;
+    height: max-content;
     margin: 20px auto;
 }
 
@@ -162,12 +174,16 @@ button:hover {
 }
 
 .save_button {
+    display: block;
     background: #67a46d;
     border-radius: 6px;
     border: none;
+    margin-top: 10px;
     padding: 8px 12px;
     color: #ffffff;
 }
+
+
 
 .save_button:hover {
     cursor: pointer;
@@ -228,6 +244,7 @@ table th {
 
 /*сообщения пользователю*/
 .message{
+    height:fit-content;
     width:98%;
     background-color: #dddddd;
     padding: 10px 0 10px 10px;
@@ -261,10 +278,15 @@ table th {
 }
 .message-exit:hover{
     cursor: pointer;
+    color: #ec5d5d;
 }
 
 .warning{
     background-color: #fdb544;
+}
+
+.error {
+    background-color: #ec5d5d;
 }
 /*конец сообщения пользователю*/
 

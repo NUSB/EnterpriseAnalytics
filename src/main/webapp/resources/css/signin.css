@@ -1,19 +1,17 @@
 @import url(https://fonts.googleapis.com/css?family=Tenor+Sans);
 
-:root {
-    --hight-header:50px;
-}
+
 
 /*heder style*/
 header{
     background-color: #5D92B0;
     width: 100%;
-    height: var(--hight-header);
+    height: 50px;
     font-family: "Tenor Sans", sans-serif;
 }
 .horisontal-menu{
     text-align: right;
-    height: var(--hight-header);  
+    height: 50px;
 }
 .horisontal-menu a{
     float:right;

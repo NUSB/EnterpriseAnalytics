@@ -42,7 +42,7 @@
 
                             </form:form>
                             <c:if test="${!isNewDocument}">
-                                <form action="#">
+                                <form action="defaultPath" id="form_roles">
                                     <div class="form-head-embeded">
                                         <h1>Роли</h1>
                                     </div>
@@ -55,6 +55,7 @@
                                                     <option value="${bisnesRole.name}"></option>
                                                 </c:forEach>
                                             </datalist>
+                                            <input type="text" disabled required="" id="editDocumentRole" class="invisible" />
                                         </div>
 
                                         <div class="form-input">
@@ -63,8 +64,12 @@
                                         </div>
 
                                         <div class="button">
-                                            <br>
-                                            <input class="save_button" type="submit" value="Добавить">
+                                            <input class="save_button" type="submit" id="roleAddButton" value="Добавить">
+
+                                            <input class="save_button invisible" type="submit" id="roleEditButton" value="Сохранить">
+
+
+                                            <input class="save_button invisible" type="button" id="roleCancelButton" resetAction="" value="Отмена">
                                         </div>
 
 
@@ -82,7 +87,10 @@
                                             <tr>
                                                 <td class="document-role">${item.bisnesRole.name}</td>
                                                 <td class="document-description">${item.annotation}</td>
-                                                <td><a class="icons_table" href="#"><i class="demo-icon icon-trash-empty"></i></a></td>
+                                                <td>
+                                                    <a class="icons_table" ><i class="demo-icon icon-trash-empty"></i></a>
+                                                    <a class="icons_table"  pathUpdateCurrentRole="bisnesrole/update/8"><i class="demo-icon icon-edit"></i></a>
+                                                </td>
                                             </tr>
                                         </c:forEach>
                                     </table>

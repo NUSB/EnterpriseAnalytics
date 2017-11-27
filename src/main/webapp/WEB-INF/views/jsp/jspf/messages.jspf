@@ -5,7 +5,7 @@
     <div class="message ${message.type}">
         <div class="message-container">
             <div class="message-text">${message.text}</div>
-            <div class="message-exit"><i class="demo-icon icon-trash-empty"></i></div>
+            <div class="message-exit"><i class="demo-icon icon-cancel"></i></div>
         </div>
     </div>
 </c:forEach>
