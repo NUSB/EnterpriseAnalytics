@@ -25,6 +25,9 @@ public class ResponsibilityForDocuments {
         this.annotation = annotation;
     }
 
+    public ResponsibilityForDocuments() {
+    }
+
     public String getAnnotation() {
         return annotation;
     }

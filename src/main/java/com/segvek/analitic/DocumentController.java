@@ -2,8 +2,11 @@ package com.segvek.analitic;
 
 import com.segvek.analitic.dao.BisnesRoleDAO;
 import com.segvek.analitic.dao.DocumentDAO;
+import com.segvek.analitic.dao.ResponsibilityForDocumentsDAO;
+import com.segvek.analitic.model.BisnesRole;
 import com.segvek.analitic.model.Document;
 import com.segvek.analitic.model.Message;
+import com.segvek.analitic.model.ResponsibilityForDocuments;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,9 @@ public class DocumentController {
 
     @Autowired
     BisnesRoleDAO bisnesRoleDAO;
+    
+    @Autowired
+    ResponsibilityForDocumentsDAO responsibilityForDocumentsDAO;
 
     @RequestMapping(value = "/admin/document", method = RequestMethod.GET)
     public ModelAndView documentList() {
@@ -74,6 +80,7 @@ public class DocumentController {
         model.addAttribute("document", document);
         model.addAttribute("bisnesRoles", bisnesRoleDAO.getAllBisnesRole());
         model.addAttribute("sendTo", "update/" + document.getId());
+        model.addAttribute("responsibilityForDocuments", new ResponsibilityForDocuments());
         return "admin/document/document";
     }
 
@@ -85,11 +92,29 @@ public class DocumentController {
         return documentList();
     }
 
-//    @RequestMapping(value = "/admin/document/{docId}/bisnesRole/add",method = RequestMethod.POST)
-//    public ModelAndView addBisnesRoleToDocument(@ModelAttribute("bisnesRole") BisnesRole bisnesRole){
-//        
-//        return null;
-//    }
+    @RequestMapping(value = "/admin/document/{docId}/responsibilityForDocuments/add", method = RequestMethod.POST)
+    public ModelAndView addBisnesRoleToDocument(WebRequest request
+            ,@ModelAttribute("responsibilityForDocuments") ResponsibilityForDocuments responsibilityForDocuments
+            ,BindingResult result,@PathVariable Integer docId) {
+        
+        Document doc = documentDAO.getDocumentById(docId);
+        responsibilityForDocuments.setDocument(doc);
+        
+        BisnesRole bisnesRole = bisnesRoleDAO.getBisnesRoleByName(request.getParameter("role"));
+        responsibilityForDocuments.setBisnesRole(bisnesRole);
+        
+        responsibilityForDocumentsDAO.save(responsibilityForDocuments);
+        
+        ModelAndView model = new ModelAndView("admin/document/document");
+        
+        model.addObject("title", "Докуент № " + doc.getId());
+        model.addObject("isNewDocument", false);
+        model.addObject("document", doc);
+        model.addObject("bisnesRoles", bisnesRoleDAO.getAllBisnesRole());
+        model.addObject("sendTo", "update/" + doc.getId());
+        model.addObject("responsibilityForDocuments", new ResponsibilityForDocuments());
+        return model;
+    }
 //    
 //    @RequestMapping(value = "/admin/document/{docId}/bisnesRole/update/{idRole}",method = RequestMethod.POST)
 //    public ModelAndView updateBisnesRoleToDocument(){

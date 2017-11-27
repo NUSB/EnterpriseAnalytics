@@ -12,4 +12,6 @@ public interface ResponsibilityForDocumentsDAO {
     public Document getDocumentByResponsibilityForDocuments(ResponsibilityForDocuments rfd);
 
     public BisnesRole getBisnesRoleByResponsibilityForDocuments(ResponsibilityForDocuments rfd);
+
+    public void save(ResponsibilityForDocuments responsibilityForDocuments);
 }

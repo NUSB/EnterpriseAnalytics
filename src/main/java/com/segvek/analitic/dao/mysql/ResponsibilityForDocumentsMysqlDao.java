@@ -70,6 +70,12 @@ public class ResponsibilityForDocumentsMysqlDao implements ResponsibilityForDocu
             }
         },rfd.getId());
     }
+
+    @Override
+    public void save(ResponsibilityForDocuments rfd) {
+        String sql = "INSERT INTO `documents-hash-bisnes_roles`(idDocument, idBisnesRole, annotation)  VALUES (?,?,?)";
+        jdbcTemplate.update(sql, rfd.getDocument().getId(),rfd.getBisnesRole().getId(),rfd.getAnnotation());
+    }
     
 }
 

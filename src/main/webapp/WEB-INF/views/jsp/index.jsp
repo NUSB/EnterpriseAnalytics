@@ -12,11 +12,6 @@
         <a href="${loginURL}">Войти</a>
         <a href="${adminURL}">админ</a>
         <a href="${userURL}">моя страница</a><br>
-        ${acount.name}
-        ${acount.code}
-        ${acount.type}
-        ${acount.parent.name}
-        ${acount.group}
-        ${acount.anotation}
+        ${text}
     </body>
 </html>
