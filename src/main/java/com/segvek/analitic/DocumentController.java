@@ -2,7 +2,6 @@ package com.segvek.analitic;
 
 import com.segvek.analitic.dao.BisnesRoleDAO;
 import com.segvek.analitic.dao.DocumentDAO;
-import com.segvek.analitic.model.BisnesRole;
 import com.segvek.analitic.model.Document;
 import com.segvek.analitic.model.Message;
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ public class DocumentController {
 
     @Autowired
     DocumentDAO documentDAO;
-    
+
     @Autowired
     BisnesRoleDAO bisnesRoleDAO;
 
@@ -32,16 +31,6 @@ public class DocumentController {
     public ModelAndView documentList() {
         ModelAndView view = new ModelAndView("admin/document/documentList");
         List<Document> documents = documentDAO.getAllDocument();
-        for (Document d : documents) {
-            StringBuilder sb = new StringBuilder(d.getName());
-            for (BisnesRole br : d.getBisnesRoles().keySet()) {
-                sb.append("   ");
-                sb.append(br.getName());
-                sb.append("   ");
-                sb.append(br.getAnnotation());
-            }
-            d.setName(sb.toString());
-        }
 
         view.addObject("documents", documents);
         return view;
@@ -62,13 +51,14 @@ public class DocumentController {
             BindingResult result, ModelMap model) {
         ModelAndView view = new ModelAndView("admin/document/document");
         documentDAO.save(document);
-        view.addObject("title", "Документ № "+document.getId());
-        
+        view.addObject("title", "Документ № " + document.getId());
+
         List<Message> messages = new ArrayList<Message>();
         messages.add(new Message(Message.TYPE_WARNING, "Добавте списко ролей, которіе отвечают за єтот документ!!"));
         view.addObject("messages", messages);
         view.addObject("isNewDocument", false);
-        view.addObject("sendTo", "edit/"+document.getId());
+        model.addAttribute("bisnesRoles", bisnesRoleDAO.getAllBisnesRole());
+        view.addObject("sendTo", "edit/" + document.getId());
         return view;
     }
 
@@ -86,4 +76,30 @@ public class DocumentController {
         model.addAttribute("sendTo", "update/" + document.getId());
         return "admin/document/document";
     }
+
+    @RequestMapping(value = "/admin/document/update/{id}", method = RequestMethod.POST)
+    public ModelAndView acountUpdateAction(WebRequest request, @ModelAttribute("document") Document document,
+            BindingResult result, ModelMap model, @PathVariable Integer id) {
+        document.setId(id);
+        documentDAO.update(document);
+        return documentList();
+    }
+
+//    @RequestMapping(value = "/admin/document/{docId}/bisnesRole/add",method = RequestMethod.POST)
+//    public ModelAndView addBisnesRoleToDocument(@ModelAttribute("bisnesRole") BisnesRole bisnesRole){
+//        
+//        return null;
+//    }
+//    
+//    @RequestMapping(value = "/admin/document/{docId}/bisnesRole/update/{idRole}",method = RequestMethod.POST)
+//    public ModelAndView updateBisnesRoleToDocument(){
+//        
+//        return null;
+//    }
+//    
+//    @RequestMapping(value = "/admin/document/{docId}/bisnesRole/delete/{idRole}",method = RequestMethod.POST)
+//    public ModelAndView deleteBisnesRoleToDocument(){
+//        
+//        return null;
+//    }
 }

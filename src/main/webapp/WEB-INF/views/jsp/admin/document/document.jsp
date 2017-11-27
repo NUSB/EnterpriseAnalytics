@@ -78,10 +78,10 @@
                                             <th>Описание</th>
                                             <th>Действие</th>
                                         </tr>
-                                        <c:forEach items="${document.bisnesRoles}" var="item">
+                                        <c:forEach items="${document.responsibilityForDocumentses}" var="item">
                                             <tr>
-                                                <td class="document-role">${item.key.name}</td>
-                                                <td class="document-description">${item.value}</td>
+                                                <td class="document-role">${item.bisnesRole.name}</td>
+                                                <td class="document-description">${item.annotation}</td>
                                                 <td><a class="icons_table" href="#"><i class="demo-icon icon-trash-empty"></i></a></td>
                                             </tr>
                                         </c:forEach>
