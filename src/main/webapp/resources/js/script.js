@@ -5,8 +5,17 @@ $(document).ready(function () {
             $(this).parent().addClass("table-row-clicked");
         }
     });
-});
-$("table tr td a").click(function () {
+    
+        $("table tr").click(function () {
+        document_role = $(this).find(".document-role").text();
+        document_description = $(this).find(".document-description").text();
+        $("#description_role").val(document_description);
+        $("#document-role").attr("value", document_role);
+        console.log(document_role);
+        console.log(document_description);
+    });
+    
+    $("table tr td a").click(function () {
     if ($(this).attr("accountLink") !== undefined) {
         currentAccountLink = $(this).attr("accountLink");
         $("table tr:gt(0)").removeClass("table-row-clicked");
@@ -16,4 +25,5 @@ $("table tr td a").click(function () {
 
 $(".message-exit").click(function () {
     $(this).parent().parent().css("display","none");
+});
 });
