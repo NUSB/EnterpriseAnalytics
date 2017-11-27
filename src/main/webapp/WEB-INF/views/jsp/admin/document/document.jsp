@@ -6,12 +6,14 @@
     <%@include file="../../jspf/head.jspf" %>
     <body>
         <%@include file="../../jspf/header.jspf" %>
+        <div class="grid-container-full">
         <div class="grid-container">
             <%@include file="../../jspf/adminMenu.jspf" %>
-            <div >
+            <div class="grid-container-full">
                 <%@include file="../../jspf/messages.jspf" %>
-<div class="grid-container-full">
+
 <div class="form-design">
+    
             <div class="grid-container-full">
                 <form:form method="POST" action="${sendTo}" class="data-form" modelAttribute="document" >
 
@@ -47,7 +49,7 @@
                     <div class="roles_document grid-container-cols-3">
                         <div class="form-input">
                             <p>Роли:</p>
-                            <input list="roles_document">
+                            <input list="roles_document" id="document-role">
                             <datalist id="roles_document" aria-required="true">
                                 <option value="Роль 1"></option>
                                 <option value="Роль 2"></option>
@@ -78,28 +80,28 @@
                         </tr>
 
                         <tr>
-                            <td>Роль 1</td>
-                            <td>Пописание</td>
+                            <td class="document-role">Роль 1</td>
+                            <td class="document-description">Пописание</td>
                             <td><a class="icons_table" href="#"><i class="demo-icon icon-trash-empty"></i></a></td>
                         </tr>
 
                         <tr>
-                            <td>Роль 2</td>
-                            <td>Пописание</td>
+                            <td class="document-role">Роль 2</td>
+                            <td class="document-description">Пописание</td>
                             <td><a class="icons_table" href="#"><i class="demo-icon icon-trash-empty"></i></a></td>
                         </tr>
 
                         <tr>
-                            <td>Роль 3</td>
-                            <td>Пописание</td>
+                            <td class="document-role">Роль 3</td>
+                            <td class="document-description">Пописание</td>
                             <td><a class="icons_table" href="#"><i class="demo-icon icon-trash-empty"></i></a></td>
                         </tr>
                     </table>
                 </div>
             </div>
-
+</div>
     </div>
-
+        </div>
 
 
         <%@include file="../../jspf/footer.jspf" %>

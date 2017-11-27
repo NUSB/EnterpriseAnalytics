@@ -67,7 +67,7 @@ nav ul li a:hover {
 
 /*TABLE*/
 .table-section {
-    margin: 15px 15px 0 0;
+    margin: 20px;
 }
 table {
     width: 100%;
@@ -228,15 +228,16 @@ table th {
 
 /*сообщения пользователю*/
 .message{
+    width:98%;
     background-color: #dddddd;
     padding: 10px 0 10px 10px;
     border-radius: 10px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 5px 0 rgba(0, 0, 0, 0.19);
-    margin-bottom: 10px;
+    margin:10px 0;
 }
 
 .message:hover{
-    margin-top: -3px;
+    margin-bot: 5px;
     padding: 13px 0 13px 13px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 4px 8px 0 rgba(0, 0, 0, 0.19);
 }
