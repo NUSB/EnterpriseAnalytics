@@ -115,16 +115,47 @@ public class DocumentController {
         model.addObject("responsibilityForDocuments", new ResponsibilityForDocuments());
         return model;
     }
-//    
-//    @RequestMapping(value = "/admin/document/{docId}/bisnesRole/update/{idRole}",method = RequestMethod.POST)
-//    public ModelAndView updateBisnesRoleToDocument(){
-//        
-//        return null;
-//    }
-//    
-//    @RequestMapping(value = "/admin/document/{docId}/bisnesRole/delete/{idRole}",method = RequestMethod.POST)
-//    public ModelAndView deleteBisnesRoleToDocument(){
-//        
-//        return null;
-//    }
+    
+    @RequestMapping(value = "/admin/document/{docId}/responsibilityForDocuments/update/{idRole}",method = RequestMethod.POST)
+    public ModelAndView updateBisnesRoleToDocument(@ModelAttribute("responsibilityForDocuments") ResponsibilityForDocuments responsibilityForDocuments
+            ,BindingResult result,@PathVariable("idRole") Integer id, @PathVariable("docId") Integer iddoc){
+        responsibilityForDocuments.setId(id);
+        ResponsibilityForDocuments rs = responsibilityForDocumentsDAO.getResponsibilityForDocumentsById(id);
+        rs.setAnnotation(responsibilityForDocuments.getAnnotation());
+        responsibilityForDocumentsDAO.update(rs);
+        
+        ModelAndView model = new ModelAndView("admin/document/document");
+        model.addObject("title", "Докуент № " + rs.getDocument().getId());
+        model.addObject("isNewDocument", false);
+        model.addObject("document", rs.getDocument());
+        model.addObject("bisnesRoles", bisnesRoleDAO.getAllBisnesRole());
+        model.addObject("sendTo", "update/" + rs.getDocument().getId());
+        model.addObject("responsibilityForDocuments", new ResponsibilityForDocuments());
+        return model;
+    }
+    
+    @RequestMapping(value = "/admin/document/{docId}/responsibilityForDocuments/delete/{idRole}",method = RequestMethod.GET)
+    public ModelAndView deleteBisnesRoleToDocument(@PathVariable("idRole") Integer id, @PathVariable("docId") Integer iddoc){
+        
+        ResponsibilityForDocuments rfd = responsibilityForDocumentsDAO.getResponsibilityForDocumentsById(id);
+        responsibilityForDocumentsDAO.delete(rfd);
+        
+        Document document = documentDAO.getDocumentById(iddoc);
+        ModelAndView model = new ModelAndView("admin/document/document");
+        model.addObject("title", "Докуент № " + document.getId());
+        model.addObject("isNewDocument", false);
+        model.addObject("document", document);
+        model.addObject("bisnesRoles", bisnesRoleDAO.getAllBisnesRole());
+        model.addObject("sendTo", "update/" + document.getId());
+        model.addObject("responsibilityForDocuments", new ResponsibilityForDocuments());
+        return model;
+    }
+    
+    @RequestMapping(value = "/admin/document/delete/{docId}", method = RequestMethod.GET)
+    public ModelAndView deleteDocuemnt(@PathVariable("docId") Integer iddoc){
+        Document document = documentDAO.getDocumentById(iddoc);
+        documentDAO.deleteDocument(document);
+        
+        return documentList();
+    }
 }

@@ -12,11 +12,11 @@ public interface DocumentDAO {
 
     public void save(Document acount);
 
-    public void deleteDocumentById(int id);
-
     public Document getDocumentById(int id);
 
     public void update(Document acount);
 
     public List<ResponsibilityForDocuments> getResponsibilityForDocument(Document document);
+
+    public void deleteDocument(Document document);
 }

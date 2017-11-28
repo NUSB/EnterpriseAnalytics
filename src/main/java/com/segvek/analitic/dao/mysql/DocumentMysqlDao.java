@@ -70,11 +70,6 @@ public class DocumentMysqlDao implements DocumentDAO {
     }
 
     @Override
-    public void deleteDocumentById(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public Document getDocumentById(int id) {
         String sql = "SELECT * FROM documents WHERE id=?";
         DocumentLazy a = DataAccessUtils.singleResult(jdbcTemplate.query(sql, documentRowMapper, id));
@@ -97,6 +92,16 @@ public class DocumentMysqlDao implements DocumentDAO {
     @Override
     public List<ResponsibilityForDocuments> getResponsibilityForDocument(Document document) {
         return responsibilityForDocumentsDAO.getResponsibilityForDocumentsByDocument(document);
+    }
+
+    @Override
+    public void deleteDocument(Document document) {
+        List<ResponsibilityForDocuments> list = responsibilityForDocumentsDAO.getResponsibilityForDocumentsByDocument(document);
+        for(ResponsibilityForDocuments rfd:list){
+            responsibilityForDocumentsDAO.delete(rfd);
+        }
+        String sql = "DELETE FROM documents WHERE id=?";
+        jdbcTemplate.update(sql, document.getId());
     }
 }
 

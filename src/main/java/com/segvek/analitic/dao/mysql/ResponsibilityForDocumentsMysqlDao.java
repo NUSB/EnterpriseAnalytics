@@ -76,6 +76,26 @@ public class ResponsibilityForDocumentsMysqlDao implements ResponsibilityForDocu
         String sql = "INSERT INTO `documents-hash-bisnes_roles`(idDocument, idBisnesRole, annotation)  VALUES (?,?,?)";
         jdbcTemplate.update(sql, rfd.getDocument().getId(),rfd.getBisnesRole().getId(),rfd.getAnnotation());
     }
+
+    @Override
+    public ResponsibilityForDocuments getResponsibilityForDocumentsById(Integer id) {
+        String sql = "SELECT * FROM `documents-hash-bisnes_roles` dr WHERE dr.id=?";
+        ResponsibilityForDocumentsLazy rfd = jdbcTemplate.queryForObject(sql, responsibilityForDocumentsRowMapper,id);
+        rfd.setResponsibilityForDocumentsDAO(this);
+        return rfd;
+    }
+
+    @Override
+    public void update(ResponsibilityForDocuments rs) {
+        String sql = "UPDATE `documents-hash-bisnes_roles` dr SET dr.idDocument=?, dr.idBisnesRole=?, dr.annotation=? WHERE id=?";
+        jdbcTemplate.update(sql,rs.getDocument().getId(),rs.getBisnesRole().getId(), rs.getAnnotation(),rs.getId());
+    }
+
+    @Override
+    public void delete(ResponsibilityForDocuments rfd) {
+        String sql = "DELETE FROM `documents-hash-bisnes_roles` WHERE id=?";
+        jdbcTemplate.update(sql, rfd.getId());
+    }
     
 }
 

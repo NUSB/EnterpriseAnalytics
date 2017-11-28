@@ -82,8 +82,8 @@
                                                 <td class="document-role">${item.bisnesRole.name}</td>
                                                 <td class="document-description">${item.annotation}</td>
                                                 <td>
-                                                    <a class="icons_table" ><i class="demo-icon icon-trash-empty"></i></a>
-                                                    <a class="icons_table"  pathUpdateCurrentRole="bisnesrole/update/8"><i class="demo-icon icon-edit"></i></a>
+                                                    <a class="icons_table" href="${pageContext.request.contextPath}/admin/document/${document.id}/responsibilityForDocuments/delete/${item.id}"><i class="demo-icon icon-trash-empty"></i></a>
+                                                    <a class="icons_table"  pathUpdateCurrentRole="${pageContext.request.contextPath}/admin/document/${document.id}/responsibilityForDocuments/update/${item.id}"><i class="demo-icon icon-edit"></i></a>
                                                 </td>
                                             </tr>
                                         </c:forEach>
