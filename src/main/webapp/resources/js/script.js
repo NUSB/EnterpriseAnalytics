@@ -56,4 +56,18 @@ $(document).ready(function () {
         rulesButtonsToggle();
         clickedCheck = 0;
     });
+    
+    
+    //User restriction area
+    $('input[userRestriction]').click(function () {
+        indexOfClicked = Number($(this).attr("userRestriction"));
+        $('input[userRestriction]').each(function(i) {
+            if (indexOfClicked < i) {
+                $(this).prop('checked', true);
+            }
+            if (indexOfClicked > i) {
+                $(this).prop('checked', false);
+            }
+        });
+        });
 });
