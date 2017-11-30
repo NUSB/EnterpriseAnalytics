@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User</title>
+</head>
+<body>
+<canvas style="border: 1px solid black" width="800" height="600" id="graphicFrame"></canvas>
+
+<script>
+    function GraphicFrame() {
+        var canvas = document.getElementById("graphicFrame");
+        var context = canvas.getContext("2d");
+        var bias = new Point(0, 0);
+
+        var oldPosition = null;
+        canvas.addEventListener("mousemove", function (event) {
+
+
+            if (oldPosition !== null) {
+                var dX = oldPosition.x - event.pageX;
+                var dY = oldPosition.y - event.pageY;
+                bias.x += dX;
+                bias.y += dY;
+                oldPosition = new Point(event.pageX, event.pageY);
+            }
+
+
+            graphicFrame.draw();
+        });
+        canvas.addEventListener("mousedown", function (event) {
+            oldPosition = new Point(event.pageX, event.pageY);
+        });
+        canvas.addEventListener("mouseup", function (event) {
+            oldPosition = null;
+        });
+
+        var rect = new Rect(200, 300);
+
+        this.draw = function () {
+            context.fillStyle = "#3e3e3e";
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            rect.draw(context, bias);
+        };
+
+
+        this.draw();
+        
+    }
+
+    function Point(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    function Rect(x, y) {
+        var width = 30;
+        var height = 90;
+        var color = "#FFFFFF";
+        var scale=2;
+        var text = "Учетник учетных учетностей"; //Бухгалтер, Работник отдела продаж
+        
+        this.draw = function (context, bias) {
+            context.strokeStyle = color;
+            context.beginPath();
+            context.arc(x-bias.x+width/2, y-bias.y+width/2, width/2, 0, 2*Math.PI);
+            context.moveTo(x-bias.x+width/2, y-bias.y+height/3);
+            context.lineTo(x-bias.x+width/2, y-bias.y+(2*height)/3);
+            context.lineTo(x-bias.x, y-bias.y+height);
+            context.moveTo(x-bias.x+width/2, y-bias.y+(2*height)/3);
+            context.lineTo(x-bias.x+width, y-bias.y+height);
+            context.moveTo(x-bias.x, y-bias.y+(4*height)/9);
+            context.lineTo(x-bias.x+width, y-bias.y+(4*height)/9);
+            context.fillStyle = color;
+            context.font = "14px Arial";
+            context.fillText(text, x-bias.x + (width - context.measureText(text).width)/2, y+height-bias.y+14);
+            context.stroke();
+        }
+    }
+
+
+    
+    graphicFrame = new GraphicFrame();
+</script>
+</body>
+</html>
