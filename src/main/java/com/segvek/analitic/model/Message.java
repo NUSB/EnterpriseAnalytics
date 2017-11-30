@@ -11,6 +11,8 @@ package com.segvek.analitic.model;
  */
 public class Message {
     public static final String TYPE_WARNING="warning";
+    public static final String TYPE_ERROR = "error";
+    
     String type = TYPE_WARNING;
     String text;
 

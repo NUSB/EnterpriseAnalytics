@@ -29,7 +29,7 @@ public class DocumentController {
 
     @Autowired
     BisnesRoleDAO bisnesRoleDAO;
-    
+
     @Autowired
     ResponsibilityForDocumentsDAO responsibilityForDocumentsDAO;
 
@@ -60,11 +60,12 @@ public class DocumentController {
         view.addObject("title", "Документ № " + document.getId());
 
         List<Message> messages = new ArrayList<Message>();
-        messages.add(new Message(Message.TYPE_WARNING, "Добавте списко ролей, которіе отвечают за єтот документ!!"));
+        messages.add(new Message(Message.TYPE_WARNING, "Заполните список ролей, которые отвечают за данный документ!"));
         view.addObject("messages", messages);
         view.addObject("isNewDocument", false);
+        model.addAttribute("responsibilityForDocuments", new ResponsibilityForDocuments());
         model.addAttribute("bisnesRoles", bisnesRoleDAO.getAllBisnesRole());
-        view.addObject("sendTo", "edit/" + document.getId());
+        view.addObject("sendTo", "update/" + document.getId());
         return view;
     }
 
@@ -75,6 +76,7 @@ public class DocumentController {
         if (document == null) {
             return "error";
         }
+        model.addAttribute("messages", documentValidator(document));
         model.addAttribute("title", "Докуент № " + document.getId());
         model.addAttribute("isNewDocument", false);
         model.addAttribute("document", document);
@@ -93,20 +95,20 @@ public class DocumentController {
     }
 
     @RequestMapping(value = "/admin/document/{docId}/responsibilityForDocuments/add", method = RequestMethod.POST)
-    public ModelAndView addBisnesRoleToDocument(WebRequest request
-            ,@ModelAttribute("responsibilityForDocuments") ResponsibilityForDocuments responsibilityForDocuments
-            ,BindingResult result,@PathVariable Integer docId) {
-        
+    public ModelAndView addBisnesRoleToDocument(WebRequest request,
+            @ModelAttribute("responsibilityForDocuments") ResponsibilityForDocuments responsibilityForDocuments,
+            BindingResult result, @PathVariable Integer docId) {
+
         Document doc = documentDAO.getDocumentById(docId);
         responsibilityForDocuments.setDocument(doc);
-        
+
         BisnesRole bisnesRole = bisnesRoleDAO.getBisnesRoleByName(request.getParameter("role"));
         responsibilityForDocuments.setBisnesRole(bisnesRole);
-        
+
         responsibilityForDocumentsDAO.save(responsibilityForDocuments);
-        
+
         ModelAndView model = new ModelAndView("admin/document/document");
-        
+
         model.addObject("title", "Докуент № " + doc.getId());
         model.addObject("isNewDocument", false);
         model.addObject("document", doc);
@@ -115,15 +117,15 @@ public class DocumentController {
         model.addObject("responsibilityForDocuments", new ResponsibilityForDocuments());
         return model;
     }
-    
-    @RequestMapping(value = "/admin/document/{docId}/responsibilityForDocuments/update/{idRole}",method = RequestMethod.POST)
-    public ModelAndView updateBisnesRoleToDocument(@ModelAttribute("responsibilityForDocuments") ResponsibilityForDocuments responsibilityForDocuments
-            ,BindingResult result,@PathVariable("idRole") Integer id, @PathVariable("docId") Integer iddoc){
+
+    @RequestMapping(value = "/admin/document/{docId}/responsibilityForDocuments/update/{idRole}", method = RequestMethod.POST)
+    public ModelAndView updateBisnesRoleToDocument(@ModelAttribute("responsibilityForDocuments") ResponsibilityForDocuments responsibilityForDocuments,
+            BindingResult result, @PathVariable("idRole") Integer id, @PathVariable("docId") Integer iddoc) {
         responsibilityForDocuments.setId(id);
         ResponsibilityForDocuments rs = responsibilityForDocumentsDAO.getResponsibilityForDocumentsById(id);
         rs.setAnnotation(responsibilityForDocuments.getAnnotation());
         responsibilityForDocumentsDAO.update(rs);
-        
+
         ModelAndView model = new ModelAndView("admin/document/document");
         model.addObject("title", "Докуент № " + rs.getDocument().getId());
         model.addObject("isNewDocument", false);
@@ -133,15 +135,16 @@ public class DocumentController {
         model.addObject("responsibilityForDocuments", new ResponsibilityForDocuments());
         return model;
     }
-    
-    @RequestMapping(value = "/admin/document/{docId}/responsibilityForDocuments/delete/{idRole}",method = RequestMethod.GET)
-    public ModelAndView deleteBisnesRoleToDocument(@PathVariable("idRole") Integer id, @PathVariable("docId") Integer iddoc){
-        
+
+    @RequestMapping(value = "/admin/document/{docId}/responsibilityForDocuments/delete/{idRole}", method = RequestMethod.GET)
+    public ModelAndView deleteBisnesRoleToDocument(@PathVariable("idRole") Integer id, @PathVariable("docId") Integer iddoc) {
+
         ResponsibilityForDocuments rfd = responsibilityForDocumentsDAO.getResponsibilityForDocumentsById(id);
         responsibilityForDocumentsDAO.delete(rfd);
-        
+
         Document document = documentDAO.getDocumentById(iddoc);
         ModelAndView model = new ModelAndView("admin/document/document");
+        model.addObject("messages", documentValidator(document));
         model.addObject("title", "Докуент № " + document.getId());
         model.addObject("isNewDocument", false);
         model.addObject("document", document);
@@ -150,12 +153,19 @@ public class DocumentController {
         model.addObject("responsibilityForDocuments", new ResponsibilityForDocuments());
         return model;
     }
-    
+
     @RequestMapping(value = "/admin/document/delete/{docId}", method = RequestMethod.GET)
-    public ModelAndView deleteDocuemnt(@PathVariable("docId") Integer iddoc){
+    public ModelAndView deleteDocuemnt(@PathVariable("docId") Integer iddoc) {
         Document document = documentDAO.getDocumentById(iddoc);
         documentDAO.deleteDocument(document);
-        
         return documentList();
+    }
+
+    private List<Message> documentValidator(Document document) {
+        List<Message> messages = new ArrayList<Message>();
+        if (document.getResponsibilityForDocumentses().isEmpty()) {
+            messages.add(new Message(Message.TYPE_ERROR, "Внимание! В данных обнаружена критическая ошибка. Список ролей отвечающих за документ, не может быть пуст!"));
+        }
+        return messages;
     }
 }

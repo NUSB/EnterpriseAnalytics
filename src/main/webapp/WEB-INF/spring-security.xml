@@ -12,7 +12,6 @@
    
     <http auto-config="true" path-type="regex" use-expressions="true">
         <intercept-url pattern="/admin.*" access="hasRole('ROLE_ADMIN')"/>
-        <intercept-url pattern="/user.*" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/user.*" access="hasRole('ROLE_USER')"/>
         <form-login
             login-page="/login"
