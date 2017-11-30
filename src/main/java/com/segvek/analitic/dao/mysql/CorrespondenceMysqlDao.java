@@ -57,11 +57,11 @@ public class CorrespondenceMysqlDao implements CorrespondenceDAO {
         String sql = "SELECT a.id FROM acount a INNER JOIN correspondence c ON a.id = c.debet WHERE c.id=?";
         return DataAccessUtils.singleResult(
                 jdbcTemplate.query(sql, new RowMapper<Acount>() {
-            @Override
-            public Acount mapRow(ResultSet rs, int i) throws SQLException {
-                return acountDAO.getAcountById(rs.getInt("id"));
-            }
-        }, correspondence.getId()));
+                    @Override
+                    public Acount mapRow(ResultSet rs, int i) throws SQLException {
+                        return acountDAO.getAcountById(rs.getInt("id"));
+                    }
+                }, correspondence.getId()));
     }
 
     @Override
@@ -69,11 +69,11 @@ public class CorrespondenceMysqlDao implements CorrespondenceDAO {
         String sql = "SELECT a.id FROM acount a INNER JOIN correspondence c ON a.id = c.credit WHERE c.id=?";
         return DataAccessUtils.singleResult(
                 jdbcTemplate.query(sql, new RowMapper<Acount>() {
-            @Override
-            public Acount mapRow(ResultSet rs, int i) throws SQLException {
-                return acountDAO.getAcountById(rs.getInt("id"));
-            }
-        }, correspondence.getId()));
+                    @Override
+                    public Acount mapRow(ResultSet rs, int i) throws SQLException {
+                        return acountDAO.getAcountById(rs.getInt("id"));
+                    }
+                }, correspondence.getId()));
     }
 
     @Override
@@ -81,11 +81,36 @@ public class CorrespondenceMysqlDao implements CorrespondenceDAO {
         String sql = "SELECT d.id FROM documents d INNER JOIN correspondence c ON d.id = c.documentId WHERE c.id=?";
         return DataAccessUtils.singleResult(
                 jdbcTemplate.query(sql, new RowMapper<Document>() {
-            @Override
-            public Document mapRow(ResultSet rs, int i) throws SQLException {
-                return documentDAO.getDocumentById(rs.getInt("id"));
-            }
-        }, document.getId()));
+                    @Override
+                    public Document mapRow(ResultSet rs, int i) throws SQLException {
+                        return documentDAO.getDocumentById(rs.getInt("id"));
+                    }
+                }, document.getId()));
+    }
+
+    @Override
+    public void save(Correspondence correspondence) {
+        String sql = "INSERT INTO correspondence(debet, credit, documentId, annotation)VALUES (?,?,?,?)";
+        jdbcTemplate.update(sql, correspondence.getDebet().getId(),
+                correspondence.getCredit().getId(),
+                correspondence.getDocument().getId(),
+                correspondence.getAnnotation());
+    }
+
+    @Override
+    public void delete(Correspondence correspondece) {
+        String sql = "DELETE FROM correspondence WHERE id=?";
+        jdbcTemplate.update(sql, correspondece.getId());
+    }
+
+    @Override
+    public void update(Correspondence correspondence) {
+        String sql = "UPDATE correspondence c SET c.debet=?, c.credit=?, c.documentId=?, c.annotation=? WHERE id=?";
+        jdbcTemplate.update(sql, correspondence.getDebet().getId(),
+                 correspondence.getCredit().getId(),
+                 correspondence.getDocument().getId(),
+                 correspondence.getAnnotation(),
+                 correspondence.getId());
     }
 
 }

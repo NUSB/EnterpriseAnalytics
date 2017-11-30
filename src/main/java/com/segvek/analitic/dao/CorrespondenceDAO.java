@@ -18,4 +18,10 @@ public interface CorrespondenceDAO {
     public Acount getCreditAcountByCorrespondence(Correspondence correspondence);
 
     public Document getDocumentByCorrespondence(Correspondence document);
+
+    public void save(Correspondence correspondence);
+
+    public void delete(Correspondence correspondeceById);
+
+    public void update(Correspondence correspondence);
 }

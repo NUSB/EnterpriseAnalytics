@@ -48,7 +48,10 @@ public class DocumentMysqlDao implements DocumentDAO {
 
     @Override
     public Document getDocumentByName(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String sql="SELECT * FROM documents d WHERE d.name=?";
+        DocumentLazy a = DataAccessUtils.singleResult(jdbcTemplate.query(sql, documentRowMapper, name));
+        a.setDocumentDAO(this);
+        return a; 
     }
 
     @Override

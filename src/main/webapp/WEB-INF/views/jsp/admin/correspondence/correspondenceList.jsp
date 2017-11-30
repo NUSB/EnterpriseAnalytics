@@ -10,7 +10,7 @@
             <%@include file="../../jspf/adminMenu.jspf" %>
             <div class="table-section">
                 <h1 class="page_title">Корреспонденция счетов</h1>
-                <a class="icons_table" href="${pageContext.request.contextPath}/admin/bisnesRole/add"><i class="demo-icon icon-doc-add"></i></a>
+                <a class="icons_table" href="${pageContext.request.contextPath}/admin/correspondence/add"><i class="demo-icon icon-doc-add"></i></a>
                 <table>
                     <tr>
                         <th>№</th>
@@ -26,8 +26,8 @@
                             <td>${correspondence.credit.code} (<a href="${pageContext.request.contextPath}/admin/acount/${correspondence.credit.id}">${correspondence.credit.name}</a>)</td>
                             <td><a href="${pageContext.request.contextPath}/admin/document/${correspondence.document.id}">${correspondence.document.name}</a></td>
                             <td>
-                                <a class="icons_table" href="${pageContext.request.contextPath}/admin/bisnesRole/${bisnesRole.id}"><i class="demo-icon icon-edit"></i></a>
-                                <a class="icons_table" href="${pageContext.request.contextPath}/admin/bisnesRole/delete/${bisnesRole.id}"><i class="demo-icon icon-trash-empty"></i></a>
+                                <a class="icons_table" href="${pageContext.request.contextPath}/admin/correspondence/${correspondence.id}"><i class="demo-icon icon-edit"></i></a>
+                                <a class="icons_table" href="${pageContext.request.contextPath}/admin/correspondence/delete/${correspondence.id}"><i class="demo-icon icon-trash-empty"></i></a>
                             </td>
                         </tr>
                     </c:forEach>
