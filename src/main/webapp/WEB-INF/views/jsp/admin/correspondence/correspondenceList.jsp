@@ -24,7 +24,7 @@
                             <td>${correspondence.id}</td>
                             <td>${correspondence.debet.code} (<a href="${pageContext.request.contextPath}/admin/acount/${correspondence.debet.id}">${correspondence.debet.name}</a>)</td>
                             <td>${correspondence.credit.code} (<a href="${pageContext.request.contextPath}/admin/acount/${correspondence.credit.id}">${correspondence.credit.name}</a>)</td>
-                            <td><a href="#">${correspondence.document.name}</a></td>
+                            <td><a href="${pageContext.request.contextPath}/admin/document/${correspondence.document.id}">${correspondence.document.name}</a></td>
                             <td>
                                 <a class="icons_table" href="${pageContext.request.contextPath}/admin/bisnesRole/${bisnesRole.id}"><i class="demo-icon icon-edit"></i></a>
                                 <a class="icons_table" href="${pageContext.request.contextPath}/admin/bisnesRole/delete/${bisnesRole.id}"><i class="demo-icon icon-trash-empty"></i></a>

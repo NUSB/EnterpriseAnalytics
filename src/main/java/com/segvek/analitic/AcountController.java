@@ -2,6 +2,8 @@ package com.segvek.analitic;
 
 import com.segvek.analitic.dao.AcountDAO;
 import com.segvek.analitic.model.Acount;
+import java.util.LinkedList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,7 +34,12 @@ public class AcountController {
         ModelAndView view = new ModelAndView("admin/acount/acount");
         view.addObject("title", "Создать счет");
         view.addObject("acount", new Acount());
-        view.addObject("acounts", acountDAO.getAllAcount());
+        List <Acount> l = new LinkedList<Acount>();
+        for(Acount a:acountDAO.getAllAcount()){
+            if(a.isGroup())
+                l.add(a);
+        }
+        view.addObject("groupAcounts", l);
         view.addObject("sendTo","add");
         return view;
     }
@@ -40,7 +47,7 @@ public class AcountController {
     @RequestMapping(value = "/admin/acount/add", method = RequestMethod.POST)
     public ModelAndView acountAddAction(WebRequest request, @ModelAttribute("acount") Acount acount,
             BindingResult result, ModelMap model) {
-        String parentName = request.getParameter("parent");
+        String parentName = request.getParameter("parentGroup");
         if (parentName != null && parentName.length() > 0) {
             Acount parent = acountDAO.getAcountByName(parentName);
             acount.setParent(parent);
@@ -73,7 +80,7 @@ public class AcountController {
     @RequestMapping(value = "/admin/acount/update/{id}", method = RequestMethod.POST)
     public ModelAndView acountUpdateAction(WebRequest request, @ModelAttribute("acount") Acount acount,
             BindingResult result, ModelMap model,@PathVariable Integer id) {
-        String parentName = request.getParameter("parent");
+        String parentName = request.getParameter("parentGroup");
         if (parentName != null && parentName.length() > 0) {
             Acount parent = acountDAO.getAcountByName(parentName);
             acount.setParent(parent);

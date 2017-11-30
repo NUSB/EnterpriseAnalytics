@@ -40,9 +40,9 @@
                         <p>Родитель:</p>
                     </div>
                     <div class="form-input">
-                        <input list="parents" name="parent" value="${acount.parent.name}"/>
+                        <input list="parents" name="parentGroup" value="${acount.parent.name}"/>
                         <datalist id="parents" aria-required="true">
-                            <c:forEach items="${acounts}" var="current_parrent">
+                            <c:forEach items="${groupAcounts}" var="current_parrent">
                                 <option value="${current_parrent.name}">${current_parrent.code}</option>
                             </c:forEach>
                         </datalist>
