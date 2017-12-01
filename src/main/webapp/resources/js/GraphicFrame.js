@@ -52,29 +52,35 @@ function GraphicFrame() {
         for (let i = 0; i < chartObjects.length; i++) {
             chartObjects[i].draw(context, bias, TypeViewChartObject.PASSIVE, scale);
         }
+        
+        //todo: Код по отображению линий затемненных
+        
         if (activeChartObject !== null) {
             context.fillStyle = "rgba(0, 0, 0, 0.85)";
             context.fillRect(0, 0, canvas.width, canvas.height);
         }
-        //            todo: Код по отображению линий
+        //todo: Код по отображению линий связующим
+        //todo: Код по отображению смежных елеметов диаграммы 
         if (activeChartObject !== null) {
             activeChartObject.draw(context, bias, TypeViewChartObject.ACTIVE, scale);
         }
         
+        drawCenter();
+    };
+
+    let drawCenter = function(){
         context.strokeStyle = "#FF0000";
         context.beginPath();
         context.moveTo(-bias.x,-40-bias.y);
         context.lineTo(-bias.x,40-bias.y);     
         context.stroke();
         context.closePath();
-        context.beginPath()
-//        context.strokeStyle = "#00FF00";
+        context.beginPath();
         context.moveTo(40-bias.x,-bias.y);
         context.lineTo(-40-bias.x,-bias.y);     
         context.stroke();
         context.closePath();
     };
-
 }
 
 function ChartModel() {
@@ -183,64 +189,37 @@ function Renderer(chartObject) {
 
 function DefaultRenderer(chartObject) {
     Renderer.call(this, chartObject);
-    var width = 180;
-    var height = 40;
+    this.width = 180;
+    this.height = 40;
     this.fillColor = "#3e3e3e";
     this.color = "#ff000f";
-    var fontSize = 14;
+    this.fontSize = 14;
 
     this.draw = function (context, bias, scale) {
         context.fillStyle = this.fillColor;
         context.beginPath();
-        context.fillRect(chartObject.position.x * scale - bias.x, chartObject.position.y * scale - bias.y, width * scale, height * scale);
+        context.fillRect(chartObject.position.x * scale - bias.x, chartObject.position.y * scale - bias.y, this.width * scale, this.height * scale);
         context.strokeStyle = this.color;
-        context.strokeRect(chartObject.position.x * scale - bias.x, chartObject.position.y * scale - bias.y, width * scale, height * scale);
+        context.strokeRect(chartObject.position.x * scale - bias.x, chartObject.position.y * scale - bias.y, this.width * scale, this.height * scale);
         context.closePath();
         context.fillStyle = this.color;
-        context.font = (fontSize * scale) + "px Arial";
-        var text = "default renderer: " + chartObject.name;
-        context.fillText(text, chartObject.position.x * scale - bias.x + (width * scale - context.measureText(text).width) / 2, chartObject.position.y * scale - bias.y + height * scale / 2 + fontSize / 3);
+        context.font = (this.fontSize * scale) + "px Arial";
+        var text = chartObject.name;
+        context.fillText(text, chartObject.position.x * scale - bias.x + (this.width * scale - context.measureText(text).width) / 2, chartObject.position.y * scale - bias.y + this.height * scale / 2 + this.fontSize / 3);
         context.stroke();
-    }
+    };
 
     this.containsPoint = function (point, scale) {
         return point.x > chartObject.position.x * scale
-                && point.x < chartObject.position.x * scale + width * scale
+                && point.x < chartObject.position.x * scale + this.width * scale
                 && point.y > chartObject.position.y * scale
-                && point.y < chartObject.position.y * scale + height * scale;
+                && point.y < chartObject.position.y * scale + this.height * scale;
     };
-
 }
 
 function DocumentPassiveRenderer(chartObject) {
-    Renderer.call(this, chartObject);
-    this.fillColor = "#3e3e3e";
+    DefaultRenderer.call(this, chartObject);
     this.color = "#ffffff";
-    var width = 180;
-    var height = 40;
-    var fontSize = 14;
-
-    this.draw = function (context, bias, scale) {
-        context.fillStyle = this.fillColor;
-        context.beginPath();
-        context.fillRect(chartObject.position.x * scale - bias.x, chartObject.position.y * scale - bias.y, width * scale, height * scale);
-        context.strokeStyle = this.color;
-        context.strokeRect(chartObject.position.x * scale - bias.x, chartObject.position.y * scale - bias.y, width * scale, height * scale);
-        context.fillStyle = this.color;
-        context.closePath();
-        context.font = fontSize * scale + "px Arial";
-        context.fillText(chartObject.name
-                , chartObject.position.x * scale - bias.x + (width * scale - context.measureText(chartObject.name).width) / 2
-                , chartObject.position.y * scale - bias.y + height * scale / 2 + fontSize / 3);
-        context.stroke();
-    }
-
-    this.containsPoint = function (point, scale) {
-        return point.x > chartObject.position.x * scale
-                && point.x < chartObject.position.x * scale + width * scale
-                && point.y > chartObject.position.y * scale
-                && point.y < chartObject.position.y * scale + height * scale;
-    };
 }
 function DocumentActiveRenderer(chartObject) {
     DocumentPassiveRenderer.call(this, chartObject);
@@ -249,11 +228,10 @@ function DocumentActiveRenderer(chartObject) {
 
 
 function AccountPassiveRenderer(chartObject) {
-    Renderer.call(this, chartObject);
+    DefaultRenderer.call(this, chartObject);
     this.fillColor = "#3e3e3e";
     this.color = "#FFFFFF";
     var radius = 25;
-    var fontSize = 14;
 
 
     this.draw = function (context, bias, scale) {
@@ -265,10 +243,10 @@ function AccountPassiveRenderer(chartObject) {
         context.stroke();
         context.fillStyle = this.color;
         context.closePath();
-        context.font = fontSize * scale + "px Arial";
-        context.fillText(chartObject.name, chartObject.position.x * scale - bias.x + (radius * scale - context.measureText(chartObject.name).width) / 2 - radius * scale / 2, chartObject.position.y * scale - bias.y + fontSize / 3);
+        context.font = this.fontSize * scale + "px Arial";
+        context.fillText(chartObject.name, chartObject.position.x * scale - bias.x + (radius * scale - context.measureText(chartObject.name).width) / 2 - radius * scale / 2, chartObject.position.y * scale - bias.y + this.fontSize / 3);
         context.stroke();
-    }
+    };
 
     this.containsPoint = function (point, scale) {
         return (Math.pow(point.x - chartObject.position.x * scale, 2) + Math.pow(point.y - chartObject.position.y * scale, 2)) < Math.pow(radius * scale, 2);
@@ -280,37 +258,29 @@ function AccountActiveRenderer(chartObject) {
 }
 
 function RolePassiveRenderer(chartObject) {
-    Renderer.call(this, chartObject);
+    DefaultRenderer.call(this, chartObject);
     this.color = "#FFFFFF";
-    var fontSize = 14;
-    var width = 30;
-    var height = 90;
+    this.width = 30;
+    this.height = 90;
 
     this.draw = function (context, bias, scale) {
         context.strokeStyle = this.color;
         context.beginPath();
-        context.arc(chartObject.position.x * scale - bias.x + width * scale / 2, chartObject.position.y * scale - bias.y + width * scale / 2, width * scale / 2, 0, 2 * Math.PI);
-        context.moveTo(chartObject.position.x * scale - bias.x + width * scale / 2, chartObject.position.y * scale - bias.y + height * scale / 3);
-        context.lineTo(chartObject.position.x * scale - bias.x + width * scale / 2, chartObject.position.y * scale - bias.y + (7 * height * scale) / 9);
-        context.lineTo(chartObject.position.x * scale - bias.x, chartObject.position.y * scale - bias.y + height * scale);
-        context.moveTo(chartObject.position.x * scale - bias.x + width * scale / 2, chartObject.position.y * scale - bias.y + (7 * height * scale) / 9);
-        context.lineTo(chartObject.position.x * scale - bias.x + width * scale, chartObject.position.y * scale - bias.y + height * scale);
-        context.moveTo(chartObject.position.x * scale - bias.x, chartObject.position.y * scale - bias.y + (4 * height * scale) / 9);
-        context.lineTo(chartObject.position.x * scale - bias.x + width * scale, chartObject.position.y * scale - bias.y + (4 * height * scale) / 9);
+        context.arc(chartObject.position.x * scale - bias.x + this.width * scale / 2, chartObject.position.y * scale - bias.y + this.width * scale / 2, this.width * scale / 2, 0, 2 * Math.PI);
+        context.moveTo(chartObject.position.x * scale - bias.x + this.width * scale / 2, chartObject.position.y * scale - bias.y + this.height * scale / 3);
+        context.lineTo(chartObject.position.x * scale - bias.x + this.width * scale / 2, chartObject.position.y * scale - bias.y + (7 * this.height * scale) / 9);
+        context.lineTo(chartObject.position.x * scale - bias.x, chartObject.position.y * scale - bias.y + this.height * scale);
+        context.moveTo(chartObject.position.x * scale - bias.x + this.width * scale / 2, chartObject.position.y * scale - bias.y + (7 * this.height * scale) / 9);
+        context.lineTo(chartObject.position.x * scale - bias.x + this.width * scale, chartObject.position.y * scale - bias.y + this.height * scale);
+        context.moveTo(chartObject.position.x * scale - bias.x, chartObject.position.y * scale - bias.y + (4 * this.height * scale) / 9);
+        context.lineTo(chartObject.position.x * scale - bias.x + this.width * scale, chartObject.position.y * scale - bias.y + (4 * this.height * scale) / 9);
         context.closePath();
         context.stroke();
 
         context.fillStyle = this.color;
-        context.font = (fontSize * scale) + "px Arial";
-        context.fillText(chartObject.name, chartObject.position.x * scale - bias.x + (width * scale - context.measureText(chartObject.name).width) / 2, chartObject.position.y * scale + height * scale - bias.y + fontSize * scale);
+        context.font = (this.fontSize * scale) + "px Arial";
+        context.fillText(chartObject.name, chartObject.position.x * scale - bias.x + (this.width * scale - context.measureText(chartObject.name).width) / 2, chartObject.position.y * scale + this.height * scale - bias.y + this.fontSize * scale);
         context.stroke();
-    }
-
-    this.containsPoint = function (point, scale) {
-        return point.x > chartObject.position.x * scale
-                && point.x < chartObject.position.x * scale + width * scale
-                && point.y > chartObject.position.y * scale
-                && point.y < chartObject.position.y * scale + height * scale;
     };
 }
 function RoleActiveRenderer(chartObject) {
@@ -320,32 +290,22 @@ function RoleActiveRenderer(chartObject) {
 }
 
 function CorrespondencePassiveRenderer(chartObject) {
-    Renderer.call(this, chartObject);
+    DefaultRenderer.call(this, chartObject);
     this.fillColor = "#3e3e3e";
     this.color = "#FFFFFF";
-    var width = 30;
-    var height = 20;
+    this.width = 30;
+    this.height = 20;
 
     this.draw = function (context, bias, scale) {
         context.beginPath();
-        context.moveTo(chartObject.position.x * scale - bias.x + width * scale / 2, chartObject.position.y * scale - bias.y);
-        context.lineTo(chartObject.position.x * scale - bias.x + width * scale, chartObject.position.y * scale - bias.y + height * scale);
-        context.lineTo(chartObject.position.x * scale - bias.x, chartObject.position.y * scale - bias.y + height * scale);
+        context.moveTo(chartObject.position.x * scale - bias.x + this.width * scale / 2, chartObject.position.y * scale - bias.y);
+        context.lineTo(chartObject.position.x * scale - bias.x + this.width * scale, chartObject.position.y * scale - bias.y + this.height * scale);
+        context.lineTo(chartObject.position.x * scale - bias.x, chartObject.position.y * scale - bias.y + this.height * scale);
         context.closePath();
-
         context.strokeStyle = this.color;
         context.stroke();
-
         context.fillStyle = this.fillColor;
         context.fill();
-
-    }
-
-    this.containsPoint = function (point, scale) {
-        return point.x > chartObject.position.x * scale
-                && point.x < chartObject.position.x * scale + width * scale
-                && point.y > chartObject.position.y * scale
-                && point.y < chartObject.position.y * scale + height * scale;
     };
 }
 function CorrespondenceActiveRenderer(chartObject) {
@@ -370,5 +330,5 @@ var TypeViewChartObject = {
 //</editor-fold>
 
 
-graphicFrame = new GraphicFrame();
+var graphicFrame = new GraphicFrame();
 graphicFrame.draw();
