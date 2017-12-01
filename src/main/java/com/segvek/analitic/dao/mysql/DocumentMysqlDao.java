@@ -3,6 +3,7 @@ package com.segvek.analitic.dao.mysql;
 import com.segvek.analitic.dao.DocumentDAO;
 import com.segvek.analitic.dao.ResponsibilityForDocumentsDAO;
 import com.segvek.analitic.dao.lazy.DocumentLazy;
+import com.segvek.analitic.model.BisnesRole;
 import com.segvek.analitic.model.Document;
 import com.segvek.analitic.model.ResponsibilityForDocuments;
 import java.awt.Point;
@@ -37,9 +38,9 @@ public class DocumentMysqlDao implements DocumentDAO {
     @Override
     public List<Document> getAllDocument() {
         String sql = "SELECT * FROM documents;";
-        List<DocumentLazy> acounts = jdbcTemplate.query(sql, documentRowMapper);
+        List<DocumentLazy> docuemtns = jdbcTemplate.query(sql, documentRowMapper);
         List<Document> res = new ArrayList<Document>();
-        for (DocumentLazy a : acounts) {
+        for (DocumentLazy a : docuemtns) {
             a.setDocumentDAO(this);
             res.add(a);
         }
@@ -105,6 +106,18 @@ public class DocumentMysqlDao implements DocumentDAO {
         }
         String sql = "DELETE FROM documents WHERE id=?";
         jdbcTemplate.update(sql, document.getId());
+    }
+
+    @Override
+    public List<Document> getDocumentsByBisnesRole(BisnesRole bisnesRole) {
+        String sql = "SELECT d.* FROM documents d INNER JOIN `documents-hash-bisnes_roles` dr ON d.id = dr.idDocument WHERE dr.idBisnesRole=?";
+        List<DocumentLazy> docuemtns = jdbcTemplate.query(sql, documentRowMapper,bisnesRole.getId());
+        List<Document> res = new ArrayList<Document>();
+        for (DocumentLazy a : docuemtns) {
+            a.setDocumentDAO(this);
+            res.add(a);
+        }
+        return res;
     }
 }
 

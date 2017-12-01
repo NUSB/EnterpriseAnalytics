@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.segvek.analitic;
+package com.segvek.analitic.controller.admin;
 
 import com.segvek.analitic.dao.AcountDAO;
 import com.segvek.analitic.dao.CorrespondenceDAO;
@@ -20,6 +20,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
+@RequestMapping(value = "/admin/correspondence")
 public class CorrecpondenceController {
 
     @Autowired
@@ -31,14 +32,14 @@ public class CorrecpondenceController {
     @Autowired
     DocumentDAO documentDAO;
 
-    @RequestMapping(value = "/admin/correspondence", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public ModelAndView correspondenceList() {
         ModelAndView view = new ModelAndView("/admin/correspondence/correspondenceList");
         view.addObject("correspondences", correspondenceDAO.getAllCorrespondences());
         return view;
     }
 
-    @RequestMapping(value = "/admin/correspondence/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ModelAndView correspondenceView(@PathVariable("id") Integer correspondenceId) {
         ModelAndView mav = new ModelAndView("/admin/correspondence/correspondence");
         mav.addObject("title", "Корреспонденция счетов");
@@ -49,7 +50,7 @@ public class CorrecpondenceController {
         return mav;
     }
 
-    @RequestMapping(value = "/admin/correspondence/add", method = RequestMethod.GET)
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
     public ModelAndView correspondenceAddForm() {
         ModelAndView mav = new ModelAndView("/admin/correspondence/correspondence");
         mav.addObject("title", "Новая корреспонденция счетов");
@@ -59,7 +60,7 @@ public class CorrecpondenceController {
         return mav;
     }
 
-    @RequestMapping(value = "/admin/correspondence/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ModelAndView correspondenceAddAction(WebRequest request) {
         Acount debet = acountDAO.getAcountByName(request.getParameter("debet"));
         Acount credit = acountDAO.getAcountByName(request.getParameter("credit"));
@@ -70,13 +71,13 @@ public class CorrecpondenceController {
         return correspondenceList();
     }
 
-    @RequestMapping(value = "/admin/correspondence/delete/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
     public ModelAndView deleteCorrespondence(@PathVariable("id") Integer correspondenceId) {
         correspondenceDAO.delete(correspondenceDAO.getCorrespondeceById(correspondenceId));
         return correspondenceList();
     }
 
-    @RequestMapping(value = "/admin/correspondence/update/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
     public ModelAndView updateCorrespondence(WebRequest request, @PathVariable("id") Integer correspondenceId) {
         Correspondence correspondence = correspondenceDAO.getCorrespondeceById(correspondenceId);
         correspondence.setDebet(acountDAO.getAcountByName(request.getParameter("debet")));

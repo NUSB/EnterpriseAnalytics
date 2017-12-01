@@ -9,13 +9,14 @@
 
             <%@include file="../../jspf/adminMenu.jspf" %>
             <div class="table-section">
+                <%@include file="../../jspf/messages.jspf" %>
                 <h1 class="page_title">Роли учасников бизнес процессов</h1>
                 <a class="icons_table" href="${pageContext.request.contextPath}/admin/bisnesRole/add"><i class="demo-icon icon-doc-add"></i></a>
                 <table>
                     <tr>
                         <th>№</th>
                         <th>Наименование</th>
-                        <th>Подчиненн</th>
+                        <th>Подчинен</th>
                         <th>Действие</th>
                     </tr>
                     <c:forEach items="${bisnesRoles}" var="bisnesRole">
