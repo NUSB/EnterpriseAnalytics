@@ -1,10 +1,10 @@
 package com.segvek.analitic.dao.mysql;
 
-import com.segvek.analitic.dao.BisnesRoleDAO;
 import com.segvek.analitic.dao.DocumentDAO;
+import com.segvek.analitic.dao.ResponsibilityForDocumentsDAO;
 import com.segvek.analitic.dao.lazy.DocumentLazy;
-import com.segvek.analitic.model.BisnesRole;
 import com.segvek.analitic.model.Document;
+import com.segvek.analitic.model.ResponsibilityForDocuments;
 import java.awt.Point;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,9 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,11 +29,11 @@ public class DocumentMysqlDao implements DocumentDAO {
     JdbcTemplate jdbcTemplate;
 
     @Autowired
-    BisnesRoleDAO bisnesRoleDAO;
-
-    @Autowired
     DocumentRowMapper documentRowMapper;
 
+    @Autowired
+    ResponsibilityForDocumentsDAO responsibilityForDocumentsDAO;
+    
     @Override
     public List<Document> getAllDocument() {
         String sql = "SELECT * FROM documents;";
@@ -50,7 +48,10 @@ public class DocumentMysqlDao implements DocumentDAO {
 
     @Override
     public Document getDocumentByName(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String sql="SELECT * FROM documents d WHERE d.name=?";
+        DocumentLazy a = DataAccessUtils.singleResult(jdbcTemplate.query(sql, documentRowMapper, name));
+        a.setDocumentDAO(this);
+        return a; 
     }
 
     @Override
@@ -60,20 +61,15 @@ public class DocumentMysqlDao implements DocumentDAO {
         jdbcTemplate.update(
                 new PreparedStatementCreator() {
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-                PreparedStatement ps = connection.prepareStatement(INSERT_SQL,Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement ps = connection.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS);
                 ps.setString(1, document.getName());
                 ps.setString(2, document.getAnnotation());
                 ps.setInt(3, document.getPosition().x);
                 ps.setInt(4, document.getPosition().y);
                 return ps;
             }
-        },keyHolder);
+        }, keyHolder);
         document.setId(keyHolder.getKey().intValue());
-    }
-
-    @Override
-    public void deleteDocumentById(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -85,42 +81,31 @@ public class DocumentMysqlDao implements DocumentDAO {
     }
 
     @Override
-    public void update(Document acount) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void update(Document document) {
+        String sql = "UPDATE documents d SET d.name=?, d.annotation=?, "
+                + "d.positionX=?, d.positionY=? WHERE d.id=?;";
+        jdbcTemplate.update(sql
+                , document.getName()
+                , document.getAnnotation()
+                , document.getPosition().x
+                , document.getPosition().y
+                , document.getId());
     }
 
     @Override
-    public Map<BisnesRole, String> getBisnesRolesByDocument(Document document) {
-        class MapElement {
-
-            BisnesRole br;
-            String annotation;
-
-            public MapElement(BisnesRole br, String annotation) {
-                this.br = br;
-                this.annotation = annotation;
-            }
-        }
-        class MapElementRowMapper implements RowMapper<MapElement> {
-
-            @Override
-            public MapElement mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new MapElement(
-                        bisnesRoleDAO.getBisnesRoleById(rs.getInt("idBisnesRole")),
-                        rs.getString("annotation"));
-            }
-        }
-        String sql = "SELECT * FROM `documents-hash-bisnes_roles` WHERE idDocument=?";
-
-        List<MapElement> res = jdbcTemplate.query(sql, new MapElementRowMapper(), document.getId());
-        Map<BisnesRole, String> map = new HashMap<BisnesRole, String>(res.size());
-        for (MapElement el : res) {
-            map.put(el.br, el.annotation);
-        }
-
-        return map;
+    public List<ResponsibilityForDocuments> getResponsibilityForDocument(Document document) {
+        return responsibilityForDocumentsDAO.getResponsibilityForDocumentsByDocument(document);
     }
 
+    @Override
+    public void deleteDocument(Document document) {
+        List<ResponsibilityForDocuments> list = responsibilityForDocumentsDAO.getResponsibilityForDocumentsByDocument(document);
+        for(ResponsibilityForDocuments rfd:list){
+            responsibilityForDocumentsDAO.delete(rfd);
+        }
+        String sql = "DELETE FROM documents WHERE id=?";
+        jdbcTemplate.update(sql, document.getId());
+    }
 }
 
 @Service

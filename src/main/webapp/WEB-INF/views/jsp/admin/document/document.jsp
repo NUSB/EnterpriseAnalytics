@@ -42,39 +42,33 @@
 
                             </form:form>
                             <c:if test="${!isNewDocument}">
-                                <form action="defaultPath" id="form_roles">
+                                <form:form action="${pageContext.request.contextPath}/admin/document/${document.id}/responsibilityForDocuments/add" 
+                                           id="form_roles" modelAttribute="responsibilityForDocuments">
                                     <div class="form-head-embeded">
                                         <h1>Роли</h1>
                                     </div>
                                     <div class="roles_document grid-container-cols-3">
                                         <div class="form-input">
                                             <p>Роли:</p>
-                                            <input list="roles_document" id="document-role">
+                                            <input list="roles_document" id="document-role"  name="role">
                                             <datalist id="roles_document" aria-required="true">
                                                 <c:forEach items="${bisnesRoles}" var="bisnesRole">
                                                     <option value="${bisnesRole.name}"></option>
                                                 </c:forEach>
                                             </datalist>
-                                            <input type="text" disabled required="" id="editDocumentRole" class="invisible" />
+                                            <input type="text" name="role" disabled required="" id="editDocumentRole" class="invisible" />
                                         </div>
-
                                         <div class="form-input">
                                             <p>Описание:</p>
-                                            <textarea name="description" id="description_role" cols="50" rows="5" required></textarea>
+                                            <form:textarea path="annotation" id="description_role" cols="50" rows="5" required="required"/>
                                         </div>
-
                                         <div class="button">
                                             <input class="save_button" type="submit" id="roleAddButton" value="Добавить">
-
                                             <input class="save_button invisible" type="submit" id="roleEditButton" value="Сохранить">
-
-
-                                            <input class="save_button invisible" type="button" id="roleCancelButton" resetAction="" value="Отмена">
+                                            <input class="save_button invisible" type="button" id="roleCancelButton" value="Отмена">
                                         </div>
-
-
                                     </div>
-                                </form>
+                                </form:form>
 
                                 <div class="table-section">
                                     <table>
@@ -83,19 +77,20 @@
                                             <th>Описание</th>
                                             <th>Действие</th>
                                         </tr>
-                                        <c:forEach items="${document.bisnesRoles}" var="item">
+                                        <c:forEach items="${document.responsibilityForDocumentses}" var="item">
                                             <tr>
-                                                <td class="document-role">${item.key.name}</td>
-                                                <td class="document-description">${item.value}</td>
+                                                <td class="document-role">${item.bisnesRole.name}</td>
+                                                <td class="document-description">${item.annotation}</td>
                                                 <td>
-                                                    <a class="icons_table" ><i class="demo-icon icon-trash-empty"></i></a>
-                                                    <a class="icons_table"  pathUpdateCurrentRole="bisnesrole/update/8"><i class="demo-icon icon-edit"></i></a>
+                                                    <a class="icons_table" href="${pageContext.request.contextPath}/admin/document/${document.id}/responsibilityForDocuments/delete/${item.id}"><i class="demo-icon icon-trash-empty"></i></a>
+                                                    <a class="icons_table"  pathUpdateCurrentRole="${pageContext.request.contextPath}/admin/document/${document.id}/responsibilityForDocuments/update/${item.id}"><i class="demo-icon icon-edit"></i></a>
                                                 </td>
                                             </tr>
                                         </c:forEach>
                                     </table>
-                                </c:if>
-                            </div>
+
+                                </div>
+                            </c:if>
                         </div>
                     </div>
                 </div>

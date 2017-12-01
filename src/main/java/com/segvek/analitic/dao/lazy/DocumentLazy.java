@@ -6,15 +6,15 @@
 package com.segvek.analitic.dao.lazy;
 
 import com.segvek.analitic.dao.DocumentDAO;
-import com.segvek.analitic.model.BisnesRole;
 import com.segvek.analitic.model.Document;
+import com.segvek.analitic.model.ResponsibilityForDocuments;
 import java.awt.Point;
-import java.util.Map;
+import java.util.List;
 
-public class DocumentLazy extends Document{
-    
+public class DocumentLazy extends Document {
+
     private DocumentDAO documentDAO;
-    
+
     public DocumentLazy(int id, String name, String annotation, Point position) {
         super(id, name, annotation, position);
     }
@@ -24,12 +24,10 @@ public class DocumentLazy extends Document{
     }
 
     @Override
-    public Map<BisnesRole, String> getBisnesRoles() {
-        if(super.getBisnesRoles()==null){
-            return documentDAO.getBisnesRolesByDocument(this);
+    public List<ResponsibilityForDocuments> getResponsibilityForDocumentses() {
+        if (super.getResponsibilityForDocumentses() == null) {
+            return documentDAO.getResponsibilityForDocument(this);
         }
-        return super.getBisnesRoles();
+        return super.getResponsibilityForDocumentses();
     }
-    
-    
 }

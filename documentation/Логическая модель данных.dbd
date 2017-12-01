@@ -220,7 +220,7 @@
               </Port>
               <Port>
                 <Location>
-                  <X>Undefined</X>
+                  <X>0 px</X>
                   <Y>95.25 px</Y>
                 </Location>
                 <Anchors>Top Bottom</Anchors>
@@ -395,12 +395,12 @@
               <Parent>0</Parent>
             </CustomProperties>
             <Location>
-              <X>260 px</X>
-              <Y>340 px</Y>
+              <X>250 px</X>
+              <Y>320 px</Y>
             </Location>
             <Size>
               <Width>251 px</Width>
-              <Height>127 px</Height>
+              <Height>144 px</Height>
             </Size>
             <DbOid>
               <Path>enterpriceanalytics.`documents-hash-bisnes_roles`</Path>
@@ -426,7 +426,7 @@
               <Port>
                 <Location>
                   <X>0 px</X>
-                  <Y>63.5 px</Y>
+                  <Y>72 px</Y>
                 </Location>
                 <Anchors>Top Bottom</Anchors>
                 <Align>Left</Align>
@@ -451,7 +451,7 @@
             <BendPoints>
               <PointD>
                 <X>227.5 px</X>
-                <Y>403.5 px</Y>
+                <Y>392 px</Y>
               </PointD>
             </BendPoints>
             <IsManuallyRouted>false</IsManuallyRouted>
@@ -470,8 +470,8 @@
             <PortAnchors>
               <Port xsi:type="LinkPort">
                 <Location>
-                  <X>32.5 px</X>
-                  <Y>59.75 px</Y>
+                  <X>22.5 px</X>
+                  <Y>54 px</Y>
                 </Location>
                 <Anchors>None</Anchors>
                 <Align>Left</Align>
@@ -525,7 +525,7 @@
             </PortAnchors>
             <BendPoints>
               <PointD>
-                <X>385.5 px</X>
+                <X>375.5 px</X>
                 <Y>134.5 px</Y>
               </PointD>
             </BendPoints>
@@ -546,7 +546,7 @@
               <Port xsi:type="LinkPort">
                 <Location>
                   <X>0 px</X>
-                  <Y>102.75 px</Y>
+                  <Y>92.75 px</Y>
                 </Location>
                 <Anchors>None</Anchors>
                 <Align>Top</Align>
@@ -795,10 +795,10 @@
         </Children>
         <ViewPort>
           <ScaleMode>Free</ScaleMode>
-          <Scale>1</Scale>
+          <Scale>0.8593007</Scale>
           <Location>
-            <X>-364 px</X>
-            <Y>16 px</Y>
+            <X>-529.500341722393 px</X>
+            <Y>-111.833357132344 px</Y>
           </Location>
         </ViewPort>
       </Model>

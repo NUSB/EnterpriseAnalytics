@@ -1,7 +1,7 @@
 ﻿--
 -- Скрипт сгенерирован Devart dbForge Studio for MySQL, Версия 7.0.52.0
 -- Домашняя страница продукта: http://www.devart.com/ru/dbforge/mysql/studio
--- Дата скрипта: 27.11.2017 20:14:40
+-- Дата скрипта: 28.11.2017 10:42:31
 -- Версия сервера: 5.5.23
 -- Версия клиента: 4.1
 --
@@ -86,7 +86,7 @@ CREATE TABLE documents (
 )
 ENGINE = INNODB
 AUTO_INCREMENT = 5
-AVG_ROW_LENGTH = 4096
+AVG_ROW_LENGTH = 5461
 CHARACTER SET utf8
 COLLATE utf8_general_ci;
 
@@ -113,13 +113,16 @@ CREATE TABLE `documents-hash-bisnes_roles` (
   idDocument INT(11) NOT NULL,
   idBisnesRole INT(11) NOT NULL,
   annotation TEXT NOT NULL,
+  id INT(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (idDocument, idBisnesRole),
+  UNIQUE INDEX id (id),
   CONSTRAINT `FK_document-hash-bisnes_roles_bisnes_roles_id` FOREIGN KEY (idBisnesRole)
     REFERENCES bisnes_roles(id) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_document-hash-bisnes_roles_document_id` FOREIGN KEY (idDocument)
     REFERENCES documents(id) ON DELETE NO ACTION ON UPDATE NO ACTION
 )
 ENGINE = INNODB
+AUTO_INCREMENT = 6
 AVG_ROW_LENGTH = 8192
 CHARACTER SET utf8
 COLLATE utf8_general_ci;
@@ -190,8 +193,7 @@ INSERT INTO bisnes_roles VALUES
 -- Вывод данных для таблицы documents
 --
 INSERT INTO documents VALUES
-(1, 'Приходная накладная', 'Документ содержащий перечень материалов и товаров которіе призодят, их количество а также стоимость, соответственно указаной стоимости делаються движения по регистрам', 162, 235),
-(2, 'yfpdfybt', 'srgfd', 191, 381),
+(1, 'Приходная накладная', 'Документ содержащий перечень материалов и товаров которые призодят, их количество а также стоимость, соответственно указаной стоимости делаються движения по регистрам', 382, 240),
 (3, 'hbk', 'hkjml', 294, 173),
 (4, 'Расходная накладная', 'Здесь какое-то описание', 401, 123);
 
@@ -206,8 +208,8 @@ INSERT INTO users VALUES
 -- Вывод данных для таблицы `documents-hash-bisnes_roles`
 --
 INSERT INTO `documents-hash-bisnes_roles` VALUES
-(1, 2, 'Віборочно проверяет правильность заполнения программи'),
-(1, 3, 'Вводит в программу и отвечает за сохранность первичной документации до конца месяца. \r\nв 25-30 днях месяца документі сдаются бухгалтеру для перепроверки правильности учета.\r\n');
+(1, 2, 'Выборочно проверяет правильность заполнения программы', 1),
+(1, 3, 'Вводит в программу и отвечает за сохранность первичной документации до конца месяца. \r\nв 25-30 днях месяца документы сдаются бухгалтеру для перепроверки правильности учета.\r\n', 2);
 
 -- 
 -- Вывод данных для таблицы correspondence
