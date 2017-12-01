@@ -10,7 +10,7 @@ public interface BisnesRoleDAO {
     List<BisnesRole> getAllBisnesRole();
 
     public BisnesRole getParentByBisnesRole(BisnesRole acount);
-
+//todo: dfgfd
     public BisnesRole getBisnesRoleByName(String name);
 
     public void save(BisnesRole acount);
