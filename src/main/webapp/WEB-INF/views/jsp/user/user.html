@@ -24,22 +24,23 @@
                 var bias = new Point(0, 0);
                 var chartModel = new ChartModel();
                 var activeChartObject = null;
+                var scale = 1;
 
                 var oldPosition = null;
                 var workWithObject = null;
                 canvas.addEventListener("mousemove", function (event) {
                     if (workWithObject === null) {
-                        activeChartObject = chartModel.findChartObjectByPoint(new Point(event.pageX + bias.x, event.pageY + bias.y));
+                        activeChartObject = chartModel.findChartObjectByPoint(new Point(event.pageX + bias.x, event.pageY + bias.y), scale, TypeViewChartObject.PASSIVE);
                     }
                     if (oldPosition !== null) {
-                        var dX = oldPosition.x - event.pageX;
-                        var dY = oldPosition.y - event.pageY;
+                        var dX = (oldPosition.x - event.pageX) / scale;
+                        var dY = (oldPosition.y - event.pageY) / scale;
 
                         if (workWithObject !== null) {
                             chartModel.moveCharObject(workWithObject, new Point(-dX, -dY));
                         } else {
-                            bias.x += dX;
-                            bias.y += dY;
+                            bias.x += dX * scale;
+                            bias.y += dY * scale;
                         }
                         oldPosition = new Point(event.pageX, event.pageY);
                     }
@@ -66,7 +67,7 @@
 
                     var chartObjects = chartModel.getAllChartObjects();
                     for (let i = 0; i < chartObjects.length; i++) {
-                        chartObjects[i].draw(context, bias, TypeViewChartObject.PASSIVE);
+                        chartObjects[i].draw(context, bias, TypeViewChartObject.PASSIVE, scale);
                     }
                     if (activeChartObject !== null) {
                         context.fillStyle = "rgba(0, 0, 0, 0.85)";
@@ -74,7 +75,7 @@
                     }
                     //            todo: Код по отображению линий
                     if (activeChartObject !== null) {
-                        activeChartObject.draw(context, bias, TypeViewChartObject.ACTIVE);
+                        activeChartObject.draw(context, bias, TypeViewChartObject.ACTIVE, scale);
                     }
                 };
 
@@ -100,16 +101,18 @@
                 this.rendererMap = new Map();
                 this.rendererMap.set("default", new DefaultRenderer(this));
 
-                this.containsPoint = function (point) {
-                    console.error("Method containtsPoint isn't overridden");
-                    return false;
-                };
-
-                this.draw = function (context, bias, typeRendering) {
+                this.containsPoint = function (point, scale, typeRendering) {
                     if (this.rendererMap.get(typeRendering) === undefined) {
                         typeRendering = "default";
                     }
-                    this.rendererMap.get(typeRendering).draw(context, bias);
+                    return this.rendererMap.get(typeRendering).containsPoint(point, scale);
+                };
+
+                this.draw = function (context, bias, typeRendering, scale) {
+                    if (this.rendererMap.get(typeRendering) === undefined) {
+                        typeRendering = "default";
+                    }
+                    this.rendererMap.get(typeRendering).draw(context, bias, scale);
                 };
 
                 this.move = function (point) {
@@ -121,66 +124,46 @@
 
             function Role(position, name, type, info, link) {
                 ChartObject.call(this, position, name, type, info, link);
-                this.width = 30;
-                this.height = 90;
+
                 this.rendererMap.set(TypeViewChartObject.PASSIVE, new RolePassiveRenderer(this));
                 this.rendererMap.set(TypeViewChartObject.ACTIVE, new RoleActiveRenderer(this));
-
-                this.containsPoint = function (point) {
-                    return point.x > position.x && point.x < position.x + this.width
-                            && point.y > position.y && point.y < position.y + this.height;
-                };
             }
 
 
             function Document(position, name, type, info, link) {
                 ChartObject.call(this, position, name, type, info, link);
-                this.width = 180;
-                this.height = 40;
                 this.rendererMap.set(TypeViewChartObject.PASSIVE, new DocumentPassiveRenderer(this));
                 this.rendererMap.set(TypeViewChartObject.ACTIVE, new DocumentActiveRenderer(this));
 
-                this.containsPoint = function (point) {
-                    return point.x > position.x && point.x < position.x + this.width
-                            && point.y > position.y && point.y < position.y + this.height;
-                };
             }
 
 
             function Account(position, name, type, info, link) {
                 ChartObject.call(this, position, name, type, info, link);
-                this.radius = 25;
+
                 this.rendererMap.set(TypeViewChartObject.PASSIVE, new AccountPassiveRenderer(this));
                 this.rendererMap.set(TypeViewChartObject.ACTIVE, new AccountActiveRenderer(this));
-
-                this.containsPoint = function (point) {
-                    return (Math.pow(point.x - position.x, 2) + Math.pow(point.y - position.y, 2)) < this.radius * this.radius;
-                };
             }
 
 
             function Correspondence(position, name, type, info, link) {
                 ChartObject.call(this, position, name, type, info, link);
-                this.width = 30;
-                this.height = 20;
+
                 this.rendererMap.set(TypeViewChartObject.PASSIVE, new CorrespondencePassiveRenderer(this));
                 this.rendererMap.set(TypeViewChartObject.ACTIVE, new CorrespondenceActiveRenderer(this));
 
-                this.containsPoint = function (point) {
-                    return point.x > position.x && point.x < position.x + this.width
-                            && point.y > position.y && point.y < position.y + this.height;
-                };
                 this.move = function (point) {};
-
-
-
-
             }
 
             function Renderer(chartObject) {
-                this.draw = function (context, bias) {
-                    console.error("Method isn't instantiated");
+                this.draw = function (context, bias, scale) {
+                    console.error("Method draw isn't overradden  in Render class");
                 };
+
+                this.containsPoint = function (point, scale) {
+                    console.error("Method containsPoint isn't overradden in Render class");
+                };
+
             }
 
             function DefaultRenderer(chartObject) {
@@ -191,41 +174,58 @@
                 this.color = "#ff000f";
                 var fontSize = 14;
 
-                this.draw = function (context, bias) {
-                    console.log("Default");
+                this.draw = function (context, bias, scale) {
                     context.fillStyle = this.fillColor;
                     context.beginPath();
-
-                    context.fillRect(chartObject.position.x - bias.x, chartObject.position.y - bias.y, width, height);
+                    context.fillRect(chartObject.position.x * scale - bias.x, chartObject.position.y * scale - bias.y, width * scale, height * scale);
                     context.strokeStyle = this.color;
-                    context.strokeRect(chartObject.position.x - bias.x, chartObject.position.y - bias.y, width, height);
+                    context.strokeRect(chartObject.position.x * scale - bias.x, chartObject.position.y * scale - bias.y, width * scale, height * scale);
                     context.closePath();
                     context.fillStyle = this.color;
-                    context.font = fontSize + "px Arial";
+                    context.font = (fontSize * scale) + "px Arial";
                     var text = "default renderer: " + chartObject.name;
-                    context.fillText(text, chartObject.position.x - bias.x + (width - context.measureText(text).width) / 2, chartObject.position.y - bias.y + height / 2 + fontSize / 3);
+                    context.fillText(text, chartObject.position.x * scale - bias.x + (width * scale - context.measureText(text).width) / 2, chartObject.position.y * scale - bias.y + height * scale / 2 + fontSize / 3);
                     context.stroke();
                 }
+
+                this.containsPoint = function (point, scale) {
+                    return point.x > chartObject.position.x * scale
+                            && point.x < chartObject.position.x * scale + width * scale
+                            && point.y > chartObject.position.y * scale
+                            && point.y < chartObject.position.y * scale + height * scale;
+                };
+
             }
 
             function DocumentPassiveRenderer(chartObject) {
                 Renderer.call(this, chartObject);
                 this.fillColor = "#3e3e3e";
                 this.color = "#ffffff";
+                var width = 180;
+                var height = 40;
                 var fontSize = 14;
 
-                this.draw = function (context, bias) {
+                this.draw = function (context, bias, scale) {
                     context.fillStyle = this.fillColor;
                     context.beginPath();
-                    context.fillRect(chartObject.position.x - bias.x, chartObject.position.y - bias.y, chartObject.width, chartObject.height);
+                    context.fillRect(chartObject.position.x * scale - bias.x, chartObject.position.y * scale - bias.y, width * scale, height * scale);
                     context.strokeStyle = this.color;
-                    context.strokeRect(chartObject.position.x - bias.x, chartObject.position.y - bias.y, chartObject.width, chartObject.height);
+                    context.strokeRect(chartObject.position.x * scale - bias.x, chartObject.position.y * scale - bias.y, width * scale, height * scale);
                     context.fillStyle = this.color;
                     context.closePath();
-                    context.font = fontSize + "px Arial";
-                    context.fillText(chartObject.name, chartObject.position.x - bias.x + (chartObject.width - context.measureText(chartObject.name).width) / 2, chartObject.position.y - bias.y + chartObject.height / 2 + fontSize / 3);
+                    context.font = fontSize * scale + "px Arial";
+                    context.fillText(chartObject.name
+                            , chartObject.position.x * scale - bias.x + (width * scale - context.measureText(chartObject.name).width) / 2
+                            , chartObject.position.y * scale - bias.y + height * scale / 2 + fontSize / 3);
                     context.stroke();
                 }
+
+                this.containsPoint = function (point, scale) {
+                    return point.x > chartObject.position.x * scale
+                            && point.x < chartObject.position.x * scale + width * scale
+                            && point.y > chartObject.position.y * scale
+                            && point.y < chartObject.position.y * scale + height * scale;
+                };
             }
 
             function DocumentActiveRenderer(chartObject) {
@@ -238,22 +238,27 @@
                 Renderer.call(this, chartObject);
                 this.fillColor = "#3e3e3e";
                 this.color = "#FFFFFF";
+                var radius = 25;
                 var fontSize = 14;
 
 
-                this.draw = function (context, bias) {
+                this.draw = function (context, bias, scale) {
                     context.beginPath();
-                    context.arc(chartObject.position.x - bias.x, chartObject.position.y - bias.y, chartObject.radius, 0, 2 * Math.PI, false);
+                    context.arc(chartObject.position.x * scale - bias.x, chartObject.position.y * scale - bias.y, radius * scale, 0, 2 * Math.PI, false);
                     context.fillStyle = this.fillColor;
                     context.fill();
                     context.strokeStyle = this.color;
                     context.stroke();
                     context.fillStyle = this.color;
                     context.closePath();
-                    context.font = fontSize + "px Arial";
-                    context.fillText(chartObject.name, chartObject.position.x - bias.x + (chartObject.radius - context.measureText(chartObject.name).width) / 2 - chartObject.radius / 2, chartObject.position.y - bias.y + fontSize / 2);
+                    context.font = fontSize * scale + "px Arial";
+                    context.fillText(chartObject.name, chartObject.position.x * scale - bias.x + (radius * scale - context.measureText(chartObject.name).width) / 2 - radius * scale / 2, chartObject.position.y * scale - bias.y + fontSize / 3);
                     context.stroke();
                 }
+
+                this.containsPoint = function (point, scale) {
+                    return (Math.pow(point.x - chartObject.position.x * scale, 2) + Math.pow(point.y - chartObject.position.y * scale, 2)) < Math.pow(radius * scale, 2);
+                };
             }
 
             function AccountActiveRenderer(chartObject) {
@@ -265,27 +270,35 @@
                 Renderer.call(this, chartObject);
                 this.color = "#FFFFFF";
                 var fontSize = 14;
+                var width = 30;
+                var height = 90;
 
-                this.draw = function (context, bias) {
+                this.draw = function (context, bias, scale) {
                     context.strokeStyle = this.color;
-                    console.log("RolePassive");
                     context.beginPath();
-                    context.arc(chartObject.position.x - bias.x + chartObject.width / 2, chartObject.position.y - bias.y + chartObject.width / 2, chartObject.width / 2, 0, 2 * Math.PI);
-                    context.moveTo(chartObject.position.x - bias.x + chartObject.width / 2, chartObject.position.y - bias.y + chartObject.height / 3);
-                    context.lineTo(chartObject.position.x - bias.x + chartObject.width / 2, chartObject.position.y - bias.y + (7 * chartObject.height) / 9);
-                    context.lineTo(chartObject.position.x - bias.x, chartObject.position.y - bias.y + chartObject.height);
-                    context.moveTo(chartObject.position.x - bias.x + chartObject.width / 2, chartObject.position.y - bias.y + (7 * chartObject.height) / 9);
-                    context.lineTo(chartObject.position.x - bias.x + chartObject.width, chartObject.position.y - bias.y + chartObject.height);
-                    context.moveTo(chartObject.position.x - bias.x, chartObject.position.y - bias.y + (4 * chartObject.height) / 9);
-                    context.lineTo(chartObject.position.x - bias.x + chartObject.width, chartObject.position.y - bias.y + (4 * chartObject.height) / 9);
+                    context.arc(chartObject.position.x * scale - bias.x + width * scale / 2, chartObject.position.y * scale - bias.y + width * scale / 2, width * scale / 2, 0, 2 * Math.PI);
+                    context.moveTo(chartObject.position.x * scale - bias.x + width * scale / 2, chartObject.position.y * scale - bias.y + height * scale / 3);
+                    context.lineTo(chartObject.position.x * scale - bias.x + width * scale / 2, chartObject.position.y * scale - bias.y + (7 * height * scale) / 9);
+                    context.lineTo(chartObject.position.x * scale - bias.x, chartObject.position.y * scale - bias.y + height * scale);
+                    context.moveTo(chartObject.position.x * scale - bias.x + width * scale / 2, chartObject.position.y * scale - bias.y + (7 * height * scale) / 9);
+                    context.lineTo(chartObject.position.x * scale - bias.x + width * scale, chartObject.position.y * scale - bias.y + height * scale);
+                    context.moveTo(chartObject.position.x * scale - bias.x, chartObject.position.y * scale - bias.y + (4 * height * scale) / 9);
+                    context.lineTo(chartObject.position.x * scale - bias.x + width * scale, chartObject.position.y * scale - bias.y + (4 * height * scale) / 9);
                     context.closePath();
                     context.stroke();
 
                     context.fillStyle = this.color;
-                    context.font = fontSize + "px Arial";
-                    context.fillText(chartObject.name, chartObject.position.x - bias.x + (chartObject.width - context.measureText(chartObject.name).width) / 2, chartObject.position.y + chartObject.height - bias.y + fontSize);
+                    context.font = (fontSize * scale) + "px Arial";
+                    context.fillText(chartObject.name, chartObject.position.x * scale - bias.x + (width * scale - context.measureText(chartObject.name).width) / 2, chartObject.position.y * scale + height * scale - bias.y + fontSize * scale);
                     context.stroke();
                 }
+
+                this.containsPoint = function (point, scale) {
+                    return point.x > chartObject.position.x * scale
+                            && point.x < chartObject.position.x * scale + width * scale
+                            && point.y > chartObject.position.y * scale
+                            && point.y < chartObject.position.y * scale + height * scale;
+                };
             }
 
             function RoleActiveRenderer(chartObject) {
@@ -298,12 +311,14 @@
                 Renderer.call(this, chartObject);
                 this.fillColor = "#3e3e3e";
                 this.color = "#FFFFFF";
+                var width = 30;
+                var height = 20;
 
-                this.draw = function (context, bias) {
+                this.draw = function (context, bias, scale) {
                     context.beginPath();
-                    context.moveTo(chartObject.position.x - bias.x + chartObject.width / 2, chartObject.position.y - bias.y);
-                    context.lineTo(chartObject.position.x - bias.x + chartObject.width, chartObject.position.y - bias.y + chartObject.height);
-                    context.lineTo(chartObject.position.x - bias.x, chartObject.position.y - bias.y + chartObject.height);
+                    context.moveTo(chartObject.position.x*scale - bias.x + width*scale / 2, chartObject.position.y*scale - bias.y);
+                    context.lineTo(chartObject.position.x*scale - bias.x + width*scale, chartObject.position.y*scale - bias.y + height*scale);
+                    context.lineTo(chartObject.position.x*scale - bias.x, chartObject.position.y*scale - bias.y + height*scale);
                     context.closePath();
 
                     context.strokeStyle = this.color;
@@ -313,6 +328,13 @@
                     context.fill();
 
                 }
+
+                this.containsPoint = function (point, scale) {
+                    return point.x > chartObject.position.x * scale
+                            && point.x < chartObject.position.x * scale + width * scale
+                            && point.y > chartObject.position.y * scale
+                            && point.y < chartObject.position.y * scale + height * scale;
+                };
             }
 
             function CorrespondenceActiveRenderer(chartObject) {
@@ -337,9 +359,9 @@
                     return chartObjects;
                 };
 
-                this.findChartObjectByPoint = function (point) {
+                this.findChartObjectByPoint = function (point, scale, typeRendering) {
                     for (let i = 0; i < chartObjects.length; i++) {
-                        if (chartObjects[i].containsPoint(point) === true) {
+                        if (chartObjects[i].containsPoint(point, scale, typeRendering) === true) {
                             return chartObjects[i];
                         }
                     }
