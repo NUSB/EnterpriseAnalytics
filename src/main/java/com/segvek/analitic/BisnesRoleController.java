@@ -2,6 +2,10 @@ package com.segvek.analitic;
 
 import com.segvek.analitic.dao.BisnesRoleDAO;
 import com.segvek.analitic.model.BisnesRole;
+import com.segvek.analitic.model.Document;
+import com.segvek.analitic.model.Message;
+import java.util.LinkedList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -75,12 +79,47 @@ public class BisnesRoleController {
         bisnesRoleDAO.update(bisnesRole);
         return bisnesRoleList();
     }
-    
-     @RequestMapping(value = "/admin/bisnesRole/delete/{id}", method = RequestMethod.GET)
-    public ModelAndView bisnesRoleDeleteAction(@PathVariable Integer id) {
-        bisnesRoleDAO.deleteBisnesRoleById(id);
-        return bisnesRoleList();
+
+    @RequestMapping(value = "/admin/bisnesRole/delete/{id}", method = RequestMethod.GET)
+    public ModelAndView bisnesRoleDeleteAction(WebRequest request, @PathVariable Integer id) {
+        ModelAndView view = new ModelAndView("admin/bisnesRole/bisnesRoleList");
+        BisnesRole bisnesRole = bisnesRoleDAO.getBisnesRoleById(id);
+        List<Message> messages = deleteValidation(bisnesRole, request);
+        if (messages.isEmpty()) {
+            bisnesRoleDAO.deleteBisnesRole(bisnesRole);
+        } else {
+            view.addObject("messages", messages);
+        }
+        view.addObject("bisnesRoles", bisnesRoleDAO.getAllBisnesRole());
+        return view;
     }
-    
+
+    private List<Message> deleteValidation(BisnesRole bisnesRole, WebRequest request) {
+        List<Message> messages = new LinkedList<Message>();
+
+        List<Document> documents = bisnesRole.getDocuments();
+        if (!documents.isEmpty()) {
+            StringBuilder sb = new StringBuilder("На данную роль ссылаются слудующие документы: ");
+            for (Document d : documents) {
+                sb.append("<br>").append("<a href=\"")
+                        .append(request.getContextPath())
+                        .append("/admin/document/")
+                        .append(d.getId()).append("\">").append(d.getName()).append("</a>");
+            }
+            messages.add(new Message(Message.TYPE_ERROR, sb.toString()));
+        }
+        List<BisnesRole> children = bisnesRole.getChildren();
+        if (!children.isEmpty()) {
+            StringBuilder sb = new StringBuilder("Даня роль имеет в подчинении следующие бизнес сущности: ");
+            for (BisnesRole br : children) {
+                sb.append("<br>").append("<a href=\"")
+                        .append(request.getContextPath())
+                        .append("/admin/bisnesRole/")
+                        .append(br.getId()).append("\">").append(br.getName()).append("</a>");
+            }
+            messages.add(new Message(Message.TYPE_ERROR, sb.toString()));
+        }
+        return messages;
+    }
 
 }

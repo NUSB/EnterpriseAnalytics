@@ -1,9 +1,10 @@
-
 package com.segvek.analitic.dao.mysql;
 
 import com.segvek.analitic.dao.BisnesRoleDAO;
+import com.segvek.analitic.dao.DocumentDAO;
 import com.segvek.analitic.dao.lazy.BisnesRoleLasy;
 import com.segvek.analitic.model.BisnesRole;
+import com.segvek.analitic.model.Document;
 import java.awt.Point;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,13 +17,15 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
 @Service(value = "bisnesRoleDAO")
-public class BisnesRoleMysqlDao implements BisnesRoleDAO{
+public class BisnesRoleMysqlDao implements BisnesRoleDAO {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
     @Autowired
     BisnesRoleRowMapper bisnesRoleRowMapper;
-    
+    @Autowired
+    DocumentDAO documentDAO;
+
     @Override
     public List<BisnesRole> getAllBisnesRole() {
         String sql = "SELECT * FROM bisnes_roles;";
@@ -64,12 +67,6 @@ public class BisnesRoleMysqlDao implements BisnesRoleDAO{
     }
 
     @Override
-    public void deleteBisnesRoleById(int id) {
-        String sql = "DELETE FROM bisnes_roles WHERE id=?";
-        jdbcTemplate.update(sql, id);
-    }
-
-    @Override
     public BisnesRole getBisnesRoleById(int id) {
         String sql = "Select * FROm bisnes_roles where id=?";
         BisnesRoleLasy a = DataAccessUtils.singleResult(jdbcTemplate.query(sql, bisnesRoleRowMapper, id));
@@ -81,22 +78,45 @@ public class BisnesRoleMysqlDao implements BisnesRoleDAO{
     public void update(BisnesRole bisnes_role) {
         String sql = "UPDATE bisnes_roles SET name=?,annotation=?, positionX=?, positionY=?,parent=? WHERE id=?;";
         jdbcTemplate.update(sql, bisnes_role.getName(),
-                 bisnes_role.getAnnotation(),
-                 bisnes_role.getPosition().x,
-                 bisnes_role.getPosition().y,
-                 bisnes_role.getParent() == null ? null : bisnes_role.getParent().getId(),
-                 bisnes_role.getId());
+                bisnes_role.getAnnotation(),
+                bisnes_role.getPosition().x,
+                bisnes_role.getPosition().y,
+                bisnes_role.getParent() == null ? null : bisnes_role.getParent().getId(),
+                bisnes_role.getId());
     }
-    
+
+    @Override
+    public void deleteBisnesRole(BisnesRole bisnesRole) {
+        String sql = "DELETE FROM bisnes_roles WHERE id=?";
+        jdbcTemplate.update(sql, bisnesRole.getId());
+    }
+
+    @Override
+    public List<Document> getDocumentsByBisnesRole(BisnesRole bisnesRole) {
+        return documentDAO.getDocumentsByBisnesRole(bisnesRole);
+    }
+
+    @Override
+    public List<BisnesRole> getChildrenByBisnesRole(BisnesRole bisnesRole) {
+        String sql = "SELECT * FROM bisnes_roles br WHERE br.parent=?";
+        List<BisnesRoleLasy> acounts = jdbcTemplate.query(sql, bisnesRoleRowMapper, bisnesRole.getId());
+        List<BisnesRole> res = new ArrayList<BisnesRole>();
+        for (BisnesRoleLasy a : acounts) {
+            a.setBisnesRoleDAO(this);
+            res.add(a);
+        }
+        return res;
+    }
+
 }
 
 @Service
-class BisnesRoleRowMapper implements RowMapper<BisnesRoleLasy>{
+class BisnesRoleRowMapper implements RowMapper<BisnesRoleLasy> {
 
     @Override
     public BisnesRoleLasy mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new BisnesRoleLasy(rs.getInt("id"), rs.getString("name"), rs.getString("annotation"), 
+        return new BisnesRoleLasy(rs.getInt("id"), rs.getString("name"), rs.getString("annotation"),
                 new Point(rs.getInt("positionX"), rs.getInt("positionY")));
     }
-    
+
 }
