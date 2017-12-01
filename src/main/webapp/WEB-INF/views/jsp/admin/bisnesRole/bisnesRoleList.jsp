@@ -16,7 +16,7 @@
                     <tr>
                         <th>№</th>
                         <th>Наименование</th>
-                        <th>Подчиненн</th>
+                        <th>Подчинен</th>
                         <th>Действие</th>
                     </tr>
                     <c:forEach items="${bisnesRoles}" var="bisnesRole">

@@ -1,4 +1,4 @@
-package com.segvek.analitic;
+package com.segvek.analitic.controller;
 
 import com.segvek.analitic.dao.mysql.AcountMysqlDao;
 import org.springframework.beans.factory.annotation.Autowired;

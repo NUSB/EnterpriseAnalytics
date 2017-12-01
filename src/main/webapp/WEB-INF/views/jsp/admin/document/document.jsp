@@ -50,9 +50,9 @@
                                     <div class="roles_document grid-container-cols-3">
                                         <div class="form-input">
                                             <p>Роли:</p>
-                                            <input list="roles_document" id="document-role"  name="role">
-                                            <datalist id="roles_document" aria-required="true">
-                                                <c:forEach items="${bisnesRoles}" var="bisnesRole">
+                                            <input list="roles_document1" id="document-role"  name="role_d">
+                                            <datalist id="roles_document1" aria-required="true">
+                                                <c:forEach items="${allbisnesRoles}" var="bisnesRole">
                                                     <option value="${bisnesRole.name}"></option>
                                                 </c:forEach>
                                             </datalist>

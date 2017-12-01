@@ -1,4 +1,4 @@
-package com.segvek.analitic;
+package com.segvek.analitic.controller.admin;
 
 import com.segvek.analitic.dao.BisnesRoleDAO;
 import com.segvek.analitic.model.BisnesRole;
@@ -19,32 +19,33 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
+@RequestMapping(value = "/admin/bisnesRole")
 public class BisnesRoleController {
 
     @Autowired
     BisnesRoleDAO bisnesRoleDAO;
 
-    @RequestMapping(value = "/admin/bisnesRole", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public ModelAndView bisnesRoleList() {
         ModelAndView view = new ModelAndView("admin/bisnesRole/bisnesRoleList");
         view.addObject("bisnesRoles", bisnesRoleDAO.getAllBisnesRole());
         return view;
     }
 
-    @RequestMapping(value = "/admin/bisnesRole/add", method = RequestMethod.GET)
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
     public ModelAndView bisnesRoleAddForm() {
         ModelAndView view = new ModelAndView("admin/bisnesRole/bisnesRole");
         view.addObject("title", "Создать бизнес-роль");
         view.addObject("bisnesRole", new BisnesRole());
-        view.addObject("bisnesRoles", bisnesRoleDAO.getAllBisnesRole());
+        view.addObject("allbisnesRoles", bisnesRoleDAO.getAllBisnesRole());
         view.addObject("sendTo", "add");
         return view;
     }
 
-    @RequestMapping(value = "/admin/bisnesRole/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ModelAndView bisnsRoleAddAction(WebRequest request, @ModelAttribute("bisnesRole") BisnesRole bisnesRole,
             BindingResult result, ModelMap model) {
-        String parentName = request.getParameter("subordination");
+        String parentName = request.getParameter("subordination1");
         if (parentName != null && parentName.length() > 0) {
             BisnesRole parent = bisnesRoleDAO.getBisnesRoleByName(parentName);
             bisnesRole.setParent(parent);
@@ -53,7 +54,7 @@ public class BisnesRoleController {
         return bisnesRoleList();
     }
 
-    @RequestMapping(value = "/admin/bisnesRole/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public String bisnesRoleView(Model model, @PathVariable Integer id) {
 
         BisnesRole bisnesRole = bisnesRoleDAO.getBisnesRoleById(id);
@@ -62,15 +63,15 @@ public class BisnesRoleController {
         }
         model.addAttribute("title", "Бизнес-роль № " + bisnesRole.getId());
         model.addAttribute("bisnesRole", bisnesRole);
-        model.addAttribute("bisnesRoles", bisnesRoleDAO.getAllBisnesRole());
+        model.addAttribute("allbisnesRoles", bisnesRoleDAO.getAllBisnesRole());
         model.addAttribute("sendTo", "update/" + bisnesRole.getId());
         return "admin/bisnesRole/bisnesRole";
     }
 
-    @RequestMapping(value = "/admin/bisnesRole/update/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
     public ModelAndView bisnesRoleUpdateAction(WebRequest request, @ModelAttribute("bisnesRole") BisnesRole bisnesRole,
             BindingResult result, ModelMap model, @PathVariable Integer id) {
-        String parentName = request.getParameter("subordination");
+        String parentName = request.getParameter("subordination1");
         if (parentName != null && parentName.length() > 0) {
             BisnesRole parent = bisnesRoleDAO.getBisnesRoleByName(parentName);
             bisnesRole.setParent(parent);
@@ -80,7 +81,7 @@ public class BisnesRoleController {
         return bisnesRoleList();
     }
 
-    @RequestMapping(value = "/admin/bisnesRole/delete/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
     public ModelAndView bisnesRoleDeleteAction(WebRequest request, @PathVariable Integer id) {
         ModelAndView view = new ModelAndView("admin/bisnesRole/bisnesRoleList");
         BisnesRole bisnesRole = bisnesRoleDAO.getBisnesRoleById(id);

@@ -35,9 +35,9 @@
                         <p>Подчинен</p>
                     </div>
                     <div class="form-input">
-                        <input list="parents1" name="subordination" value="${bisnesRole.parent.name}"/>
+                        <input list="parents1" name="subordination1" value="${bisnesRole.parent.name}" autocomplete="off"/>
                         <datalist id="parents1" aria-required="true">
-                            <c:forEach items="${bisnesRoles}" var="current_parrent">
+                            <c:forEach items="${allbisnesRoles}" var="current_parrent">
                                 <option value="${current_parrent.name}">${current_parrent.id}</option>
                             </c:forEach>
                         </datalist>
