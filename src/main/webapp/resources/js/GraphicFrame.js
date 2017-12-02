@@ -6,7 +6,7 @@ function GraphicFrame() {
     var bias = new Point(0, 0);
     var chartModel = new ChartModel();
     var activeChartObject = null;
-    var scale = 0.75;
+    var scale = 1;
 
     var oldPosition = null;
     var workWithObject = null;
@@ -48,50 +48,99 @@ function GraphicFrame() {
         context.fillStyle = "#222222";
         context.fillRect(0, 0, canvas.width, canvas.height);
 
-        var chartObjects = chartModel.getAllChartObjects();
+        let lines = chartModel.getAllLines();
+        for (let i = 0; i < lines.length; i++) {
+            lines[i].draw(context, bias, scale);
+        }
+
+        let chartObjects = chartModel.getAllChartObjects();
         for (let i = 0; i < chartObjects.length; i++) {
             chartObjects[i].draw(context, bias, TypeViewChartObject.PASSIVE, scale);
         }
-        
-        //todo: Код по отображению линий затемненных
-        
+
         if (activeChartObject !== null) {
             context.fillStyle = "rgba(0, 0, 0, 0.85)";
             context.fillRect(0, 0, canvas.width, canvas.height);
-        }
-        //todo: Код по отображению линий связующим
-        //todo: Код по отображению смежных елеметов диаграммы 
-        if (activeChartObject !== null) {
+
+            let activeChartObjects = chartModel.getLinesByChartObject(activeChartObject);
+
+            for (let i = 0; i < activeChartObjects.length; i++) {
+                activeChartObjects[i].draw(context, bias, scale);
+            }
             activeChartObject.draw(context, bias, TypeViewChartObject.ACTIVE, scale);
+
+            //todo: Код по отображению смежных елеметов диаграммы 
         }
-        
         drawCenter();
     };
 
-    let drawCenter = function(){
+    let drawCenter = function () {
         context.strokeStyle = "#FF0000";
         context.beginPath();
-        context.moveTo(-bias.x,-40-bias.y);
-        context.lineTo(-bias.x,40-bias.y);     
+        context.moveTo(-bias.x, -40 - bias.y);
+        context.lineTo(-bias.x, 40 - bias.y);
         context.stroke();
         context.closePath();
         context.beginPath();
-        context.moveTo(40-bias.x,-bias.y);
-        context.lineTo(-40-bias.x,-bias.y);     
+        context.moveTo(40 - bias.x, -bias.y);
+        context.lineTo(-40 - bias.x, -bias.y);
         context.stroke();
         context.closePath();
     };
 }
 
 function ChartModel() {
-    var chartObjects = [new Document(new Point(400, 100), "Поступление на счет", "doc", "doc_1", "doc/1")
+    var chartObjects = [
+        new Document(new Point(400, 100), "Поступление на счет", "doc", "doc_1", "doc/1")
                 , new Document(new Point(350, 200), "Приходная накладная", "doc", "doc_2", "doc/2")
                 , new Role(new Point(200, 100), "Кассир", "role", "role_1", "role/1")
                 , new Role(new Point(50, 200), "Кладовщик", "role", "role_2", "role/2")
                 , new Account(new Point(500, 500), "30", "acc", "Касса", "account/1")
                 , new Account(new Point(500, 700), "40", "acc", "Рассчеты с поставщиками", "account/2")
-                , new Correspondence(new Point(480, 600), "", "crr", "Дт 40:Кт 30", "correspondence/2")
+//                , new Correspondence(new Point(480, 600), "", "crr", "Дт 40:Кт 30", "correspondence/2")
     ];
+
+    var matrixIncidence = [
+        [' ', ' ', 'd', ' ', ' ', ' '],
+        [' ', ' ', ' ', 'd', ' ', ' '],
+        ['d', ' ', ' ', ' ', ' ', ' '],
+        [' ', 'd', 's', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ']
+    ];
+
+    this.getAllLines = function () {
+        let lines = [];
+        for (var i = 0; i < matrixIncidence.length; i++) {
+            for (var j = 0; j < matrixIncidence.length; j++) {
+                if (matrixIncidence[i][j] !== ' ') {
+                    lines.push(new Line(chartObjects[i].position, chartObjects[j].position, "#fff"));
+                }
+            }
+        }
+        return lines;
+
+    };
+
+    this.getLinesByChartObject = function (chartObject) {
+        let lines = [];
+        let chartObjectIndex = null;
+        for (var i = 0; i < chartObjects.length; i++) {
+            if (chartObjects[i] === chartObject) {
+                chartObjectIndex = i;
+                console.log(chartObjectIndex);
+                break;
+            }
+        }
+
+        for (var i = 0; i < matrixIncidence.length; i++) {
+
+        }
+
+
+        return this.getAllLines();
+
+    };
 
     this.getAllChartObjects = function () {
         return chartObjects;
@@ -173,6 +222,16 @@ function Correspondence(position, name, type, info, link) {
     this.move = function (point) {};
 }
 
+function Line(point1, point2, color) {
+    this.draw = function (context, bias, scale) {
+        context.beginPath();
+        context.strokeStyle = color;
+        context.moveTo((point1.x * scale - bias.x), (point1.y * scale - bias.y));
+        context.lineTo((point2.x * scale - bias.x), (point2.y * scale - bias.y));
+        context.stroke();
+        context.closePath();
+    };
+}
 //</editor-fold>
 
 //<editor-fold defaultstate="collapsed" desc="renderrer classes">
@@ -196,24 +255,26 @@ function DefaultRenderer(chartObject) {
     this.fontSize = 14;
 
     this.draw = function (context, bias, scale) {
+        let biasCenter = new Point(bias.x + this.width / 2, bias.y + this.height / 2);
         context.fillStyle = this.fillColor;
         context.beginPath();
-        context.fillRect(chartObject.position.x * scale - bias.x, chartObject.position.y * scale - bias.y, this.width * scale, this.height * scale);
+        context.fillRect(chartObject.position.x * scale - biasCenter.x, chartObject.position.y * scale - biasCenter.y, this.width * scale, this.height * scale);
         context.strokeStyle = this.color;
-        context.strokeRect(chartObject.position.x * scale - bias.x, chartObject.position.y * scale - bias.y, this.width * scale, this.height * scale);
+        context.strokeRect(chartObject.position.x * scale - biasCenter.x, chartObject.position.y * scale - biasCenter.y, this.width * scale, this.height * scale);
         context.closePath();
         context.fillStyle = this.color;
         context.font = (this.fontSize * scale) + "px Arial";
         var text = chartObject.name;
-        context.fillText(text, chartObject.position.x * scale - bias.x + (this.width * scale - context.measureText(text).width) / 2, chartObject.position.y * scale - bias.y + this.height * scale / 2 + this.fontSize / 3);
+        context.fillText(text, chartObject.position.x * scale - biasCenter.x + (this.width * scale - context.measureText(text).width) / 2, chartObject.position.y * scale - biasCenter.y + this.height * scale / 2 + this.fontSize / 3);
         context.stroke();
     };
 
     this.containsPoint = function (point, scale) {
-        return point.x > chartObject.position.x * scale
-                && point.x < chartObject.position.x * scale + this.width * scale
-                && point.y > chartObject.position.y * scale
-                && point.y < chartObject.position.y * scale + this.height * scale;
+        let pointCenter = new Point(point.x + this.width / 2, point.y + this.height / 2);
+        return pointCenter.x > chartObject.position.x * scale
+                && pointCenter.x < chartObject.position.x * scale + this.width * scale
+                && pointCenter.y > chartObject.position.y * scale
+                && pointCenter.y < chartObject.position.y * scale + this.height * scale;
     };
 }
 
@@ -224,6 +285,17 @@ function DocumentPassiveRenderer(chartObject) {
 function DocumentActiveRenderer(chartObject) {
     DocumentPassiveRenderer.call(this, chartObject);
     this.color = "#99ffb9";
+
+    this.draw = function (context, bias, scale) {
+        let temp = new DocumentPassiveRenderer(chartObject);
+        temp.color = this.color;
+        temp.draw(context, bias, scale);
+        context.beginPath();
+        context.fillStyle = "#ff3333";
+        context.fillText(chartObject.info, 30, 30);
+        context.stroke();
+        context.closePath();
+    };
 }
 
 
@@ -262,33 +334,37 @@ function RolePassiveRenderer(chartObject) {
     this.color = "#FFFFFF";
     this.width = 30;
     this.height = 90;
+    this.fillColor = "#222222";
 
     this.draw = function (context, bias, scale) {
+        let biasCenter = new Point(bias.x + this.width / 2, bias.y + this.height / 2);
         context.strokeStyle = this.color;
+        context.fillStyle = this.fillColor;
+        context.fillRect(chartObject.position.x * scale - biasCenter.x, chartObject.position.y * scale - biasCenter.y, this.width * scale, this.height * scale);
         context.beginPath();
-        context.arc(chartObject.position.x * scale - bias.x + this.width * scale / 2, chartObject.position.y * scale - bias.y + this.width * scale / 2, this.width * scale / 2, 0, 2 * Math.PI);
-        context.moveTo(chartObject.position.x * scale - bias.x + this.width * scale / 2, chartObject.position.y * scale - bias.y + this.height * scale / 3);
-        context.lineTo(chartObject.position.x * scale - bias.x + this.width * scale / 2, chartObject.position.y * scale - bias.y + (7 * this.height * scale) / 9);
-        context.lineTo(chartObject.position.x * scale - bias.x, chartObject.position.y * scale - bias.y + this.height * scale);
-        context.moveTo(chartObject.position.x * scale - bias.x + this.width * scale / 2, chartObject.position.y * scale - bias.y + (7 * this.height * scale) / 9);
-        context.lineTo(chartObject.position.x * scale - bias.x + this.width * scale, chartObject.position.y * scale - bias.y + this.height * scale);
-        context.moveTo(chartObject.position.x * scale - bias.x, chartObject.position.y * scale - bias.y + (4 * this.height * scale) / 9);
-        context.lineTo(chartObject.position.x * scale - bias.x + this.width * scale, chartObject.position.y * scale - bias.y + (4 * this.height * scale) / 9);
+        context.arc(chartObject.position.x * scale - biasCenter.x + this.width * scale / 2, chartObject.position.y * scale - biasCenter.y + this.width * scale / 2, this.width * scale / 2, 0, 2 * Math.PI);
+        context.moveTo(chartObject.position.x * scale - biasCenter.x + this.width * scale / 2, chartObject.position.y * scale - biasCenter.y + this.height * scale / 3);
+        context.lineTo(chartObject.position.x * scale - biasCenter.x + this.width * scale / 2, chartObject.position.y * scale - biasCenter.y + (7 * this.height * scale) / 9);
+        context.lineTo(chartObject.position.x * scale - biasCenter.x, chartObject.position.y * scale - biasCenter.y + this.height * scale);
+        context.moveTo(chartObject.position.x * scale - biasCenter.x + this.width * scale / 2, chartObject.position.y * scale - biasCenter.y + (7 * this.height * scale) / 9);
+        context.lineTo(chartObject.position.x * scale - biasCenter.x + this.width * scale, chartObject.position.y * scale - biasCenter.y + this.height * scale);
+        context.moveTo(chartObject.position.x * scale - biasCenter.x, chartObject.position.y * scale - biasCenter.y + (4 * this.height * scale) / 9);
+        context.lineTo(chartObject.position.x * scale - biasCenter.x + this.width * scale, chartObject.position.y * scale - biasCenter.y + (4 * this.height * scale) / 9);
         context.closePath();
         context.stroke();
 
         context.fillStyle = this.color;
         context.font = (this.fontSize * scale) + "px Arial";
-        context.fillText(chartObject.name, chartObject.position.x * scale - bias.x + (this.width * scale - context.measureText(chartObject.name).width) / 2, chartObject.position.y * scale + this.height * scale - bias.y + this.fontSize * scale);
+        context.fillText(chartObject.name, chartObject.position.x * scale - biasCenter.x + (this.width * scale - context.measureText(chartObject.name).width) / 2, chartObject.position.y * scale + this.height * scale - biasCenter.y + this.fontSize * scale);
         context.stroke();
     };
 }
 function RoleActiveRenderer(chartObject) {
     RolePassiveRenderer.call(this, chartObject);
-
+    this.fillColor = "#000000";
     this.color = "#12ff4e";
 }
-
+//todo: Смещение по центру
 function CorrespondencePassiveRenderer(chartObject) {
     DefaultRenderer.call(this, chartObject);
     this.fillColor = "#3e3e3e";
