@@ -97,16 +97,23 @@ function ChartModel() {
                 , new Role(new Point(50, 200), "Кладовщик", "role", "role_2", "role/2")
                 , new Account(new Point(500, 500), "30", "acc", "Касса", "account/1")
                 , new Account(new Point(500, 700), "40", "acc", "Рассчеты с поставщиками", "account/2")
-//                , new Correspondence(new Point(480, 600), "", "crr", "Дт 40:Кт 30", "correspondence/2")
+                , new Correspondence(new Point(480, 600), "", "crr", "Дт 40:Кт 30", "correspondence/2")
+                , new Account(new Point(800, 800), "50", "acc", "Касса2", "account/2")
+                , new Account(new Point(900, 900), "60", "acc", "Рассчеты с поставщиками2", "account/3")
+                , new Correspondence(new Point(680, 800), "", "crr", "Дт 50:Кт 60", "correspondence/2")
     ];
 
     var matrixIncidence = [
-        [' ', ' ', 'd', ' ', ' ', ' '],
-        [' ', ' ', ' ', 'd', ' ', ' '],
-        ['d', ' ', ' ', ' ', ' ', ' '],
-        [' ', 'd', 's', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ']
+        [' ', ' ', 'd', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', 'd', ' ', ' ', ' ', ' ', ' ', 'd'],
+        ['d', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', 'd', 's', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', 't', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', 't', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', 't', 't', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 't'],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', 'd', ' ', ' ', 't', ' ', ' ', ' ', ' ', ' ']
     ];
 
     this.getAllLines = function () {
@@ -122,24 +129,111 @@ function ChartModel() {
 
     };
 
-    this.getLinesByChartObject = function (chartObject) {
-        let lines = [];
-        let chartObjectIndex = null;
-        for (var i = 0; i < chartObjects.length; i++) {
+    this.getIndexByChartObject = function (chartObject) {
+        for (let i = 0; i < chartObjects.length; i++) {
             if (chartObjects[i] === chartObject) {
-                chartObjectIndex = i;
-                console.log(chartObjectIndex);
-                break;
+                return i;
             }
         }
+    };
 
-        for (var i = 0; i < matrixIncidence.length; i++) {
-
+    this.getLinesByDocument = function (document) {
+        let index = this.getIndexByChartObject(document);
+        let lines = [];
+        for (let i = 0; i < matrixIncidence.length; i++) {
+            if (matrixIncidence[index][i] === 'd') {
+                lines.push(new Line(chartObjects[index].position, chartObjects[i].position, "#fff"));
+                if (chartObjects[i].type === 'crr') {
+                    let correspondenceLines = this.getLinesByCorrespondence(chartObjects[i]);
+                    for (let j = 0; j < correspondenceLines.length; j++) {
+                        lines.push(correspondenceLines[j]);
+                    }
+                }
+            }
         }
+        
+        return lines;
+    };
 
 
-        return this.getAllLines();
+    this.getLinesByRole = function (role) {
+        let index = this.getIndexByChartObject(role);
+        let lines = [];
+        for (let i = 0; i < matrixIncidence.length; i++) {
+            if (matrixIncidence[index][i] === 'd') {
+                lines.push(new Line(chartObjects[index].position, chartObjects[i].position, "#fff"));
+            }
+            if (matrixIncidence[index][i] === 's') {
+                lines.push(new Line(chartObjects[index].position, chartObjects[i].position, "#ef04cb"));
+            }
+            if (matrixIncidence[i][index] === 's') {
+                lines.push(new Line(chartObjects[index].position, chartObjects[i].position, "#a604f7"));
+            }
+        }
+        return lines;
+    };
 
+    this.getLinesByAccount = function (account) {
+        let index = this.getIndexByChartObject(account);
+        let lines = [];
+        let flag = -1;
+        for (let i = 0; i < matrixIncidence.length; i++) {
+            if (matrixIncidence[index][i] === 't') {
+                flag = i;
+                let color = "#ff0000";
+                if (matrixIncidence[i][index] === 't') {
+                    color = "#f4ee42";
+                }
+                lines.push(new Line(chartObjects[index].position, chartObjects[i].position, color));
+                for (let j = 0; j < matrixIncidence.length; j++) {
+                    if (matrixIncidence[i][j] === 't' && j !== i) {
+                        lines.push(new Line(chartObjects[i].position, chartObjects[j].position, color));
+                    }
+                }
+
+            }
+            if (flag !== i && matrixIncidence[i][index] === 't') {
+                let color = "#00ff00";
+                lines.push(new Line(chartObjects[index].position, chartObjects[i].position, color));
+                for (let j = 0; j < matrixIncidence.length; j++) {
+                    if (matrixIncidence[j][i] === 't' && j !== i) {
+                        lines.push(new Line(chartObjects[i].position, chartObjects[j].position, color));
+                    }
+                }
+            }
+        }
+        return lines;
+    };
+
+    this.getLinesByCorrespondence = function (correspondence) {
+        let index = this.getIndexByChartObject(correspondence);
+        let lines = [];
+        for (let i = 0; i < matrixIncidence.length; i++) {
+            if (matrixIncidence[index][i] !== ' ' || matrixIncidence[i][index] !== ' ') {
+                lines.push(new Line(chartObjects[index].position, chartObjects[i].position, "#fff"));
+            }
+        }
+        return lines;
+    };
+
+    this.getLinesByChartObject = function (chartObject) {
+        if (chartObject.type === "doc") {
+            return this.getLinesByDocument(chartObject);
+        }
+        if (chartObject.type === "role") {
+            return this.getLinesByRole(chartObject);
+        }
+        if (chartObject.type === 'acc') {
+            return this.getLinesByAccount(chartObject);
+        }
+        if (chartObject.type === 'crr') {
+            return this.getLinesByCorrespondence(chartObject);
+        }
+        return [];
+    };
+
+    this.getRelatedObjects = function () {
+        console.log("asdasda");
     };
 
     this.getAllChartObjects = function () {
@@ -157,6 +251,32 @@ function ChartModel() {
     };
 
     this.moveCharObject = function (charObject, point) {
+        if (charObject.type === "crr") {
+            return;
+        }
+        if (charObject.type === "acc") {
+            let index = this.getIndexByChartObject(charObject);
+            let indexCorrespondence = [];
+            for (let i = 0; i < matrixIncidence.length; i++) {
+                if (matrixIncidence[index][i] === 't' || matrixIncidence[i][index] === 't') {
+                    indexCorrespondence.push(i);
+                }
+            }
+
+            for (let i = 0; i < indexCorrespondence.length; i++) {
+                for (let j = 0; j < matrixIncidence.length; j++) {
+                    if (matrixIncidence[indexCorrespondence[i]][j] === 't' && j !== index) {
+                        chartObjects[indexCorrespondence[i]].position = new Point(charObject.position.x + (chartObjects[j].position.x - charObject.position.x) / 2
+                                , charObject.position.y + (chartObjects[j].position.y - charObject.position.y) / 2);
+                    }
+
+                    if (matrixIncidence[j][indexCorrespondence[i]] === 't' && j !== index) {
+                        chartObjects[indexCorrespondence[i]].position = new Point(charObject.position.x + (chartObjects[j].position.x - charObject.position.x) / 2
+                                , charObject.position.y + (chartObjects[j].position.y - charObject.position.y) / 2);
+                    }
+                }
+            }
+        }
         charObject.move(point);
     };
 
@@ -364,7 +484,7 @@ function RoleActiveRenderer(chartObject) {
     this.fillColor = "#000000";
     this.color = "#12ff4e";
 }
-//todo: Смещение по центру
+
 function CorrespondencePassiveRenderer(chartObject) {
     DefaultRenderer.call(this, chartObject);
     this.fillColor = "#3e3e3e";
@@ -373,10 +493,11 @@ function CorrespondencePassiveRenderer(chartObject) {
     this.height = 20;
 
     this.draw = function (context, bias, scale) {
+        let biasCenter = new Point(bias.x + this.width / 2, bias.y + this.height / 2);
         context.beginPath();
-        context.moveTo(chartObject.position.x * scale - bias.x + this.width * scale / 2, chartObject.position.y * scale - bias.y);
-        context.lineTo(chartObject.position.x * scale - bias.x + this.width * scale, chartObject.position.y * scale - bias.y + this.height * scale);
-        context.lineTo(chartObject.position.x * scale - bias.x, chartObject.position.y * scale - bias.y + this.height * scale);
+        context.moveTo(chartObject.position.x * scale - biasCenter.x + this.width * scale / 2, chartObject.position.y * scale - biasCenter.y);
+        context.lineTo(chartObject.position.x * scale - biasCenter.x + this.width * scale, chartObject.position.y * scale - biasCenter.y + this.height * scale);
+        context.lineTo(chartObject.position.x * scale - biasCenter.x, chartObject.position.y * scale - biasCenter.y + this.height * scale);
         context.closePath();
         context.strokeStyle = this.color;
         context.stroke();
