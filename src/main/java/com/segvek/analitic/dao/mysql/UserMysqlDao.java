@@ -42,6 +42,11 @@ public class UserMysqlDao implements UserDAO {
     public void save(User user) {
         String sql = "INSERT INTO users(username, password, enabled)VALUES (?,?,?);";
         jdbcTemplate.update(sql, user.getName(), user.getPassword(), user.isEnabled());
+        if (user.getRoles() != null) {
+            for (UserRole ur : user.getRoles()) {
+                userRoleDAO.save(ur);
+            }
+        }
     }
 
     @Override
@@ -60,13 +65,20 @@ public class UserMysqlDao implements UserDAO {
     @Override
     public void update(User user) {
         userRoleDAO.deleteRolesByUser(user);
-        String sql = "UPDATE users u  SET u.password=?, u.enabled=?";
-        jdbcTemplate.update(sql, user.getPassword(), user.isEnabled());
+        String sql = "UPDATE users u SET u.password=?, u.enabled=? WHERE u.username=?";
+        jdbcTemplate.update(sql, user.getPassword(), user.isEnabled(), user.getName());
         if (user.getRoles() != null) {
             for (UserRole ur : user.getRoles()) {
                 userRoleDAO.save(ur);
             }
         }
+    }
+
+    @Override
+    public void delete(User user) {
+        userRoleDAO.deleteRolesByUser(user);
+        String sql = "DELETE FROM users WHERE username=?";
+        jdbcTemplate.update(sql, user.getName());
     }
 
 }

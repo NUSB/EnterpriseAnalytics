@@ -38,7 +38,20 @@ public class UserController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ModelAndView acountAddAction(@ModelAttribute("user") User user, BindingResult result) {
+    public ModelAndView acountAddAction(WebRequest request,@ModelAttribute("user") User user, BindingResult result) {
+        if (request.getParameter(UserRolesEnum.ROLE_SUBORDINATION) != null) {
+            user.addRole(UserRolesEnum.ROLE_SUBORDINATION);
+            user.addRole(UserRolesEnum.ROLE_USER);
+        }
+        if (request.getParameter(UserRolesEnum.ROLE_DOCUMENTS) != null) {
+            user.addRole(UserRolesEnum.ROLE_DOCUMENTS);
+        }
+        if (request.getParameter(UserRolesEnum.ROLE_ACOUNTING) != null) {
+            user.addRole(UserRolesEnum.ROLE_ACOUNTING);
+        }
+        if (request.getParameter(UserRolesEnum.ROLE_ADMIN) != null) {
+            user.addRole(UserRolesEnum.ROLE_ADMIN);
+        }
         userDAO.save(user);
         return userList();
     }
@@ -89,4 +102,10 @@ public class UserController {
         return userList();
     }
 
+    @RequestMapping(value = "/delete/{username}",method = RequestMethod.GET)
+    public ModelAndView deleteUser(@PathVariable("username") String name){
+        User user = userDAO.getUserByName(name);
+        userDAO.delete(user);
+        return userList();
+    }
 }
