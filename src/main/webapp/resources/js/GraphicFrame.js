@@ -1,34 +1,68 @@
 var saveButton = document.getElementById("schemaSaveButton");
-saveButton.style.top = 70 + "px";
-saveButton.style.left = (window.innerWidth - saveButton.offsetWidth) - 10 + "px";
+var canvas = document.getElementById("graphicFrame");
 
-saveButton.addEventListener("click", function () {
+saveButton.onclick = function() {
     graphicFrame.save();
-});
+    saveButton.style.display = "none";
+};
+
+document.getElementById("scaleUp").onclick = function() {
+    graphicFrame.scaleUp();
+};
+
+document.getElementById("scaleDown").onclick = function() {
+    graphicFrame.scaleDown();
+};
+
+window.onresize = function (ev) {
+    saveButton.style.top = 70 + "px";
+    saveButton.style.left = (window.innerWidth - saveButton.offsetWidth) - 10 + "px";
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    graphicFrame.draw();
+};
+
 
 function GraphicFrame() {
-    var canvas = document.getElementById("graphicFrame");
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight - canvas.offsetTop;
     var context = canvas.getContext("2d");
     var bias = new Point(0, 0);
     var connector = new Connector();
     var chartModel = new ChartModel(new JsonParser(connector.getStringFromServer()));
+    var eventListener = new GraphicFrameEventListener();
     var activeChartObject = null;
     var scale = 1;
-    
+
+    var observers = [];
     var oldPosition = null;
     var workWithObject = null;
     canvas.addEventListener("mousemove", function (event) {
         if (workWithObject === null) {
+            let flag = false;
+            if (activeChartObject !== null) {
+                flag = true;
+            }
             activeChartObject = chartModel.findChartObjectByPoint(new Point(event.pageX - canvas.offsetLeft + bias.x, event.pageY - canvas.offsetTop + bias.y), scale, TypeViewChartObject.PASSIVE);
+            if (flag && activeChartObject === null) {
+                for (let i = 0; i < observers.length; i++) {
+                    observers[i].mouseExitedChartObject();
+                }
+            }
+            if (!flag && activeChartObject !== null) {
+                for (let i = 0; i < observers.length; i++) {
+                    observers[i].hoverChartObject(activeChartObject);
+                }
+            }
         }
         if (oldPosition !== null) {
             var dX = (oldPosition.x - event.pageX) / scale;
             var dY = (oldPosition.y - event.pageY) / scale;
             if (workWithObject !== null) {
                 chartModel.moveCharObject(workWithObject, new Point(-dX, -dY));
-                
+                for (let i = 0; i < observers.length; i++) {
+                    observers[i].moveChartObject(workWithObject);
+                }
             } else {
                 bias.x += dX * scale;
                 bias.y += dY * scale;
@@ -47,7 +81,18 @@ function GraphicFrame() {
         workWithObject = null;
         oldPosition = null;
     });
-   
+
+    this.addEventListener = function (eventListener) {
+        observers.push(eventListener);
+    };
+    this.scaleUp = function() {
+        scale += 0.1;
+        this.draw();
+    };
+    this.scaleDown = function() {
+        scale -= 0.1;
+        this.draw();
+    };
     this.draw = function () {
         context.fillStyle = "#222222";
         context.fillRect(0, 0, canvas.width, canvas.height);
@@ -90,6 +135,20 @@ function GraphicFrame() {
         context.stroke();
         context.closePath();
     };
+    
+}
+function GraphicFrameEventListener() {
+    this.hoverChartObject = function (chartObject) {
+        console.error("Method hoverChartObject must be overriten");
+    };
+
+    this.moveChartObject = function (chartObject) {
+        console.error("Method moveChartObject must be overriten");
+    };
+
+    this.mouseExitedChartObject = function () {
+        console.error("Method mouseExited must be overriten");
+    };
 }
 
 function ChartModel(parser) {
@@ -97,8 +156,8 @@ function ChartModel(parser) {
     var chartObjects = parser.getObjects();
     var matrixIncidence = parser.getMatrix();
 
-    this.cleanChahges = function(){
-        changedObjects =[];
+    this.cleanChahges = function () {
+        changedObjects = [];
     };
     this.getChanged = function () {
         var stringOutput = "";
@@ -580,3 +639,23 @@ var TypeViewChartObject = {
 
 var graphicFrame = new GraphicFrame();
 graphicFrame.draw();
+
+
+graphicFrame.addEventListener(new function() {
+    GraphicFrameEventListener.call(this);
+    var infoMessageBlock = document.getElementById("info-chart-schema");
+    
+    this.moveChartObject = function (chartObject) {
+        saveButton.style.display = "block";
+    };
+    
+    this.hoverChartObject = function(chartObject) {
+        infoMessageBlock.innerHTML = chartObject.info;
+        infoMessageBlock.style.display = "block";
+    };
+    
+    
+    this.mouseExitedChartObject = function() {
+        infoMessageBlock.style.display = "none";
+    };
+});

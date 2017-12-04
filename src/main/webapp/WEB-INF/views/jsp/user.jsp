@@ -8,6 +8,12 @@
 
         <canvas style="border: 1px solid black; margin: 0px; padding: 0px;" id="graphicFrame"></canvas>
         <button class="button" id="schemaSaveButton">Сохранить</button>
+        <div class="scale-schema-block">
+        <i id="scaleUp" class="icon-plus-squared"></i>
+        <i id="scaleDown" class="icon-minus-squared"></i>
+        </div>
+        <div id = "info-chart-schema">
+        </div>
         <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/GraphicFrame.js"></script>
     </body>
 </html>

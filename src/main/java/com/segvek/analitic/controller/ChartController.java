@@ -18,6 +18,8 @@ import com.segvek.analitic.model.UserRole;
 import com.segvek.analitic.model.UserRolesEnum;
 import com.segvek.analitic.model.chart.ChartManager;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
