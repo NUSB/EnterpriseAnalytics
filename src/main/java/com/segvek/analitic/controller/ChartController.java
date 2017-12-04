@@ -41,7 +41,7 @@ public class ChartController {
     @Autowired
     UserDAO userDAO;
 
-    @RequestMapping(value = "/chart", method ={RequestMethod.GET} ,produces = {"application/json; charset=UTF-8"})
+    @RequestMapping(value = "/chart", method = {RequestMethod.GET}, produces = {"application/json; charset=UTF-8"})
     @ResponseBody
     public String getChartModel(Authentication authentication) {
 
@@ -66,29 +66,30 @@ public class ChartController {
 
     @RequestMapping(value = "/chart", method = {RequestMethod.POST})
     @ResponseBody
-    public String saveChartModel(@RequestBody String request){
-        for(String ch:request.split("#")){
-            String co[] = ch.split("|");
+    public String saveChartModel(@RequestBody String request) {
+        String temp[] = request.split("#");
+        for (int i = 0; i < temp.length; i++) {
+            String co[] = temp[i].split("_");
             String typeid[] = co[0].split(";");
-            if(typeid[0].equals("acount")){
+            if (typeid[0].equals("acount")) {
                 Acount a = acountDAO.getAcountById(Integer.parseInt(typeid[1]));
                 a.setPosition(new Point(Integer.parseInt(co[1]), Integer.parseInt(co[2])));
                 acountDAO.update(a);
                 continue;
             }
-            if(typeid[0].equals("role")){
+            if (typeid[0].equals("role")) {
                 BisnesRole br = bisnesRoleDAO.getBisnesRoleById(Integer.parseInt(typeid[1]));
                 br.setPosition(new Point(Integer.parseInt(co[1]), Integer.parseInt(co[2])));
                 bisnesRoleDAO.update(br);
                 continue;
             }
-            if(typeid[0].equals("doc")){
+            if (typeid[0].equals("doc")) {
                 Document d = documentDAO.getDocumentById(Integer.parseInt(typeid[1]));
                 d.setPosition(new Point(Integer.parseInt(co[1]), Integer.parseInt(co[2])));
                 documentDAO.update(d);
                 continue;
             }
         }
-        return "ok";
+        return request;
     }
 }

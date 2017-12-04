@@ -16,6 +16,7 @@ function GraphicFrame() {
     var chartModel = new ChartModel(new JsonParser(connector.getStringFromServer()));
     var activeChartObject = null;
     var scale = 1;
+    
     var oldPosition = null;
     var workWithObject = null;
     canvas.addEventListener("mousemove", function (event) {
@@ -27,14 +28,13 @@ function GraphicFrame() {
             var dY = (oldPosition.y - event.pageY) / scale;
             if (workWithObject !== null) {
                 chartModel.moveCharObject(workWithObject, new Point(-dX, -dY));
+                
             } else {
                 bias.x += dX * scale;
                 bias.y += dY * scale;
             }
             oldPosition = new Point(event.pageX, event.pageY);
         }
-
-
         graphicFrame.draw();
     });
     canvas.addEventListener("mousedown", function (event) {
@@ -47,6 +47,7 @@ function GraphicFrame() {
         workWithObject = null;
         oldPosition = null;
     });
+   
     this.draw = function () {
         context.fillStyle = "#222222";
         context.fillRect(0, 0, canvas.width, canvas.height);
@@ -73,7 +74,8 @@ function GraphicFrame() {
         drawCenter();
     };
     this.save = function () {
-        console.log(chartModel.getChanged());
+        console.log(connector.sendChanges(chartModel.getChanged()));
+        chartModel.cleanChahges();
     };
     let drawCenter = function () {
         context.strokeStyle = "#FF0000";
@@ -93,23 +95,21 @@ function GraphicFrame() {
 function ChartModel(parser) {
     var changedObjects = [];
     var chartObjects = parser.getObjects();
-    console.log(chartObjects);
-    var matrixIncidence =
-            parser.getMatrix();
-    console.log(matrixIncidence);
+    var matrixIncidence = parser.getMatrix();
+
+    this.cleanChahges = function(){
+        changedObjects =[];
+    };
     this.getChanged = function () {
         var stringOutput = "";
-        let temp = "";
         for (let i = 0; i < changedObjects.length; i++) {
-            stringOutput += changedObjects[i].getId() + "|";
-            stringOutput += changedObjects[i].getPosition().x + "|";
-            stringOutput += changedObjects[i].getPosition().y + "|";
-            stringOutput += "#";
+            stringOutput += changedObjects[i].getId() + "_";
+            stringOutput += changedObjects[i].getPosition().x + "_";
+            stringOutput += changedObjects[i].getPosition().y;
+            if (i < changedObjects.length - 1) {
+                stringOutput += "#";
+            }
         }
-        for (let i = 0; i < stringOutput.length - 2; i++) {
-            temp += stringOutput[i];
-        }
-        stringOutput = temp;
         return stringOutput;
     };
     this.getAllLines = function () {
@@ -269,19 +269,13 @@ function ChartModel(parser) {
             }
         }
         charObject.move(point);
-        if (changedObjects.length === 0) {
-            changedObjects.push(charObject);
-        } else {
-            for (let i = 0; i < changedObjects.length; i++) {
-                if (charObject.id === changedObjects[i].id) {
-                    break;
-                }
-                if (charObject.id !== changedObjects[i].id && i === changedObjects.length - 1) {
-                    changedObjects.push(charObject);
-                }
+
+        for (let i = 0; i < changedObjects.length; i++) {
+            if (charObject.id === changedObjects[i].id) {
+                return;
             }
         }
-
+        changedObjects.push(charObject);
     };
 }
 
@@ -369,7 +363,15 @@ function Connector() {
         }
     };
     this.sendChanges = function (changesString) {
-
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', this.url, false);
+        xhr.send(changesString);
+        if (xhr.status !== 200) {
+            console.error(xhr.status + ': ' + xhr.statusText);
+            return null;
+        } else {
+            return xhr.responseText;
+        }
     };
 }
 
