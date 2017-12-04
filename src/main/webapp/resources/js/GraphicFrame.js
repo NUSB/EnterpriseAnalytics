@@ -4,7 +4,8 @@ function GraphicFrame() {
     canvas.height = window.innerHeight - canvas.offsetTop - 5;
     var context = canvas.getContext("2d");
     var bias = new Point(0, 0);
-    var chartModel = new ChartModel();
+    var connector = new Connector();
+    var chartModel = new ChartModel(new JsonParser(connector.getStringFromServer()));
     var activeChartObject = null;
     var scale = 1;
 
@@ -31,6 +32,7 @@ function GraphicFrame() {
         graphicFrame.draw();
     });
     canvas.addEventListener("mousedown", function (event) {
+
 
         oldPosition = new Point(event.pageX, event.pageY);
         if (activeChartObject !== null) {
@@ -89,38 +91,43 @@ function GraphicFrame() {
     };
 }
 
-function ChartModel() {
-    var chartObjects = [
-        new Document(new Point(400, 100), "Поступление на счет", "doc", "doc_1", "doc/1")
-                , new Document(new Point(350, 200), "Приходная накладная", "doc", "doc_2", "doc/2")
-                , new Role(new Point(200, 100), "Кассир", "role", "role_1", "role/1")
-                , new Role(new Point(50, 200), "Кладовщик", "role", "role_2", "role/2")
-                , new Account(new Point(500, 500), "30", "acc", "Касса", "account/1")
-                , new Account(new Point(500, 700), "40", "acc", "Рассчеты с поставщиками", "account/2")
-                , new Correspondence(new Point(480, 600), "", "crr", "Дт 40:Кт 30", "correspondence/2")
-                , new Account(new Point(800, 800), "50", "acc", "Касса2", "account/2")
-                , new Account(new Point(900, 900), "60", "acc", "Рассчеты с поставщиками2", "account/3")
-                , new Correspondence(new Point(680, 800), "", "crr", "Дт 50:Кт 60", "correspondence/2")
-    ];
+function ChartModel(parser) {
+    var chartObjects = parser.getObjects();
+//        chartObjects[0] = new Role(new Point(200, 100), "Дерик", "role", "role_1", "role/1");
+//    [
+//        new Document(new Point(400, 100), "Поступление на счет", "doc", "doc_1", "doc/1")
+//                , new Document(new Point(350, 200), "Приходная накладная", "doc", "doc_2", "doc/2")
+//                , new Role(new Point(200, 100), "Кассир", "role", "role_1", "role/1")
+//                , new Role(new Point(50, 200), "Кладовщик", "role", "role_2", "role/2")
+//                , new Account(new Point(500, 500), "30", "acc", "Касса", "account/1")
+//                , new Account(new Point(500, 700), "40", "acc", "Рассчеты с поставщиками", "account/2")
+//                , new Correspondence(new Point(480, 600), "", "crr", "Дт 40:Кт 30", "correspondence/2")
+//                , new Account(new Point(800, 800), "50", "acc", "Касса2", "account/2")
+//                , new Account(new Point(900, 900), "60", "acc", "Рассчеты с поставщиками2", "account/3")
+//                , new Correspondence(new Point(680, 800), "", "crr", "Дт 50:Кт 60", "correspondence/2")
+//    ];
+    console.log(chartObjects);
+    var matrixIncidence =
+            parser.getMatrix();
 
-    var matrixIncidence = [
-        [' ', ' ', 'd', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', 'd', ' ', ' ', ' ', ' ', ' ', 'd'],
-        ['d', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', 'd', 's', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', 't', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', 't', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', 't', 't', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 't'],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', 'd', ' ', ' ', 't', ' ', ' ', ' ', ' ', ' ']
-    ];
-
+//            [
+//        [" ", " ", "d", " ", " ", " ", " ", " ", " ", " "],
+//        [" ", " ", " ", "d", " ", " ", " ", " ", " ", "d"],
+//        ["d", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+//        [" ", "d", "s", " ", " ", " ", " ", " ", " ", " "],
+//        [" ", " ", " ", " ", " ", " ", "t", " ", " ", " "],
+//        [" ", " ", " ", " ", " ", " ", "t", " ", " ", " "],
+//        [" ", " ", " ", " ", "t", "t", " ", " ", " ", " "],
+//        [" ", " ", " ", " ", " ", " ", " ", " ", " ", "t"],
+//        [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+//        [" ", "d", " ", " ", "t", " ", " ", " ", " ", " "]
+//    ];
+    console.log(matrixIncidence);
     this.getAllLines = function () {
         let lines = [];
         for (var i = 0; i < matrixIncidence.length; i++) {
             for (var j = 0; j < matrixIncidence.length; j++) {
-                if (matrixIncidence[i][j] !== ' ') {
+                if (matrixIncidence[i][j] !== " ") {
                     lines.push(new Line(chartObjects[i].position, chartObjects[j].position, "#fff"));
                 }
             }
@@ -141,7 +148,7 @@ function ChartModel() {
         let index = this.getIndexByChartObject(document);
         let lines = [];
         for (let i = 0; i < matrixIncidence.length; i++) {
-            if (matrixIncidence[index][i] === 'd') {
+            if (matrixIncidence[index][i] === "d") {
                 lines.push(new Line(chartObjects[index].position, chartObjects[i].position, "#fff"));
                 if (chartObjects[i].type === 'crr') {
                     let correspondenceLines = this.getLinesByCorrespondence(chartObjects[i]);
@@ -151,7 +158,7 @@ function ChartModel() {
                 }
             }
         }
-        
+
         return lines;
     };
 
@@ -160,13 +167,13 @@ function ChartModel() {
         let index = this.getIndexByChartObject(role);
         let lines = [];
         for (let i = 0; i < matrixIncidence.length; i++) {
-            if (matrixIncidence[index][i] === 'd') {
+            if (matrixIncidence[index][i] === "d") {
                 lines.push(new Line(chartObjects[index].position, chartObjects[i].position, "#fff"));
             }
-            if (matrixIncidence[index][i] === 's') {
+            if (matrixIncidence[index][i] === "s") {
                 lines.push(new Line(chartObjects[index].position, chartObjects[i].position, "#ef04cb"));
             }
-            if (matrixIncidence[i][index] === 's') {
+            if (matrixIncidence[i][index] === "s") {
                 lines.push(new Line(chartObjects[index].position, chartObjects[i].position, "#a604f7"));
             }
         }
@@ -178,25 +185,25 @@ function ChartModel() {
         let lines = [];
         let flag = -1;
         for (let i = 0; i < matrixIncidence.length; i++) {
-            if (matrixIncidence[index][i] === 't') {
+            if (matrixIncidence[index][i] === "t") {
                 flag = i;
                 let color = "#ff0000";
-                if (matrixIncidence[i][index] === 't') {
+                if (matrixIncidence[i][index] === "t") {
                     color = "#f4ee42";
                 }
                 lines.push(new Line(chartObjects[index].position, chartObjects[i].position, color));
                 for (let j = 0; j < matrixIncidence.length; j++) {
-                    if (matrixIncidence[i][j] === 't' && j !== i) {
+                    if (matrixIncidence[i][j] === "t" && j !== i) {
                         lines.push(new Line(chartObjects[i].position, chartObjects[j].position, color));
                     }
                 }
 
             }
-            if (flag !== i && matrixIncidence[i][index] === 't') {
+            if (flag !== i && matrixIncidence[i][index] === "t") {
                 let color = "#00ff00";
                 lines.push(new Line(chartObjects[index].position, chartObjects[i].position, color));
                 for (let j = 0; j < matrixIncidence.length; j++) {
-                    if (matrixIncidence[j][i] === 't' && j !== i) {
+                    if (matrixIncidence[j][i] === "t" && j !== i) {
                         lines.push(new Line(chartObjects[i].position, chartObjects[j].position, color));
                     }
                 }
@@ -209,7 +216,7 @@ function ChartModel() {
         let index = this.getIndexByChartObject(correspondence);
         let lines = [];
         for (let i = 0; i < matrixIncidence.length; i++) {
-            if (matrixIncidence[index][i] !== ' ' || matrixIncidence[i][index] !== ' ') {
+            if (matrixIncidence[index][i] !== " " || matrixIncidence[i][index] !== " ") {
                 lines.push(new Line(chartObjects[index].position, chartObjects[i].position, "#fff"));
             }
         }
@@ -258,19 +265,19 @@ function ChartModel() {
             let index = this.getIndexByChartObject(charObject);
             let indexCorrespondence = [];
             for (let i = 0; i < matrixIncidence.length; i++) {
-                if (matrixIncidence[index][i] === 't' || matrixIncidence[i][index] === 't') {
+                if (matrixIncidence[index][i] === "t" || matrixIncidence[i][index] === "t") {
                     indexCorrespondence.push(i);
                 }
             }
 
             for (let i = 0; i < indexCorrespondence.length; i++) {
                 for (let j = 0; j < matrixIncidence.length; j++) {
-                    if (matrixIncidence[indexCorrespondence[i]][j] === 't' && j !== index) {
+                    if (matrixIncidence[indexCorrespondence[i]][j] === "t" && j !== index) {
                         chartObjects[indexCorrespondence[i]].position = new Point(charObject.position.x + (chartObjects[j].position.x - charObject.position.x) / 2
                                 , charObject.position.y + (chartObjects[j].position.y - charObject.position.y) / 2);
                     }
 
-                    if (matrixIncidence[j][indexCorrespondence[i]] === 't' && j !== index) {
+                    if (matrixIncidence[j][indexCorrespondence[i]] === "t" && j !== index) {
                         chartObjects[indexCorrespondence[i]].position = new Point(charObject.position.x + (chartObjects[j].position.x - charObject.position.x) / 2
                                 , charObject.position.y + (chartObjects[j].position.y - charObject.position.y) / 2);
                     }
@@ -350,6 +357,64 @@ function Line(point1, point2, color) {
         context.lineTo((point2.x * scale - bias.x), (point2.y * scale - bias.y));
         context.stroke();
         context.closePath();
+    };
+}
+
+function Connector() {
+    this.url = "http://localhost:7995/Analitic/";
+    this.getStringFromServer = function () {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', this.url, false);
+        xhr.send();
+        if (xhr.status !== 200) {
+            console.error(xhr.status + ': ' + xhr.statusText);
+            return null;
+        } else {
+            return xhr.responseText;
+        }
+    };
+}
+
+function Parser(serverAnswer) {
+    this.getObjects = function () {
+        console.error("Method getObjects should be overritten");
+    };
+    this.getMatrix = function () {
+        console.error("Method getMatrix should be overritten");
+    };
+}
+
+
+function JsonParser(serverAnswer) {
+    Parser.call(this, serverAnswer);
+    this.getObjects = function () {
+        let output = [];
+        let objects = JSON.parse(serverAnswer).objects;
+        for (let i = 0; i < objects.length; i++) {
+                if (objects[i].type === 'doc') {
+                    output.push(new Document(new Point(Number(objects[i].x), Number(objects[i].y)),
+                            objects[i].name, objects[i].type, objects[i].info, objects[i].link));
+                }
+                if (objects[i].type === 'role') {
+                    output.push(new Role(new Point(Number(objects[i].x), Number(objects[i].y)),
+                            objects[i].name, objects[i].type, objects[i].info, objects[i].link));
+                }
+                if (objects[i].type === 'crr') {
+                    output.push(new Correspondence(new Point(Number(objects[i].x), Number(objects[i].y)),
+                            objects[i].name, objects[i].type, objects[i].info, objects[i].link));
+                }
+                if (objects[i].type === 'acc') {
+                    output.push(new Account(new Point(Number(objects[i].x), Number(objects[i].y)),
+                            objects[i].name, objects[i].type, objects[i].info, objects[i].link));
+                }
+            
+        }
+        return output;
+    };
+
+    this.getMatrix = function () {
+        return JSON.parse(serverAnswer).incedence;
+
     };
 }
 //</editor-fold>
