@@ -11,7 +11,7 @@ class ChartDocument extends ChartObject {
 
     public ChartDocument(Document document) {
         this.document = document;
-        this.id = "doc" + document.getId();
+        this.id = "doc;" + document.getId();
     }
 
     public List<ChartRole> getChartRoles() {
@@ -26,6 +26,7 @@ class ChartDocument extends ChartObject {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("{\"type\":\"doc\",")
+                .append(" \"id\":\"").append(id).append("\",")
                 .append(" \"x\":\"").append(document.getPosition().x).append("\",")
                 .append(" \"y\":\"").append(document.getPosition().y).append("\",")
                 .append(" \"name\":\"").append(document.getName()).append("\",")

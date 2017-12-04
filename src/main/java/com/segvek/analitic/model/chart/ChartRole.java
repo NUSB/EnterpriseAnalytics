@@ -8,7 +8,7 @@ public class ChartRole extends ChartObject {
 
     public ChartRole(BisnesRole bisnesRole) {
         this.bisnesRole = bisnesRole;
-        this.id = "role" + bisnesRole.getId();
+        this.id = "role;" + bisnesRole.getId();
     }
 
     public ChartRole getParent() {
@@ -19,9 +19,10 @@ public class ChartRole extends ChartObject {
         return new ChartRole(parent);
     }
 
-       @Override
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("{\"type\":\"role\",")
+                .append(" \"id\":\"").append(id).append("\",")
                 .append(" \"x\":\"").append(bisnesRole.getPosition().x).append("\",")
                 .append(" \"y\":\"").append(bisnesRole.getPosition().y).append("\",")
                 .append(" \"name\":\"").append(bisnesRole.getName()).append("\",")
