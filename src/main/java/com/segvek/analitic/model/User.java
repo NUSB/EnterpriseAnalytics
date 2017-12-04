@@ -1,5 +1,6 @@
 package com.segvek.analitic.model;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class User {
@@ -48,6 +49,18 @@ public class User {
 
     public void setRoles(List<UserRole> roles) {
         this.roles = roles;
+    }
+
+    public void addRole(String role) {
+        if(this.roles==null){
+            roles = new LinkedList<UserRole>();
+        }
+        roles.add(new UserRole(this, role));
+    }
+
+    @Override
+    public String toString() {
+        return "User{" + "name=" + name + ", password=" + password + ", enabled=" + enabled + ", roles=" + roles + '}';
     }
     
     

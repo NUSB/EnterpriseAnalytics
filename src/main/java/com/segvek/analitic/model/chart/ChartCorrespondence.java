@@ -57,6 +57,7 @@ public class ChartCorrespondence extends ChartObject {
         int x = debet.getPosition().x - (debet.getPosition().x - credit.getPosition().x) / 2;
         int y = debet.getPosition().y - (debet.getPosition().y - credit.getPosition().y) / 2;
         StringBuilder sb = new StringBuilder("{\"type\":\"crr\", \"x\":\"").append(x)
+                .append("\",  \"id\":\"").append(id)
                 .append("\", \"y\":\"").append(y)
                 .append("\", \"name\":\"").append("")
                 .append("\", \"info\":\"").append(info.toString())

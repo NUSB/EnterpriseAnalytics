@@ -8,7 +8,7 @@ public class ChartAcount extends ChartObject {
 
     public ChartAcount(Acount acount) {
         this.acount = acount;
-        this.id = "acount" + acount.getId();
+        this.id = "acount;" + acount.getId();
     }
 
     public ChartAcount getParent() {
@@ -23,6 +23,7 @@ public class ChartAcount extends ChartObject {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("{\"type\":\"acc\",")
+                .append(" \"id\":\"").append(id).append("\",")
                 .append(" \"x\":\"").append(acount.getPosition().x).append("\",")
                 .append(" \"y\":\"").append(acount.getPosition().y).append("\",")
                 .append(" \"name\":\"").append(acount.getCode()).append("\",")

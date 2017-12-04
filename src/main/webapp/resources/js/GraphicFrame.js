@@ -313,9 +313,9 @@ function ChartModel(parser) {
 }
 
 //<editor-fold defaultstate="collapsed" desc="model classes">
-function ChartObject(position, name, type, info, link) {
+function ChartObject(position, name, type, info, link, id) {
     this.position = position;
-    this.id = "" + Math.random() * 100 + "";
+    this.id = id;
     this.name = name;
     this.type = type;
     this.info = info;
@@ -350,29 +350,29 @@ function ChartObject(position, name, type, info, link) {
     };
 }
 
-function Role(position, name, type, info, link) {
-    ChartObject.call(this, position, name, type, info, link);
+function Role(position, name, type, info, link, id) {
+    ChartObject.call(this, position, name, type, info, link, id);
 
     this.rendererMap.set(TypeViewChartObject.PASSIVE, new RolePassiveRenderer(this));
     this.rendererMap.set(TypeViewChartObject.ACTIVE, new RoleActiveRenderer(this));
 }
 
-function Document(position, name, type, info, link) {
-    ChartObject.call(this, position, name, type, info, link);
+function Document(position, name, type, info, link, id) {
+    ChartObject.call(this, position, name, type, info, link, id);
     this.rendererMap.set(TypeViewChartObject.PASSIVE, new DocumentPassiveRenderer(this));
     this.rendererMap.set(TypeViewChartObject.ACTIVE, new DocumentActiveRenderer(this));
 
 }
 
-function Account(position, name, type, info, link) {
-    ChartObject.call(this, position, name, type, info, link);
+function Account(position, name, type, info, link, id) {
+    ChartObject.call(this, position, name, type, info, link, id);
 
     this.rendererMap.set(TypeViewChartObject.PASSIVE, new AccountPassiveRenderer(this));
     this.rendererMap.set(TypeViewChartObject.ACTIVE, new AccountActiveRenderer(this));
 }
 
-function Correspondence(position, name, type, info, link) {
-    ChartObject.call(this, position, name, type, info, link);
+function Correspondence(position, name, type, info, link, id) {
+    ChartObject.call(this, position, name, type, info, link, id);
 
     this.rendererMap.set(TypeViewChartObject.PASSIVE, new CorrespondencePassiveRenderer(this));
     this.rendererMap.set(TypeViewChartObject.ACTIVE, new CorrespondenceActiveRenderer(this));
@@ -392,7 +392,7 @@ function Line(point1, point2, color) {
 }
 
 function Connector() {
-    this.url = "http://localhost:7995/Analitic/";
+    this.url = "http://localhost:7995/Analitic/chart";
     this.getStringFromServer = function () {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', this.url, false);
@@ -424,23 +424,24 @@ function JsonParser(serverAnswer) {
     Parser.call(this, serverAnswer);
     this.getObjects = function () {
         let output = [];
+        console.log(serverAnswer);
         let objects = JSON.parse(serverAnswer).objects;
         for (let i = 0; i < objects.length; i++) {
             if (objects[i].type === 'doc') {
                 output.push(new Document(new Point(Number(objects[i].x), Number(objects[i].y)),
-                        objects[i].name, objects[i].type, objects[i].info, objects[i].link));
+                        objects[i].name, objects[i].type, objects[i].info, objects[i].link, objects[i].id));
             }
             if (objects[i].type === 'role') {
                 output.push(new Role(new Point(Number(objects[i].x), Number(objects[i].y)),
-                        objects[i].name, objects[i].type, objects[i].info, objects[i].link));
+                        objects[i].name, objects[i].type, objects[i].info, objects[i].link, objects[i].id));
             }
             if (objects[i].type === 'crr') {
                 output.push(new Correspondence(new Point(Number(objects[i].x), Number(objects[i].y)),
-                        objects[i].name, objects[i].type, objects[i].info, objects[i].link));
+                        objects[i].name, objects[i].type, objects[i].info, objects[i].link, objects[i].id));
             }
             if (objects[i].type === 'acc') {
                 output.push(new Account(new Point(Number(objects[i].x), Number(objects[i].y)),
-                        objects[i].name, objects[i].type, objects[i].info, objects[i].link));
+                        objects[i].name, objects[i].type, objects[i].info, objects[i].link, objects[i].id));
             }
 
         }

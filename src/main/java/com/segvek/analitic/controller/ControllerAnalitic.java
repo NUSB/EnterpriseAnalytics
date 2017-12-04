@@ -1,10 +1,6 @@
 package com.segvek.analitic.controller;
 
-import com.segvek.analitic.dao.BisnesRoleDAO;
-import com.segvek.analitic.dao.CorrespondenceDAO;
-import com.segvek.analitic.dao.DocumentDAO;
 import com.segvek.analitic.dao.mysql.AcountMysqlDao;
-import com.segvek.analitic.model.chart.ChartManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,20 +13,11 @@ public class ControllerAnalitic {
     @Autowired
     AcountMysqlDao acountDAO;
     
-    @Autowired
-    CorrespondenceDAO correspondenceDAO;
-    @Autowired
-    DocumentDAO documentDAO;
-    @Autowired
-    BisnesRoleDAO bisnesRoleDAO;
-    
-    @RequestMapping(value = "/", produces={"application/json; charset=UTF-8"})
+
+    @RequestMapping(value = "/")
     @ResponseBody
     public String index() {
-        ChartManager cm = new ChartManager(correspondenceDAO, documentDAO, bisnesRoleDAO, acountDAO);
-        
-       
-        return cm.toJson();
+        return "index";
     }
 
     @RequestMapping(value = "/admin")
