@@ -1,7 +1,16 @@
+var saveButton = document.getElementById("schemaSaveButton");
+saveButton.style.top = 70 + "px";
+saveButton.style.left = (window.innerWidth - saveButton.offsetWidth) - 10 + "px";
+
+saveButton.addEventListener("click", function () {
+    graphicFrame.save();
+});
+
 function GraphicFrame() {
     var canvas = document.getElementById("graphicFrame");
-    canvas.width = window.innerWidth - 5;
-    canvas.height = window.innerHeight - canvas.offsetTop - 5;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight - canvas.offsetTop;
+
     var context = canvas.getContext("2d");
     var bias = new Point(0, 0);
     var connector = new Connector();
@@ -32,8 +41,6 @@ function GraphicFrame() {
         graphicFrame.draw();
     });
     canvas.addEventListener("mousedown", function (event) {
-
-
         oldPosition = new Point(event.pageX, event.pageY);
         if (activeChartObject !== null) {
             workWithObject = activeChartObject;
@@ -43,7 +50,6 @@ function GraphicFrame() {
         workWithObject = null;
         oldPosition = null;
     });
-
 
 
     this.draw = function () {
@@ -76,6 +82,10 @@ function GraphicFrame() {
         drawCenter();
     };
 
+    this.save = function () {
+        console.log(chartModel.getChanged());
+    };
+
     let drawCenter = function () {
         context.strokeStyle = "#FF0000";
         context.beginPath();
@@ -92,37 +102,30 @@ function GraphicFrame() {
 }
 
 function ChartModel(parser) {
+    var changedObjects = [];
     var chartObjects = parser.getObjects();
-//        chartObjects[0] = new Role(new Point(200, 100), "Дерик", "role", "role_1", "role/1");
-//    [
-//        new Document(new Point(400, 100), "Поступление на счет", "doc", "doc_1", "doc/1")
-//                , new Document(new Point(350, 200), "Приходная накладная", "doc", "doc_2", "doc/2")
-//                , new Role(new Point(200, 100), "Кассир", "role", "role_1", "role/1")
-//                , new Role(new Point(50, 200), "Кладовщик", "role", "role_2", "role/2")
-//                , new Account(new Point(500, 500), "30", "acc", "Касса", "account/1")
-//                , new Account(new Point(500, 700), "40", "acc", "Рассчеты с поставщиками", "account/2")
-//                , new Correspondence(new Point(480, 600), "", "crr", "Дт 40:Кт 30", "correspondence/2")
-//                , new Account(new Point(800, 800), "50", "acc", "Касса2", "account/2")
-//                , new Account(new Point(900, 900), "60", "acc", "Рассчеты с поставщиками2", "account/3")
-//                , new Correspondence(new Point(680, 800), "", "crr", "Дт 50:Кт 60", "correspondence/2")
-//    ];
+
     console.log(chartObjects);
     var matrixIncidence =
             parser.getMatrix();
 
-//            [
-//        [" ", " ", "d", " ", " ", " ", " ", " ", " ", " "],
-//        [" ", " ", " ", "d", " ", " ", " ", " ", " ", "d"],
-//        ["d", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-//        [" ", "d", "s", " ", " ", " ", " ", " ", " ", " "],
-//        [" ", " ", " ", " ", " ", " ", "t", " ", " ", " "],
-//        [" ", " ", " ", " ", " ", " ", "t", " ", " ", " "],
-//        [" ", " ", " ", " ", "t", "t", " ", " ", " ", " "],
-//        [" ", " ", " ", " ", " ", " ", " ", " ", " ", "t"],
-//        [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-//        [" ", "d", " ", " ", "t", " ", " ", " ", " ", " "]
-//    ];
     console.log(matrixIncidence);
+    this.getChanged = function () {
+        var stringOutput = "";
+        let temp = "";
+        for (let i = 0; i < changedObjects.length; i++) {
+            stringOutput += changedObjects[i].getId() + "|";
+            stringOutput += changedObjects[i].getPosition().x + "|";
+            stringOutput += changedObjects[i].getPosition().y + "|";
+            stringOutput += "#";
+        }
+        for (let i = 0; i < stringOutput.length - 2; i++) {
+            temp += stringOutput[i];
+        }
+        stringOutput = temp;
+        return stringOutput;
+    };
+    
     this.getAllLines = function () {
         let lines = [];
         for (var i = 0; i < matrixIncidence.length; i++) {
@@ -208,6 +211,13 @@ function ChartModel(parser) {
                     }
                 }
             }
+
+            if (matrixIncidence[index][i] === "s") {
+                lines.push(new Line(chartObjects[index].position, chartObjects[i].position, "#ef04cb"));
+            }
+            if (matrixIncidence[i][index] === "s") {
+                lines.push(new Line(chartObjects[index].position, chartObjects[i].position, "#a604f7"));
+            }
         }
         return lines;
     };
@@ -285,6 +295,19 @@ function ChartModel(parser) {
             }
         }
         charObject.move(point);
+        if (changedObjects.length === 0) {
+            changedObjects.push(charObject);
+        } else {
+            for (let i = 0; i < changedObjects.length; i++) {
+                if (charObject.id === changedObjects[i].id) {
+                    break;
+                }
+                if (charObject.id !== changedObjects[i].id && i === changedObjects.length - 1) {
+                    changedObjects.push(charObject);
+                }
+            }
+        }
+
     };
 
 }
@@ -292,6 +315,7 @@ function ChartModel(parser) {
 //<editor-fold defaultstate="collapsed" desc="model classes">
 function ChartObject(position, name, type, info, link) {
     this.position = position;
+    this.id = "" + Math.random() * 100 + "";
     this.name = name;
     this.type = type;
     this.info = info;
@@ -316,6 +340,13 @@ function ChartObject(position, name, type, info, link) {
     this.move = function (point) {
         this.position.x += point.x;
         this.position.y += point.y;
+    };
+
+    this.getId = function () {
+        return this.id;
+    };
+    this.getPosition = function () {
+        return this.position;
     };
 }
 
@@ -373,6 +404,10 @@ function Connector() {
             return xhr.responseText;
         }
     };
+    
+    this.sendChanges = function(changesString) {
+        
+    };
 }
 
 function Parser(serverAnswer) {
@@ -391,23 +426,23 @@ function JsonParser(serverAnswer) {
         let output = [];
         let objects = JSON.parse(serverAnswer).objects;
         for (let i = 0; i < objects.length; i++) {
-                if (objects[i].type === 'doc') {
-                    output.push(new Document(new Point(Number(objects[i].x), Number(objects[i].y)),
-                            objects[i].name, objects[i].type, objects[i].info, objects[i].link));
-                }
-                if (objects[i].type === 'role') {
-                    output.push(new Role(new Point(Number(objects[i].x), Number(objects[i].y)),
-                            objects[i].name, objects[i].type, objects[i].info, objects[i].link));
-                }
-                if (objects[i].type === 'crr') {
-                    output.push(new Correspondence(new Point(Number(objects[i].x), Number(objects[i].y)),
-                            objects[i].name, objects[i].type, objects[i].info, objects[i].link));
-                }
-                if (objects[i].type === 'acc') {
-                    output.push(new Account(new Point(Number(objects[i].x), Number(objects[i].y)),
-                            objects[i].name, objects[i].type, objects[i].info, objects[i].link));
-                }
-            
+            if (objects[i].type === 'doc') {
+                output.push(new Document(new Point(Number(objects[i].x), Number(objects[i].y)),
+                        objects[i].name, objects[i].type, objects[i].info, objects[i].link));
+            }
+            if (objects[i].type === 'role') {
+                output.push(new Role(new Point(Number(objects[i].x), Number(objects[i].y)),
+                        objects[i].name, objects[i].type, objects[i].info, objects[i].link));
+            }
+            if (objects[i].type === 'crr') {
+                output.push(new Correspondence(new Point(Number(objects[i].x), Number(objects[i].y)),
+                        objects[i].name, objects[i].type, objects[i].info, objects[i].link));
+            }
+            if (objects[i].type === 'acc') {
+                output.push(new Account(new Point(Number(objects[i].x), Number(objects[i].y)),
+                        objects[i].name, objects[i].type, objects[i].info, objects[i].link));
+            }
+
         }
         return output;
     };

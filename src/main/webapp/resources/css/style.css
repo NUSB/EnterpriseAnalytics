@@ -40,7 +40,14 @@ textarea {
     grid-column-gap: 10%;
     padding:3px 20px;
 }
-
+/*NEW CODE*/
+.schema-page {
+    user-select: none;
+    overflow: hidden;
+}
+#schemaSaveButton {
+    position: absolute;
+}
 /*NAVIGATION*/
 a {
     text-decoration: none;
@@ -106,7 +113,7 @@ button {
 }
 
 button:hover {
-    curcusor: pointer;
+    cursor: pointer;
 }
 
 /*Form edit*/
