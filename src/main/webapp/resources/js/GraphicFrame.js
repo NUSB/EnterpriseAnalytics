@@ -10,14 +10,12 @@ function GraphicFrame() {
     var canvas = document.getElementById("graphicFrame");
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight - canvas.offsetTop;
-
     var context = canvas.getContext("2d");
     var bias = new Point(0, 0);
     var connector = new Connector();
     var chartModel = new ChartModel(new JsonParser(connector.getStringFromServer()));
     var activeChartObject = null;
     var scale = 1;
-
     var oldPosition = null;
     var workWithObject = null;
     canvas.addEventListener("mousemove", function (event) {
@@ -27,7 +25,6 @@ function GraphicFrame() {
         if (oldPosition !== null) {
             var dX = (oldPosition.x - event.pageX) / scale;
             var dY = (oldPosition.y - event.pageY) / scale;
-
             if (workWithObject !== null) {
                 chartModel.moveCharObject(workWithObject, new Point(-dX, -dY));
             } else {
@@ -50,12 +47,9 @@ function GraphicFrame() {
         workWithObject = null;
         oldPosition = null;
     });
-
-
     this.draw = function () {
         context.fillStyle = "#222222";
         context.fillRect(0, 0, canvas.width, canvas.height);
-
         let lines = chartModel.getAllLines();
         for (let i = 0; i < lines.length; i++) {
             lines[i].draw(context, bias, scale);
@@ -69,23 +63,18 @@ function GraphicFrame() {
         if (activeChartObject !== null) {
             context.fillStyle = "rgba(0, 0, 0, 0.85)";
             context.fillRect(0, 0, canvas.width, canvas.height);
-
             let activeChartObjects = chartModel.getLinesByChartObject(activeChartObject);
-
             for (let i = 0; i < activeChartObjects.length; i++) {
                 activeChartObjects[i].draw(context, bias, scale);
             }
             activeChartObject.draw(context, bias, TypeViewChartObject.ACTIVE, scale);
-
             //todo: Код по отображению смежных елеметов диаграммы 
         }
         drawCenter();
     };
-
     this.save = function () {
         console.log(chartModel.getChanged());
     };
-
     let drawCenter = function () {
         context.strokeStyle = "#FF0000";
         context.beginPath();
@@ -104,11 +93,9 @@ function GraphicFrame() {
 function ChartModel(parser) {
     var changedObjects = [];
     var chartObjects = parser.getObjects();
-
     console.log(chartObjects);
     var matrixIncidence =
             parser.getMatrix();
-
     console.log(matrixIncidence);
     this.getChanged = function () {
         var stringOutput = "";
@@ -125,7 +112,6 @@ function ChartModel(parser) {
         stringOutput = temp;
         return stringOutput;
     };
-    
     this.getAllLines = function () {
         let lines = [];
         for (var i = 0; i < matrixIncidence.length; i++) {
@@ -136,9 +122,7 @@ function ChartModel(parser) {
             }
         }
         return lines;
-
     };
-
     this.getIndexByChartObject = function (chartObject) {
         for (let i = 0; i < chartObjects.length; i++) {
             if (chartObjects[i] === chartObject) {
@@ -146,7 +130,6 @@ function ChartModel(parser) {
             }
         }
     };
-
     this.getLinesByDocument = function (document) {
         let index = this.getIndexByChartObject(document);
         let lines = [];
@@ -164,8 +147,6 @@ function ChartModel(parser) {
 
         return lines;
     };
-
-
     this.getLinesByRole = function (role) {
         let index = this.getIndexByChartObject(role);
         let lines = [];
@@ -182,7 +163,6 @@ function ChartModel(parser) {
         }
         return lines;
     };
-
     this.getLinesByAccount = function (account) {
         let index = this.getIndexByChartObject(account);
         let lines = [];
@@ -221,7 +201,6 @@ function ChartModel(parser) {
         }
         return lines;
     };
-
     this.getLinesByCorrespondence = function (correspondence) {
         let index = this.getIndexByChartObject(correspondence);
         let lines = [];
@@ -232,7 +211,6 @@ function ChartModel(parser) {
         }
         return lines;
     };
-
     this.getLinesByChartObject = function (chartObject) {
         if (chartObject.type === "doc") {
             return this.getLinesByDocument(chartObject);
@@ -248,15 +226,12 @@ function ChartModel(parser) {
         }
         return [];
     };
-
     this.getRelatedObjects = function () {
         console.log("asdasda");
     };
-
     this.getAllChartObjects = function () {
         return chartObjects;
     };
-
     this.findChartObjectByPoint = function (point, scale, typeRendering) {
         for (let i = 0; i < chartObjects.length; i++) {
             if (chartObjects[i].containsPoint(point, scale, typeRendering) === true) {
@@ -266,7 +241,6 @@ function ChartModel(parser) {
 
         return null;
     };
-
     this.moveCharObject = function (charObject, point) {
         if (charObject.type === "crr") {
             return;
@@ -309,7 +283,6 @@ function ChartModel(parser) {
         }
 
     };
-
 }
 
 //<editor-fold defaultstate="collapsed" desc="model classes">
@@ -322,26 +295,22 @@ function ChartObject(position, name, type, info, link, id) {
     this.link = link;
     this.rendererMap = new Map();
     this.rendererMap.set("default", new DefaultRenderer(this));
-
     this.containsPoint = function (point, scale, typeRendering) {
         if (this.rendererMap.get(typeRendering) === undefined) {
             typeRendering = "default";
         }
         return this.rendererMap.get(typeRendering).containsPoint(point, scale);
     };
-
     this.draw = function (context, bias, typeRendering, scale) {
         if (this.rendererMap.get(typeRendering) === undefined) {
             typeRendering = "default";
         }
         this.rendererMap.get(typeRendering).draw(context, bias, scale);
     };
-
     this.move = function (point) {
         this.position.x += point.x;
         this.position.y += point.y;
     };
-
     this.getId = function () {
         return this.id;
     };
@@ -352,7 +321,6 @@ function ChartObject(position, name, type, info, link, id) {
 
 function Role(position, name, type, info, link, id) {
     ChartObject.call(this, position, name, type, info, link, id);
-
     this.rendererMap.set(TypeViewChartObject.PASSIVE, new RolePassiveRenderer(this));
     this.rendererMap.set(TypeViewChartObject.ACTIVE, new RoleActiveRenderer(this));
 }
@@ -361,22 +329,18 @@ function Document(position, name, type, info, link, id) {
     ChartObject.call(this, position, name, type, info, link, id);
     this.rendererMap.set(TypeViewChartObject.PASSIVE, new DocumentPassiveRenderer(this));
     this.rendererMap.set(TypeViewChartObject.ACTIVE, new DocumentActiveRenderer(this));
-
 }
 
 function Account(position, name, type, info, link, id) {
     ChartObject.call(this, position, name, type, info, link, id);
-
     this.rendererMap.set(TypeViewChartObject.PASSIVE, new AccountPassiveRenderer(this));
     this.rendererMap.set(TypeViewChartObject.ACTIVE, new AccountActiveRenderer(this));
 }
 
 function Correspondence(position, name, type, info, link, id) {
     ChartObject.call(this, position, name, type, info, link, id);
-
     this.rendererMap.set(TypeViewChartObject.PASSIVE, new CorrespondencePassiveRenderer(this));
     this.rendererMap.set(TypeViewChartObject.ACTIVE, new CorrespondenceActiveRenderer(this));
-
     this.move = function (point) {};
 }
 
@@ -404,9 +368,8 @@ function Connector() {
             return xhr.responseText;
         }
     };
-    
-    this.sendChanges = function(changesString) {
-        
+    this.sendChanges = function (changesString) {
+
     };
 }
 
@@ -447,10 +410,8 @@ function JsonParser(serverAnswer) {
         }
         return output;
     };
-
     this.getMatrix = function () {
         return JSON.parse(serverAnswer).incedence;
-
     };
 }
 //</editor-fold>
@@ -460,11 +421,9 @@ function Renderer(chartObject) {
     this.draw = function (context, bias, scale) {
         console.error("Method draw isn't overradden  in Render class");
     };
-
     this.containsPoint = function (point, scale) {
         console.error("Method containsPoint isn't overradden in Render class");
     };
-
 }
 
 function DefaultRenderer(chartObject) {
@@ -474,7 +433,6 @@ function DefaultRenderer(chartObject) {
     this.fillColor = "#3e3e3e";
     this.color = "#ff000f";
     this.fontSize = 14;
-
     this.draw = function (context, bias, scale) {
         let biasCenter = new Point(bias.x + this.width / 2, bias.y + this.height / 2);
         context.fillStyle = this.fillColor;
@@ -489,7 +447,6 @@ function DefaultRenderer(chartObject) {
         context.fillText(text, chartObject.position.x * scale - biasCenter.x + (this.width * scale - context.measureText(text).width) / 2, chartObject.position.y * scale - biasCenter.y + this.height * scale / 2 + this.fontSize / 3);
         context.stroke();
     };
-
     this.containsPoint = function (point, scale) {
         let pointCenter = new Point(point.x + this.width / 2, point.y + this.height / 2);
         return pointCenter.x > chartObject.position.x * scale
@@ -506,7 +463,6 @@ function DocumentPassiveRenderer(chartObject) {
 function DocumentActiveRenderer(chartObject) {
     DocumentPassiveRenderer.call(this, chartObject);
     this.color = "#99ffb9";
-
     this.draw = function (context, bias, scale) {
         let temp = new DocumentPassiveRenderer(chartObject);
         temp.color = this.color;
@@ -525,8 +481,6 @@ function AccountPassiveRenderer(chartObject) {
     this.fillColor = "#3e3e3e";
     this.color = "#FFFFFF";
     var radius = 25;
-
-
     this.draw = function (context, bias, scale) {
         context.beginPath();
         context.arc(chartObject.position.x * scale - bias.x, chartObject.position.y * scale - bias.y, radius * scale, 0, 2 * Math.PI, false);
@@ -540,7 +494,6 @@ function AccountPassiveRenderer(chartObject) {
         context.fillText(chartObject.name, chartObject.position.x * scale - bias.x + (radius * scale - context.measureText(chartObject.name).width) / 2 - radius * scale / 2, chartObject.position.y * scale - bias.y + this.fontSize / 3);
         context.stroke();
     };
-
     this.containsPoint = function (point, scale) {
         return (Math.pow(point.x - chartObject.position.x * scale, 2) + Math.pow(point.y - chartObject.position.y * scale, 2)) < Math.pow(radius * scale, 2);
     };
@@ -556,7 +509,6 @@ function RolePassiveRenderer(chartObject) {
     this.width = 30;
     this.height = 90;
     this.fillColor = "#222222";
-
     this.draw = function (context, bias, scale) {
         let biasCenter = new Point(bias.x + this.width / 2, bias.y + this.height / 2);
         context.strokeStyle = this.color;
@@ -573,7 +525,6 @@ function RolePassiveRenderer(chartObject) {
         context.lineTo(chartObject.position.x * scale - biasCenter.x + this.width * scale, chartObject.position.y * scale - biasCenter.y + (4 * this.height * scale) / 9);
         context.closePath();
         context.stroke();
-
         context.fillStyle = this.color;
         context.font = (this.fontSize * scale) + "px Arial";
         context.fillText(chartObject.name, chartObject.position.x * scale - biasCenter.x + (this.width * scale - context.measureText(chartObject.name).width) / 2, chartObject.position.y * scale + this.height * scale - biasCenter.y + this.fontSize * scale);
@@ -592,7 +543,6 @@ function CorrespondencePassiveRenderer(chartObject) {
     this.color = "#FFFFFF";
     this.width = 30;
     this.height = 20;
-
     this.draw = function (context, bias, scale) {
         let biasCenter = new Point(bias.x + this.width / 2, bias.y + this.height / 2);
         context.beginPath();
@@ -609,7 +559,6 @@ function CorrespondencePassiveRenderer(chartObject) {
 function CorrespondenceActiveRenderer(chartObject) {
     CorrespondencePassiveRenderer.call(this, chartObject);
     this.fillColor = "#cc6428";
-
 }
 
 //</editor-fold>
@@ -624,7 +573,6 @@ var TypeViewChartObject = {
     PASSIVE: 0,
     ACTIVE: 1
 };
-
 //</editor-fold>
 
 
