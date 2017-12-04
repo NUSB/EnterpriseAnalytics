@@ -5,10 +5,10 @@
  */
 package com.segvek.analitic.model;
 
-public enum UserRolesEnum {
-    ROLE_ADMIN,
-    ROLE_SUBORDINATION,
-    ROLE_DOCUMENTS,//роль пользователя который ведет документы
-    ROLE_ACOUNTING,//роль пользователя-бухгалтра 
-    ROLE_USER  //роль пользователя без прав
+public final class  UserRolesEnum {
+    public static final String ROLE_ADMIN="ROLE_ADMIN";
+    public static final String ROLE_SUBORDINATION="ROLE_SUBORDINATION";
+    public static final String ROLE_DOCUMENTS="ROLE_DOCUMENTS"; //роль пользователя который ведет документы
+    public static final String ROLE_ACOUNTING="ROLE_ACOUNTING";//роль пользователя-бухгалтра 
+    public static final String ROLE_USER="ROLE_USER";  //роль пользователя без прав
 }

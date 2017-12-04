@@ -26,35 +26,28 @@ public class ChartManager {
         this.bisnesRoleDAO = bisnesRoleDAO;
         this.acountDAO = acountDAO;
         chartObjects = new ArrayList<ChartObject>();
-        initChartObjectsList();
     }
 
-    private void initChartObjectsList() {
-        initCorespondenceList();
-        initDocumentList();
-        initAcountList();
-        initbisnesRoleList();
-    }
 
-    private void initbisnesRoleList() {
+    public void initbisnesRoleList() {
         for (BisnesRole br : bisnesRoleDAO.getAllBisnesRole()) {
             chartObjects.add(new ChartRole(br));
         }
     }
 
-    private void initAcountList() {
+    public void initAcountList() {
         for (Acount a : acountDAO.getAllAcount()) {
             chartObjects.add(new ChartAcount(a));
         }
     }
 
-    private void initDocumentList() {
+    public void initDocumentList() {
         for (Document d : documentDAO.getAllDocument()) {
             chartObjects.add(new ChartDocument(d));
         }
     }
 
-    private void initCorespondenceList() {
+    public void initCorespondenceList() {
         List<ChartCorrespondence> corr = new ArrayList<ChartCorrespondence>();
         for (Correspondence c : correspondenceDAO.getAllCorrespondences()) {
             boolean flug = false;
@@ -160,6 +153,7 @@ public class ChartManager {
     }
 
     public String toJson(){
+        long time = System.currentTimeMillis();
         StringBuilder sb = new StringBuilder("{\"objects\":");
         sb.append(chartObjects.toString());
         
@@ -177,6 +171,7 @@ public class ChartManager {
                 sb.append(",");
         }
         sb.append("]}");
+        sb.append(System.currentTimeMillis()-time);
         return sb.toString();
     }
 }

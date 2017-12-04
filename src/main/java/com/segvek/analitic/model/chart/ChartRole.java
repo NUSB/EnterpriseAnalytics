@@ -16,7 +16,7 @@ public class ChartRole extends ChartObject {
         if (parent == null) {
             return null;
         }
-        return new ChartRole(bisnesRole);
+        return new ChartRole(parent);
     }
 
        @Override

@@ -36,10 +36,10 @@
                                     </div>
                                     <div class="form-input">
                                         <!--Checkbox autocopletion should be done in the next coding-->
-                                        <p><input type="checkbox" userRestriction="0" name="ROLE_ADMIN"/> Администрирование</p>
-                                        <p><input type="checkbox" userRestriction="1" name="ROLE_ACOUNTING"/> Бухгалтерия</p>
-                                        <p><input type="checkbox" userRestriction="2" name="ROLE_DOCUMENTS"/> Документооборот</p>
-                                        <p><input type="checkbox" userRestriction="3" name="ROLE_SUBORDINATION"/> Подчиненность</p>
+                                        <p><input type="checkbox" userRestriction="0" name="ROLE_ADMIN" ${role_admin eq 'ROLE_ADMIN'?'checked':''}/> Администрирование</p>
+                                        <p><input type="checkbox" userRestriction="1" name="ROLE_ACOUNTING" ${role_acounting eq 'ROLE_ACOUNTING'?'checked':''}/> Бухгалтерия</p>
+                                        <p><input type="checkbox" userRestriction="2" name="ROLE_DOCUMENTS" ${role_document eq 'ROLE_DOCUMENTS'?'checked':''}/> Документооборот</p>
+                                        <p><input type="checkbox" userRestriction="3" name="ROLE_SUBORDINATION" ${role_user eq 'ROLE_USER'?'checked':''}/> Подчиненность</p>
                                     </div>
                                     <div class="form-name">
                                         <p>Активный:</p>

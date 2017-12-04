@@ -12,24 +12,24 @@ package com.segvek.analitic.model;
 public class UserRole {
     private int id;
     private User user; 
-    private UserRolesEnum role;
+    private String role;
 
-    public UserRole(int id, User user, UserRolesEnum role) {
+    public UserRole(int id, User user, String role) {
         this.id = id;
         this.user = user;
         this.role = role;
     }
 
-    public UserRole(User user, UserRolesEnum role) {
+    public UserRole(User user, String role) {
         this.user = user;
         this.role = role;
     }
 
-    public UserRolesEnum getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(UserRolesEnum role) {
+    public void setRole(String role) {
         this.role = role;
     }
 
@@ -48,6 +48,16 @@ public class UserRole {
     public void setUser(User user) {
         this.user = user;
     }
+
+    @Override
+    public String toString() {
+        return "UserRole{" + "id=" + id + ", user=" + user.getName() + ", role=" + role + '}';
+    }
+
+   
+
+    
+    
     
     
 }
