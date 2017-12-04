@@ -153,7 +153,6 @@ public class ChartManager {
     }
 
     public String toJson(){
-        long time = System.currentTimeMillis();
         StringBuilder sb = new StringBuilder("{\"objects\":");
         sb.append(chartObjects.toString());
         
@@ -171,7 +170,6 @@ public class ChartManager {
                 sb.append(",");
         }
         sb.append("]}");
-        sb.append(System.currentTimeMillis()-time);
         return sb.toString();
     }
 }

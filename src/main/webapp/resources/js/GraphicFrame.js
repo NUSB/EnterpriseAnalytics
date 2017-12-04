@@ -29,8 +29,8 @@ function getUrl(url, cb) {
     xmlhttp.send(null);
 }
 
-getUrl("http://localhost:8084/Analitic/chart",function(status,header,text){
-   console.log(text); 
+getUrl("http://localhost:8084/Analitic/chart", function (status, header, text) {
+    console.log(text);
 });
 
 
@@ -397,7 +397,7 @@ function Line(point1, point2, color) {
 }
 
 function Connector() {
-    this.url = "http://localhost:7995/Analitic/";
+    this.url = "http://localhost:8084/Analitic/chart";
     this.getStringFromServer = function () {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', this.url, false);
@@ -427,23 +427,23 @@ function JsonParser(serverAnswer) {
         let output = [];
         let objects = JSON.parse(serverAnswer).objects;
         for (let i = 0; i < objects.length; i++) {
-                if (objects[i].type === 'doc') {
-                    output.push(new Document(new Point(Number(objects[i].x), Number(objects[i].y)),
-                            objects[i].name, objects[i].type, objects[i].info, objects[i].link));
-                }
-                if (objects[i].type === 'role') {
-                    output.push(new Role(new Point(Number(objects[i].x), Number(objects[i].y)),
-                            objects[i].name, objects[i].type, objects[i].info, objects[i].link));
-                }
-                if (objects[i].type === 'crr') {
-                    output.push(new Correspondence(new Point(Number(objects[i].x), Number(objects[i].y)),
-                            objects[i].name, objects[i].type, objects[i].info, objects[i].link));
-                }
-                if (objects[i].type === 'acc') {
-                    output.push(new Account(new Point(Number(objects[i].x), Number(objects[i].y)),
-                            objects[i].name, objects[i].type, objects[i].info, objects[i].link));
-                }
-            
+            if (objects[i].type === 'doc') {
+                output.push(new Document(new Point(Number(objects[i].x), Number(objects[i].y)),
+                        objects[i].name, objects[i].type, objects[i].info, objects[i].link));
+            }
+            if (objects[i].type === 'role') {
+                output.push(new Role(new Point(Number(objects[i].x), Number(objects[i].y)),
+                        objects[i].name, objects[i].type, objects[i].info, objects[i].link));
+            }
+            if (objects[i].type === 'crr') {
+                output.push(new Correspondence(new Point(Number(objects[i].x), Number(objects[i].y)),
+                        objects[i].name, objects[i].type, objects[i].info, objects[i].link));
+            }
+            if (objects[i].type === 'acc') {
+                output.push(new Account(new Point(Number(objects[i].x), Number(objects[i].y)),
+                        objects[i].name, objects[i].type, objects[i].info, objects[i].link));
+            }
+
         }
         return output;
     };
