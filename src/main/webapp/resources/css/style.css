@@ -74,6 +74,50 @@ textarea {
 .scale-schema-block i:active {
     color:grey;
 }
+
+.schema-settings {
+    display:none;
+    color: #141414;
+    font-size: 1.3em;
+    background: rgba(150, 150, 153, 0.9098039215686274);
+    border-radius: 7px;
+    padding:10px;
+    box-shadow: 4px 4px 20px 1px #131111;
+    position:absolute;
+    bottom:37px;
+    left:26px;
+}
+
+.schema-settings input {
+    transform: scale(1.5);
+    margin-right:10px;
+}
+.schema-settings p {
+    display: inline;
+}
+
+.schema-settings div {
+    margin:7px;
+    display:block;
+}
+
+.settings-icon {
+    z-index:999;
+    position:absolute;
+    bottom:18px;
+    left:-3px;
+    color:white;
+}
+
+.settings-icon i {
+    color: #aea9a9;
+    font-size:40px;
+}
+
+.settings-icon i:hover {
+    font-size:42px;
+}
+
 /*NAVIGATION*/
 a {
     text-decoration: none;

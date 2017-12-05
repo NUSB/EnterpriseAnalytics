@@ -9,8 +9,26 @@
         <canvas style="border: 1px solid black; margin: 0px; padding: 0px;" id="graphicFrame"></canvas>
         <button class="button" id="schemaSaveButton">Сохранить</button>
         <div class="scale-schema-block">
-        <i id="scaleUp" class="icon-plus-squared"></i>
-        <i id="scaleDown" class="icon-minus-squared"></i>
+            <i id="scaleUp" class="icon-plus-squared"></i>
+            <i id="scaleDown" class="icon-minus-squared"></i>
+        </div>
+        <div class="settings-icon"><i id="setting-icon" class="icon-cog"></i></div>
+        <div class="schema-settings" id="schema-settings">
+            <div>
+            <input type="checkbox" id="setting-1" ><p>Бизнес-роли</p>
+            </div>
+            <div>
+            <input type="checkbox" id="setting-2" ><p>Иерархия бизнес-ролей</p>
+            </div>
+            <div>
+            <input type="checkbox" id="setting-3" ><p>Документы</p>
+            </div>
+            <div>
+            <input type="checkbox" id="setting-4" ><p>Счета</p>
+            </div>
+            <div>
+            <input type="checkbox" id="setting-5" ><p>Иерархия счетов</p>
+            </div>
         </div>
         <div id = "info-chart-schema">
         </div>

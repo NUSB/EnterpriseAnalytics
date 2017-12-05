@@ -1,22 +1,29 @@
 var saveButton = document.getElementById("schemaSaveButton");
 var canvas = document.getElementById("graphicFrame");
 
-saveButton.onclick = function() {
+saveButton.onclick = function () {
     graphicFrame.save();
     saveButton.style.display = "none";
 };
 
-document.getElementById("scaleUp").onclick = function() {
+document.getElementById("scaleUp").onclick = function () {
     graphicFrame.scaleUp();
 };
 
-document.getElementById("scaleDown").onclick = function() {
+document.getElementById("scaleDown").onclick = function () {
     graphicFrame.scaleDown();
 };
 
+document.getElementById("setting-icon").onclick = function () {
+    let settings = document.getElementById("schema-settings");
+    if (settings.style.display === "block") {
+        settings.style.display = "none";
+    } else {
+        settings.style.display = "block";
+    }
+    
+};
 window.onresize = function (ev) {
-    saveButton.style.top = 70 + "px";
-    saveButton.style.left = (window.innerWidth - saveButton.offsetWidth) - 10 + "px";
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     graphicFrame.draw();
@@ -85,11 +92,11 @@ function GraphicFrame() {
     this.addEventListener = function (eventListener) {
         observers.push(eventListener);
     };
-    this.scaleUp = function() {
+    this.scaleUp = function () {
         scale += 0.1;
         this.draw();
     };
-    this.scaleDown = function() {
+    this.scaleDown = function () {
         scale -= 0.1;
         this.draw();
     };
@@ -109,12 +116,15 @@ function GraphicFrame() {
         if (activeChartObject !== null) {
             context.fillStyle = "rgba(0, 0, 0, 0.85)";
             context.fillRect(0, 0, canvas.width, canvas.height);
-            let activeChartObjects = chartModel.getLinesByChartObject(activeChartObject);
-            for (let i = 0; i < activeChartObjects.length; i++) {
-                activeChartObjects[i].draw(context, bias, scale);
+            let chartActiveLines = chartModel.getLinesByChartObject(activeChartObject);
+            for (let i = 0; i < chartActiveLines.length; i++) {
+                chartActiveLines[i].draw(context, bias, scale);
             }
             activeChartObject.draw(context, bias, TypeViewChartObject.ACTIVE, scale);
-            //todo: Код по отображению смежных елеметов диаграммы 
+            let incidentObjects = chartModel.getIncidentObjects(activeChartObject);
+            for (let i = 0; i < incidentObjects.length; i++) {
+                incidentObjects[i].draw(context, bias, TypeViewChartObject.ACTIVE, scale);
+            }
         }
         drawCenter();
     };
@@ -135,7 +145,7 @@ function GraphicFrame() {
         context.stroke();
         context.closePath();
     };
-    
+
 }
 function GraphicFrameEventListener() {
     this.hoverChartObject = function (chartObject) {
@@ -171,6 +181,61 @@ function ChartModel(parser) {
         }
         return stringOutput;
     };
+
+    this.getIndexByChartObject = function (chartObject) {
+        for (let i = 0; i < chartObjects.length; i++) {
+            if (chartObjects[i] === chartObject) {
+                return i;
+            }
+        }
+    };
+
+    this.findChartObjectByPoint = function (point, scale, typeRendering) {
+        for (let i = 0; i < chartObjects.length; i++) {
+            if (chartObjects[i].containsPoint(point, scale, typeRendering) === true) {
+                return chartObjects[i];
+            }
+        }
+
+        return null;
+    };
+    this.moveCharObject = function (charObject, point) {
+        if (charObject.type === "crr") {
+            return;
+        }
+        if (charObject.type === "acc") {
+            let index = this.getIndexByChartObject(charObject);
+            let indexCorrespondence = [];
+            for (let i = 0; i < matrixIncidence.length; i++) {
+                if (matrixIncidence[index][i] === "t" || matrixIncidence[i][index] === "t") {
+                    indexCorrespondence.push(i);
+                }
+            }
+
+            for (let i = 0; i < indexCorrespondence.length; i++) {
+                for (let j = 0; j < matrixIncidence.length; j++) {
+                    if (matrixIncidence[indexCorrespondence[i]][j] === "t" && j !== index) {
+                        chartObjects[indexCorrespondence[i]].position = new Point(charObject.position.x + (chartObjects[j].position.x - charObject.position.x) / 2
+                                , charObject.position.y + (chartObjects[j].position.y - charObject.position.y) / 2);
+                    }
+
+                    if (matrixIncidence[j][indexCorrespondence[i]] === "t" && j !== index) {
+                        chartObjects[indexCorrespondence[i]].position = new Point(charObject.position.x + (chartObjects[j].position.x - charObject.position.x) / 2
+                                , charObject.position.y + (chartObjects[j].position.y - charObject.position.y) / 2);
+                    }
+                }
+            }
+        }
+        charObject.move(point);
+
+        for (let i = 0; i < changedObjects.length; i++) {
+            if (charObject.id === changedObjects[i].id) {
+                return;
+            }
+        }
+        changedObjects.push(charObject);
+    };
+
     this.getAllLines = function () {
         let lines = [];
         for (var i = 0; i < matrixIncidence.length; i++) {
@@ -182,13 +247,10 @@ function ChartModel(parser) {
         }
         return lines;
     };
-    this.getIndexByChartObject = function (chartObject) {
-        for (let i = 0; i < chartObjects.length; i++) {
-            if (chartObjects[i] === chartObject) {
-                return i;
-            }
-        }
+    this.getAllChartObjects = function () {
+        return chartObjects;
     };
+
     this.getLinesByDocument = function (document) {
         let index = this.getIndexByChartObject(document);
         let lines = [];
@@ -285,57 +347,68 @@ function ChartModel(parser) {
         }
         return [];
     };
-    this.getRelatedObjects = function () {
-        console.log("asdasda");
-    };
-    this.getAllChartObjects = function () {
-        return chartObjects;
-    };
-    this.findChartObjectByPoint = function (point, scale, typeRendering) {
-        for (let i = 0; i < chartObjects.length; i++) {
-            if (chartObjects[i].containsPoint(point, scale, typeRendering) === true) {
-                return chartObjects[i];
-            }
-        }
 
-        return null;
-    };
-    this.moveCharObject = function (charObject, point) {
-        if (charObject.type === "crr") {
-            return;
-        }
-        if (charObject.type === "acc") {
-            let index = this.getIndexByChartObject(charObject);
-            let indexCorrespondence = [];
-            for (let i = 0; i < matrixIncidence.length; i++) {
-                if (matrixIncidence[index][i] === "t" || matrixIncidence[i][index] === "t") {
-                    indexCorrespondence.push(i);
-                }
-            }
-
-            for (let i = 0; i < indexCorrespondence.length; i++) {
-                for (let j = 0; j < matrixIncidence.length; j++) {
-                    if (matrixIncidence[indexCorrespondence[i]][j] === "t" && j !== index) {
-                        chartObjects[indexCorrespondence[i]].position = new Point(charObject.position.x + (chartObjects[j].position.x - charObject.position.x) / 2
-                                , charObject.position.y + (chartObjects[j].position.y - charObject.position.y) / 2);
-                    }
-
-                    if (matrixIncidence[j][indexCorrespondence[i]] === "t" && j !== index) {
-                        chartObjects[indexCorrespondence[i]].position = new Point(charObject.position.x + (chartObjects[j].position.x - charObject.position.x) / 2
-                                , charObject.position.y + (chartObjects[j].position.y - charObject.position.y) / 2);
+    this.getIncidentObjectByDocument = function (document) {
+        let index = this.getIndexByChartObject(document);
+        let result = [];
+        for (let i = 0; i < matrixIncidence.length; i++) {
+            if (matrixIncidence[index][i] !== " ") {
+                result.push(chartObjects[i]);
+                if (chartObjects[i].type === "crr") {
+                    for (let j = 0; j < matrixIncidence.length; j++) {
+                        if (matrixIncidence[i][j] === "t" || matrixIncidence[j][i] === "t") {
+                            result.push(chartObjects[j]);
+                        }
                     }
                 }
             }
         }
-        charObject.move(point);
+        return result;
+    };
 
-        for (let i = 0; i < changedObjects.length; i++) {
-            if (charObject.id === changedObjects[i].id) {
-                return;
+    this.getIncidentObjectByRole = function (role) {
+        let index = this.getIndexByChartObject(role);
+        let result = [];
+        for (let i = 0; i < matrixIncidence.length; i++) {
+            if (matrixIncidence[index][i] !== " " || matrixIncidence[i][index] !== " ") {
+                result.push(chartObjects[i]);
             }
         }
-        changedObjects.push(charObject);
+        return result;
     };
+    this.getIncidentObjectByAccount = function (acc) {
+        let index = this.getIndexByChartObject(acc);
+        let result = [];
+        for (let i = 0; i < matrixIncidence.length; i++) {
+            if (matrixIncidence[index][i] !== " " || matrixIncidence[i][index] !== " ") {
+                result.push(chartObjects[i]);
+                if (chartObjects[i].type === "crr") {
+                    for (let j = 0; j < matrixIncidence.length; j++) {
+                        if (matrixIncidence[i][j] === "t" || matrixIncidence[j][i] === "t") {
+                            result.push(chartObjects[j]);
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    };
+    this.getIncidentObjects = function (chartObject) {
+        if (chartObject.type === "doc") {
+            return this.getIncidentObjectByDocument(chartObject);
+        }
+        if (chartObject.type === "role") {
+            return this.getIncidentObjectByRole(chartObject);
+        }
+        if (chartObject.type === 'acc') {
+            return this.getIncidentObjectByAccount(chartObject);
+        }
+        if (chartObject.type === 'crr') {
+            return this.getIncidentObjectByRole(chartObject);
+        }
+        return [];
+    };
+
 }
 
 //<editor-fold defaultstate="collapsed" desc="model classes">
@@ -641,21 +714,21 @@ var graphicFrame = new GraphicFrame();
 graphicFrame.draw();
 
 
-graphicFrame.addEventListener(new function() {
+graphicFrame.addEventListener(new function () {
     GraphicFrameEventListener.call(this);
     var infoMessageBlock = document.getElementById("info-chart-schema");
-    
+
     this.moveChartObject = function (chartObject) {
         saveButton.style.display = "block";
     };
-    
-    this.hoverChartObject = function(chartObject) {
+
+    this.hoverChartObject = function (chartObject) {
         infoMessageBlock.innerHTML = chartObject.info;
         infoMessageBlock.style.display = "block";
     };
-    
-    
-    this.mouseExitedChartObject = function() {
+
+
+    this.mouseExitedChartObject = function () {
         infoMessageBlock.style.display = "none";
     };
 });
