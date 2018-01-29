@@ -52,6 +52,13 @@ textarea {
     top:70px;
     right:10px;
 }
+#willNotSaveMessage{
+    display: none;
+    position: absolute;
+    top:70px;
+    right:10px;
+    color:#ec5d5d;
+}
 #info-chart-schema {
     color: red;
     position: absolute;

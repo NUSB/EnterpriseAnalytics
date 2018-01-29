@@ -129,7 +129,7 @@ function GraphicFrame() {
         drawCenter();
     };
     this.save = function () {
-        console.log(connector.sendChanges(chartModel.getChanged()));
+        console.log(connector.sendChanges(chartModel.getChanged())); //todo: обработать сообщение запрета
         chartModel.cleanChahges();
     };
     let drawCenter = function () {
@@ -146,6 +146,9 @@ function GraphicFrame() {
         context.closePath();
     };
 
+    this.isEditable = function () {
+        return chartModel.isEditable();
+    }
 }
 function GraphicFrameEventListener() {
     this.hoverChartObject = function (chartObject) {
@@ -165,6 +168,7 @@ function ChartModel(parser) {
     var changedObjects = [];
     var chartObjects = parser.getObjects();
     var matrixIncidence = parser.getMatrix();
+    var editable = parser.getEditable();
 
     this.cleanChahges = function () {
         changedObjects = [];
@@ -216,12 +220,12 @@ function ChartModel(parser) {
                 for (let j = 0; j < matrixIncidence.length; j++) {
                     if ((matrixIncidence[indexCorrespondence[i]][j] === "t" && j !== index) ||
                             (matrixIncidence[j][indexCorrespondence[i]] === "t" && j !== index)) {
-                        chartObjects[indexCorrespondence[i]].position 
+                        chartObjects[indexCorrespondence[i]].position
                                 = new Point(charObject.position.x + (chartObjects[j].position.x - charObject.position.x) / 2
-                                , charObject.position.y + (chartObjects[j].position.y - charObject.position.y) / 2);
+                                        , charObject.position.y + (chartObjects[j].position.y - charObject.position.y) / 2);
                         let centercrr = chartObjects[indexCorrespondence[i]].getCenterPosition(TypeViewChartObject.ACTIVE);
-                        chartObjects[indexCorrespondence[i]].position.x-=centercrr.x-chartObjects[indexCorrespondence[i]].position.x;
-                        chartObjects[indexCorrespondence[i]].position.y-=centercrr.y-chartObjects[indexCorrespondence[i]].position.y;
+                        chartObjects[indexCorrespondence[i]].position.x -= centercrr.x - chartObjects[indexCorrespondence[i]].position.x;
+                        chartObjects[indexCorrespondence[i]].position.y -= centercrr.y - chartObjects[indexCorrespondence[i]].position.y;
                     }
 
                 }
@@ -342,7 +346,7 @@ function ChartModel(parser) {
         for (let i = 0; i < matrixIncidence.length; i++) {
             if (matrixIncidence[index][i] !== " " || matrixIncidence[i][index] !== " ") {
                 lines.push(new Line(chartObjects[index].getCenterPosition(TypeViewChartObject.ACTIVE)
-                , chartObjects[i].getCenterPosition(TypeViewChartObject.ACTIVE), "#fff"));
+                        , chartObjects[i].getCenterPosition(TypeViewChartObject.ACTIVE), "#fff"));
             }
         }
         return lines;
@@ -424,6 +428,9 @@ function ChartModel(parser) {
         return [];
     };
 
+    this.isEditable = function () {
+        return editable;
+    }
 }
 
 //<editor-fold defaultstate="collapsed" desc="model classes">
@@ -461,8 +468,8 @@ function ChartObject(position, name, type, info, link, id) {
         }
         return this.rendererMap.get(typeRendering).getCenterPoint();
     };
-    
-    this.getPosition = function (){
+
+    this.getPosition = function () {
         return this.position;
     }
 }
@@ -536,6 +543,9 @@ function Parser(serverAnswer) {
     this.getMatrix = function () {
         console.error("Method getMatrix should be overritten");
     };
+    this.getEditable = function(){
+        console.error("Method getEditable should be overritten");
+    }
 }
 
 
@@ -569,6 +579,9 @@ function JsonParser(serverAnswer) {
     this.getMatrix = function () {
         return JSON.parse(serverAnswer).incedence;
     };
+    this.getEditable = function(){
+       return true;
+    }
 }
 //</editor-fold>
 
@@ -752,7 +765,12 @@ graphicFrame.addEventListener(new function () {
     var infoMessageBlock = document.getElementById("info-chart-schema");
 
     this.moveChartObject = function (chartObject) {
-        saveButton.style.display = "block";
+        if (graphicFrame.isEditable()) {
+            saveButton.style.display = "block";
+        } else {
+            document.getElementById("willNotSaveMessage").style.display = "block";
+
+        }
     };
 
     this.hoverChartObject = function (chartObject) {
