@@ -581,7 +581,7 @@ function JsonParser(serverAnswer) {
         return JSON.parse(serverAnswer).incedence;
     };
     this.getEditable = function () {
-        return true;
+        return JSON.parse(serverAnswer).editable;
     };
 }
 //</editor-fold>
@@ -766,7 +766,7 @@ graphicFrame.addEventListener(new function () {
     var infoMessageBlock = document.getElementById("info-chart-schema");
 
     this.moveChartObject = function (chartObject) {
-        if (graphicFrame.isEditable()) {
+        if (graphicFrame.isEditable()==="true") {
             saveButton.style.display = "block";
         } else {
             document.getElementById("willNotSaveMessage").style.display = "block";

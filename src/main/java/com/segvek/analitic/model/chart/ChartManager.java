@@ -13,12 +13,14 @@ import java.util.List;
 
 public class ChartManager {
 
-    List<ChartObject> chartObjects;
+    private List<ChartObject> chartObjects;
 
-    CorrespondenceDAO correspondenceDAO;
-    DocumentDAO documentDAO;
-    BisnesRoleDAO bisnesRoleDAO;
-    AcountDAO acountDAO;
+    private CorrespondenceDAO correspondenceDAO;
+    private DocumentDAO documentDAO;
+    private BisnesRoleDAO bisnesRoleDAO;
+    private  AcountDAO acountDAO;
+    
+    private boolean editable=false;
 
     public ChartManager(CorrespondenceDAO correspondenceDAO, DocumentDAO documentDAO, BisnesRoleDAO bisnesRoleDAO, AcountDAO acountDAO) {
         this.correspondenceDAO = correspondenceDAO;
@@ -153,7 +155,8 @@ public class ChartManager {
     }
 
     public String toJson(){
-        StringBuilder sb = new StringBuilder("{\"objects\":");
+        StringBuilder sb = new StringBuilder("{\"editable\":\"");
+        sb.append(editable).append("\",\"objects\":");
         sb.append(chartObjects.toString());
         
         char m[][] = getChartIncedence();
@@ -171,5 +174,9 @@ public class ChartManager {
         }
         sb.append("]}");
         return sb.toString();
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable=editable;
     }
 }
