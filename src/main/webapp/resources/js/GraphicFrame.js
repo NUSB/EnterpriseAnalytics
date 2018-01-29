@@ -21,7 +21,7 @@ document.getElementById("setting-icon").onclick = function () {
     } else {
         settings.style.display = "block";
     }
-    
+
 };
 window.onresize = function (ev) {
     canvas.width = window.innerWidth;
@@ -258,9 +258,10 @@ function ChartModel(parser) {
             if (matrixIncidence[index][i] === "d") {
                 lines.push(new Line(chartObjects[index].position, chartObjects[i].position, "#fff"));
                 if (chartObjects[i].type === 'crr') {
-                    let correspondenceLines = this.getLinesByCorrespondence(chartObjects[i]);
-                    for (let j = 0; j < correspondenceLines.length; j++) {
-                        lines.push(correspondenceLines[j]);
+                    for (let j = 0; j < matrixIncidence.length; j++) {
+                        if (matrixIncidence[i][j] === "t" || matrixIncidence[i][i] === "t") {
+                            lines.push(new Line(chartObjects[i].position, chartObjects[j].position, "#fff"));
+                        }
                     }
                 }
             }
@@ -482,7 +483,7 @@ function Line(point1, point2, color) {
 }
 
 function Connector() {
-    this.url = "http://localhost:7995/Analitic/chart";
+    this.url = "http://localhost:8084/Analitic/chart";
     this.getStringFromServer = function () {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', this.url, false);
@@ -571,14 +572,19 @@ function DefaultRenderer(chartObject) {
         let biasCenter = new Point(bias.x + this.width / 2, bias.y + this.height / 2);
         context.fillStyle = this.fillColor;
         context.beginPath();
-        context.fillRect(chartObject.position.x * scale - biasCenter.x, chartObject.position.y * scale - biasCenter.y, this.width * scale, this.height * scale);
+        context.fillRect(chartObject.position.x * scale - biasCenter.x
+                , chartObject.position.y * scale - biasCenter.y
+                , this.width * scale, this.height * scale);
         context.strokeStyle = this.color;
-        context.strokeRect(chartObject.position.x * scale - biasCenter.x, chartObject.position.y * scale - biasCenter.y, this.width * scale, this.height * scale);
+        context.strokeRect(chartObject.position.x * scale - biasCenter.x
+                , chartObject.position.y * scale - biasCenter.y
+                , this.width * scale, this.height * scale);
         context.closePath();
         context.fillStyle = this.color;
         context.font = (this.fontSize * scale) + "px Arial";
         var text = chartObject.name;
-        context.fillText(text, chartObject.position.x * scale - biasCenter.x + (this.width * scale - context.measureText(text).width) / 2, chartObject.position.y * scale - biasCenter.y + this.height * scale / 2 + this.fontSize / 3);
+        context.fillText(text, chartObject.position.x * scale - biasCenter.x + (this.width * scale - context.measureText(text).width) / 2
+                , chartObject.position.y * scale - biasCenter.y + this.height * scale / 2 + this.fontSize / 3);
         context.stroke();
     };
     this.containsPoint = function (point, scale) {
