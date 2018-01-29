@@ -214,15 +214,16 @@ function ChartModel(parser) {
 
             for (let i = 0; i < indexCorrespondence.length; i++) {
                 for (let j = 0; j < matrixIncidence.length; j++) {
-                    if (matrixIncidence[indexCorrespondence[i]][j] === "t" && j !== index) {
-                        chartObjects[indexCorrespondence[i]].position = new Point(charObject.position.x + (chartObjects[j].position.x - charObject.position.x) / 2
+                    if ((matrixIncidence[indexCorrespondence[i]][j] === "t" && j !== index) ||
+                            (matrixIncidence[j][indexCorrespondence[i]] === "t" && j !== index)) {
+                        chartObjects[indexCorrespondence[i]].position 
+                                = new Point(charObject.position.x + (chartObjects[j].position.x - charObject.position.x) / 2
                                 , charObject.position.y + (chartObjects[j].position.y - charObject.position.y) / 2);
+                        let centercrr = chartObjects[indexCorrespondence[i]].getCenterPosition(TypeViewChartObject.ACTIVE);
+                        chartObjects[indexCorrespondence[i]].position.x-=centercrr.x-chartObjects[indexCorrespondence[i]].position.x;
+                        chartObjects[indexCorrespondence[i]].position.y-=centercrr.y-chartObjects[indexCorrespondence[i]].position.y;
                     }
 
-                    if (matrixIncidence[j][indexCorrespondence[i]] === "t" && j !== index) {
-                        chartObjects[indexCorrespondence[i]].position = new Point(charObject.position.x + (chartObjects[j].position.x - charObject.position.x) / 2
-                                , charObject.position.y + (chartObjects[j].position.y - charObject.position.y) / 2);
-                    }
                 }
             }
         }
@@ -241,7 +242,8 @@ function ChartModel(parser) {
         for (var i = 0; i < matrixIncidence.length; i++) {
             for (var j = 0; j < matrixIncidence.length; j++) {
                 if (matrixIncidence[i][j] !== " ") {
-                    lines.push(new Line(chartObjects[i].position, chartObjects[j].position, "#fff"));
+                    lines.push(new Line(chartObjects[i].getCenterPosition(TypeViewChartObject.PASSIVE)
+                            , chartObjects[j].getCenterPosition(TypeViewChartObject.PASSIVE), "#fff"));
                 }
             }
         }
@@ -256,11 +258,13 @@ function ChartModel(parser) {
         let lines = [];
         for (let i = 0; i < matrixIncidence.length; i++) {
             if (matrixIncidence[index][i] === "d") {
-                lines.push(new Line(chartObjects[index].position, chartObjects[i].position, "#fff"));
+                lines.push(new Line(chartObjects[index].getCenterPosition(TypeViewChartObject.ACTIVE)
+                        , chartObjects[i].getCenterPosition(TypeViewChartObject.ACTIVE), "#fff"));
                 if (chartObjects[i].type === 'crr') {
                     for (let j = 0; j < matrixIncidence.length; j++) {
                         if (matrixIncidence[i][j] === "t" || matrixIncidence[i][i] === "t") {
-                            lines.push(new Line(chartObjects[i].position, chartObjects[j].position, "#fff"));
+                            lines.push(new Line(chartObjects[i].getCenterPosition(TypeViewChartObject.ACTIVE)
+                                    , chartObjects[j].getCenterPosition(TypeViewChartObject.ACTIVE), "#fff"));
                         }
                     }
                 }
@@ -274,13 +278,16 @@ function ChartModel(parser) {
         let lines = [];
         for (let i = 0; i < matrixIncidence.length; i++) {
             if (matrixIncidence[index][i] === "d") {
-                lines.push(new Line(chartObjects[index].position, chartObjects[i].position, "#fff"));
+                lines.push(new Line(chartObjects[index].getCenterPosition(TypeViewChartObject.ACTIVE)
+                        , chartObjects[i].getCenterPosition(TypeViewChartObject.ACTIVE), "#fff"));
             }
             if (matrixIncidence[index][i] === "s") {
-                lines.push(new Line(chartObjects[index].position, chartObjects[i].position, "#ef04cb"));
+                lines.push(new Line(chartObjects[index].getCenterPosition(TypeViewChartObject.ACTIVE)
+                        , chartObjects[i].getCenterPosition(TypeViewChartObject.ACTIVE), "#ef04cb"));
             }
             if (matrixIncidence[i][index] === "s") {
-                lines.push(new Line(chartObjects[index].position, chartObjects[i].position, "#a604f7"));
+                lines.push(new Line(chartObjects[index].getCenterPosition(TypeViewChartObject.ACTIVE)
+                        , chartObjects[i].getCenterPosition(TypeViewChartObject.ACTIVE), "#a604f7"));
             }
         }
         return lines;
@@ -296,29 +303,35 @@ function ChartModel(parser) {
                 if (matrixIncidence[i][index] === "t") {
                     color = "#f4ee42";
                 }
-                lines.push(new Line(chartObjects[index].position, chartObjects[i].position, color));
+                lines.push(new Line(chartObjects[index].getCenterPosition(TypeViewChartObject.ACTIVE)
+                        , chartObjects[i].getCenterPosition(TypeViewChartObject.ACTIVE), color));
                 for (let j = 0; j < matrixIncidence.length; j++) {
                     if (matrixIncidence[i][j] === "t" && j !== i) {
-                        lines.push(new Line(chartObjects[i].position, chartObjects[j].position, color));
+                        lines.push(new Line(chartObjects[i].getCenterPosition(TypeViewChartObject.ACTIVE)
+                                , chartObjects[j].getCenterPosition(TypeViewChartObject.ACTIVE), color));
                     }
                 }
 
             }
             if (flag !== i && matrixIncidence[i][index] === "t") {
                 let color = "#00ff00";
-                lines.push(new Line(chartObjects[index].position, chartObjects[i].position, color));
+                lines.push(new Line(chartObjects[index].getCenterPosition(TypeViewChartObject.ACTIVE)
+                        , chartObjects[i].getCenterPosition(TypeViewChartObject.ACTIVE), color));
                 for (let j = 0; j < matrixIncidence.length; j++) {
                     if (matrixIncidence[j][i] === "t" && j !== i) {
-                        lines.push(new Line(chartObjects[i].position, chartObjects[j].position, color));
+                        lines.push(new Line(chartObjects[i].getCenterPosition(TypeViewChartObject.ACTIVE)
+                                , chartObjects[j].getCenterPosition(TypeViewChartObject.ACTIVE), color));
                     }
                 }
             }
 
             if (matrixIncidence[index][i] === "s") {
-                lines.push(new Line(chartObjects[index].position, chartObjects[i].position, "#ef04cb"));
+                lines.push(new Line(chartObjects[index].getCenterPosition(TypeViewChartObject.ACTIVE)
+                        , chartObjects[i].getCenterPosition(TypeViewChartObject.ACTIVE), "#ef04cb"));
             }
             if (matrixIncidence[i][index] === "s") {
-                lines.push(new Line(chartObjects[index].position, chartObjects[i].position, "#a604f7"));
+                lines.push(new Line(chartObjects[index].getCenterPosition(TypeViewChartObject.ACTIVE)
+                        , chartObjects[i].getCenterPosition(TypeViewChartObject.ACTIVE), "#a604f7"));
             }
         }
         return lines;
@@ -328,7 +341,8 @@ function ChartModel(parser) {
         let lines = [];
         for (let i = 0; i < matrixIncidence.length; i++) {
             if (matrixIncidence[index][i] !== " " || matrixIncidence[i][index] !== " ") {
-                lines.push(new Line(chartObjects[index].position, chartObjects[i].position, "#fff"));
+                lines.push(new Line(chartObjects[index].getCenterPosition(TypeViewChartObject.ACTIVE)
+                , chartObjects[i].getCenterPosition(TypeViewChartObject.ACTIVE), "#fff"));
             }
         }
         return lines;
@@ -441,9 +455,16 @@ function ChartObject(position, name, type, info, link, id) {
     this.getId = function () {
         return this.id;
     };
-    this.getPosition = function () {
-        return this.position;
+    this.getCenterPosition = function (typeRendering) {
+        if (this.rendererMap.get(typeRendering) === undefined) {
+            typeRendering = "default";
+        }
+        return this.rendererMap.get(typeRendering).getCenterPoint();
     };
+    
+    this.getPosition = function (){
+        return this.position;
+    }
 }
 
 function Role(position, name, type, info, link, id) {
@@ -569,7 +590,7 @@ function DefaultRenderer(chartObject) {
     this.color = "#ff000f";
     this.fontSize = 14;
     this.draw = function (context, bias, scale) {
-        let biasCenter = new Point(bias.x + this.width / 2, bias.y + this.height / 2);
+        let biasCenter = new Point(bias.x, bias.y);
         context.fillStyle = this.fillColor;
         context.beginPath();
         context.fillRect(chartObject.position.x * scale - biasCenter.x
@@ -588,12 +609,15 @@ function DefaultRenderer(chartObject) {
         context.stroke();
     };
     this.containsPoint = function (point, scale) {
-        let pointCenter = new Point(point.x + this.width / 2, point.y + this.height / 2);
+        let pointCenter = new Point(point.x, point.y);
         return pointCenter.x > chartObject.position.x * scale
                 && pointCenter.x < chartObject.position.x * scale + this.width * scale
                 && pointCenter.y > chartObject.position.y * scale
                 && pointCenter.y < chartObject.position.y * scale + this.height * scale;
     };
+    this.getCenterPoint = function () {
+        return new Point(chartObject.position.x + this.width / 2, chartObject.position.y + this.height / 2);
+    }
 }
 
 function DocumentPassiveRenderer(chartObject) {
@@ -637,6 +661,9 @@ function AccountPassiveRenderer(chartObject) {
     this.containsPoint = function (point, scale) {
         return (Math.pow(point.x - chartObject.position.x * scale, 2) + Math.pow(point.y - chartObject.position.y * scale, 2)) < Math.pow(radius * scale, 2);
     };
+    this.getCenterPoint = function () {
+        return chartObject.position;
+    }
 }
 function AccountActiveRenderer(chartObject) {
     AccountPassiveRenderer.call(this, chartObject);
@@ -650,7 +677,7 @@ function RolePassiveRenderer(chartObject) {
     this.height = 90;
     this.fillColor = "#222222";
     this.draw = function (context, bias, scale) {
-        let biasCenter = new Point(bias.x + this.width / 2, bias.y + this.height / 2);
+        let biasCenter = new Point(bias.x, bias.y);
         context.strokeStyle = this.color;
         context.fillStyle = this.fillColor;
         context.fillRect(chartObject.position.x * scale - biasCenter.x, chartObject.position.y * scale - biasCenter.y, this.width * scale, this.height * scale);
@@ -684,7 +711,7 @@ function CorrespondencePassiveRenderer(chartObject) {
     this.width = 30;
     this.height = 20;
     this.draw = function (context, bias, scale) {
-        let biasCenter = new Point(bias.x + this.width / 2, bias.y + this.height / 2);
+        let biasCenter = new Point(bias.x, bias.y);
         context.beginPath();
         context.moveTo(chartObject.position.x * scale - biasCenter.x + this.width * scale / 2, chartObject.position.y * scale - biasCenter.y);
         context.lineTo(chartObject.position.x * scale - biasCenter.x + this.width * scale, chartObject.position.y * scale - biasCenter.y + this.height * scale);
