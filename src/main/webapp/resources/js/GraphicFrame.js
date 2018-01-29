@@ -148,7 +148,7 @@ function GraphicFrame() {
 
     this.isEditable = function () {
         return chartModel.isEditable();
-    }
+    };
 }
 function GraphicFrameEventListener() {
     this.hoverChartObject = function (chartObject) {
@@ -430,7 +430,7 @@ function ChartModel(parser) {
 
     this.isEditable = function () {
         return editable;
-    }
+    };
 }
 
 //<editor-fold defaultstate="collapsed" desc="model classes">
@@ -470,8 +470,8 @@ function ChartObject(position, name, type, info, link, id) {
     };
 
     this.getPosition = function () {
-        return this.position;
-    }
+        return new Point(Math.floor(this.position.x), Math.floor(this.position.y));
+    };
 }
 
 function Role(position, name, type, info, link, id) {
@@ -526,6 +526,7 @@ function Connector() {
     this.sendChanges = function (changesString) {
         var xhr = new XMLHttpRequest();
         xhr.open('POST', this.url, false);
+        console.log(changesString);
         xhr.send(changesString);
         if (xhr.status !== 200) {
             console.error(xhr.status + ': ' + xhr.statusText);
@@ -543,9 +544,9 @@ function Parser(serverAnswer) {
     this.getMatrix = function () {
         console.error("Method getMatrix should be overritten");
     };
-    this.getEditable = function(){
+    this.getEditable = function () {
         console.error("Method getEditable should be overritten");
-    }
+    };
 }
 
 
@@ -579,9 +580,9 @@ function JsonParser(serverAnswer) {
     this.getMatrix = function () {
         return JSON.parse(serverAnswer).incedence;
     };
-    this.getEditable = function(){
-       return true;
-    }
+    this.getEditable = function () {
+        return true;
+    };
 }
 //</editor-fold>
 
@@ -630,7 +631,7 @@ function DefaultRenderer(chartObject) {
     };
     this.getCenterPoint = function () {
         return new Point(chartObject.position.x + this.width / 2, chartObject.position.y + this.height / 2);
-    }
+    };
 }
 
 function DocumentPassiveRenderer(chartObject) {
@@ -676,7 +677,7 @@ function AccountPassiveRenderer(chartObject) {
     };
     this.getCenterPoint = function () {
         return chartObject.position;
-    }
+    };
 }
 function AccountActiveRenderer(chartObject) {
     AccountPassiveRenderer.call(this, chartObject);
