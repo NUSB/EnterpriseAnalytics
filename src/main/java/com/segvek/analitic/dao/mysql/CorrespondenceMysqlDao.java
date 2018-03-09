@@ -113,6 +113,30 @@ public class CorrespondenceMysqlDao implements CorrespondenceDAO {
                  correspondence.getId());
     }
 
+    @Override
+    public List<Correspondence> getCorrespondencesByDebetAcount(Acount acount) {
+        String sql = "SELECT * fROM correspondence WHERE debet=?;";
+        List<CorrespondenceLazy> l = jdbcTemplate.query(sql, correspondenceRowMapper, acount.getId());
+        List<Correspondence> res = new ArrayList<Correspondence>();
+        for(CorrespondenceLazy cl:l){
+            cl.setCorrespondenceDAO(this);
+            res.add(cl);
+        }
+        return res;
+    }
+
+    @Override
+    public List<Correspondence> getCorrespondencesByCreditAcount(Acount acount) {
+        String sql = "SELECT * fROM correspondence WHERE credit=?;";
+        List<CorrespondenceLazy> l = jdbcTemplate.query(sql, correspondenceRowMapper, acount.getId());
+        List<Correspondence> res = new ArrayList<Correspondence>();
+        for(CorrespondenceLazy cl:l){
+            cl.setCorrespondenceDAO(this);
+            res.add(cl);
+        }
+        return res;
+    }
+
 }
 
 @Service

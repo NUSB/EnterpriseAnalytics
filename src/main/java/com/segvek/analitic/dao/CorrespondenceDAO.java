@@ -11,6 +11,10 @@ public interface CorrespondenceDAO {
     
     public List<Correspondence> getAllCorrespondences();
     
+    public List<Correspondence> getCorrespondencesByDebetAcount(Acount acount);
+    
+    public List<Correspondence> getCorrespondencesByCreditAcount(Acount acount);
+    
     public Correspondence getCorrespondeceById(int id);
 
     public Acount getDebetAcountByCorrespondence(Correspondence correspondence);

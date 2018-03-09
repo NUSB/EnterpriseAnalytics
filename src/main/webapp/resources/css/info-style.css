@@ -20,12 +20,19 @@ body {
 }
 .info-page-container header{
     border-bottom: 1px solid #d2d2d2;
-    padding: 20px 0 10px 25px;
+    padding: 20px 10px 10px 25px;
     font-size: 25px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 .info-page-container article{
     margin: 25px;
 }
+.info-page-container header label{
+    font-size: 15px;
+}
+
 section{
     margin: 25px;
     background-color: white;
@@ -36,6 +43,11 @@ article h2{
     font-weight: bold;
     font-style: italic;
     font-size: 18px;
+}
+
+article ul{
+    list-style: square;
+    margin-left: 20px;
 }
 
 

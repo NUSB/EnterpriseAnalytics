@@ -18,4 +18,6 @@ public interface AcountDAO {
     public Acount getAcountById(int id);
 
     public void update(Acount acount);
+
+    public List<Acount> getAcountsByParent(Acount acount);
 }

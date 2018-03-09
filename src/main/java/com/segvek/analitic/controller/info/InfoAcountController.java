@@ -28,10 +28,11 @@ public class InfoAcountController {
         if (acount == null) {
 //            view.setViewName("error");
         }
-        model.addAttribute("title", "Счет № " + acount.getCode());
         model.addAttribute("acount", acount);
-        model.addAttribute("acounts", acountDAO.getAllAcount());
-        model.addAttribute("sendTo", "update/" + acount.getId());
+        model.addAttribute("debet",acount.getDebetCorrespondences());
+        model.addAttribute("credit",acount.getCreditCorrespondences());
+        
+        
         return "info/acount";
     }
 

@@ -1,6 +1,7 @@
 package com.segvek.analitic.dao.mysql;
 
 import com.segvek.analitic.dao.AcountDAO;
+import com.segvek.analitic.dao.CorrespondenceDAO;
 import com.segvek.analitic.dao.lazy.AcountLazy;
 import com.segvek.analitic.model.Acount;
 import java.awt.Point;
@@ -22,6 +23,9 @@ public class AcountMysqlDao implements AcountDAO {
 
     @Autowired
     AcountRowMapper acountRowMapper;
+    
+    @Autowired
+    CorrespondenceDAO cdao;
 
     @Override
     public List<Acount> getAllAcount() {
@@ -30,6 +34,7 @@ public class AcountMysqlDao implements AcountDAO {
         List<Acount> res = new ArrayList<Acount>();
         for (AcountLazy a : acounts) {
             a.setAcountDao(this);
+            a.setCorrespondenceDao(cdao);
             res.add(a);
         }
         return res;
@@ -41,6 +46,7 @@ public class AcountMysqlDao implements AcountDAO {
         AcountLazy a = DataAccessUtils.singleResult(template.query(sql, acountRowMapper, acount.getId()));
         if (a != null) {
             a.setAcountDao(this);
+            a.setCorrespondenceDao(cdao);
         }
         return a;
     }
@@ -50,6 +56,7 @@ public class AcountMysqlDao implements AcountDAO {
         String sql = "SELECT * FROM acount a WHERE a.name=?";
         AcountLazy a = template.queryForObject(sql, acountRowMapper, name);
         a.setAcountDao(this);
+        a.setCorrespondenceDao(cdao);
         return a;
     }
 
@@ -78,6 +85,7 @@ public class AcountMysqlDao implements AcountDAO {
         String sql = "Select * FROm acount where id=?";
         AcountLazy a = DataAccessUtils.singleResult(template.query(sql, acountRowMapper, id));
         a.setAcountDao(this);
+        a.setCorrespondenceDao(cdao);
         return a;
     }
 
@@ -94,6 +102,19 @@ public class AcountMysqlDao implements AcountDAO {
                  acount.getPosition().x,
                  acount.getPosition().y,
                  acount.getId());
+    }
+
+    @Override
+    public List<Acount> getAcountsByParent(Acount acount) {
+        String sql = "Select * from acount where parentId=? ORDER BY code";
+        List<AcountLazy> acounts = template.query(sql, acountRowMapper,acount.getId());
+        List<Acount> res = new ArrayList<Acount>();
+        for (AcountLazy a : acounts) {
+            a.setAcountDao(this);
+            a.setCorrespondenceDao(cdao);
+            res.add(a);
+        }
+        return res;
     }
 
 }
