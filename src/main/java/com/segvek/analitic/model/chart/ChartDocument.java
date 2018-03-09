@@ -31,7 +31,7 @@ class ChartDocument extends ChartObject {
                 .append(" \"y\":\"").append(document.getPosition().y).append("\",")
                 .append(" \"name\":\"").append(document.getName()).append("\",")
                 .append(" \"info\":\"").append("").append("\",")
-                .append(" \"link\":\"").append("document\\\\").append(document.getId()).append("\"}");
+                .append(" \"link\":\"").append("info\\\\document\\\\").append(document.getId()).append("\"}");
         return sb.toString();
     }
     

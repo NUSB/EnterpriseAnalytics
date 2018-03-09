@@ -30,7 +30,6 @@ textarea {
     display: grid;
     grid-template-columns: 1fr;
     grid-row-gap:5px;
-
 }
 
 .grid-container-cols-3 {
@@ -60,7 +59,7 @@ textarea {
     color:#ec5d5d;
 }
 #info-chart-schema {
-    color: red;
+    color:#e16868;
     position: absolute;
     top:60px;
     left:20px;

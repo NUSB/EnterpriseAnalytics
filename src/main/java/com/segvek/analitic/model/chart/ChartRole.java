@@ -27,7 +27,7 @@ public class ChartRole extends ChartObject {
                 .append(" \"y\":\"").append(bisnesRole.getPosition().y).append("\",")
                 .append(" \"name\":\"").append(bisnesRole.getName()).append("\",")
                 .append(" \"info\":\"").append("").append("\",")
-                .append(" \"link\":\"").append("bisnesRole\\\\").append(bisnesRole.getId()).append("\"}");
+                .append(" \"link\":\"").append("info\\\\bisnesRole\\\\").append(bisnesRole.getId()).append("\"}");
         return sb.toString();
     }
     

@@ -28,7 +28,7 @@ public class ChartAcount extends ChartObject {
                 .append(" \"y\":\"").append(acount.getPosition().y).append("\",")
                 .append(" \"name\":\"").append(acount.getCode()).append("\",")
                 .append(" \"info\":\"").append(acount.getName()).append("\",")
-                .append(" \"link\":\"").append("acount\\\\").append(acount.getId()).append("\"}");
+                .append(" \"link\":\"").append("info\\\\acount\\\\").append(acount.getId()).append("\"}");
         return sb.toString();
     }
 }

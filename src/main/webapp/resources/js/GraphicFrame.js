@@ -74,6 +74,10 @@ function GraphicFrame() {
             } else {
                 bias.x += dX * scale;
                 bias.y += dY * scale;
+                deleteCookie("bx");
+                deleteCookie("by");
+                document.cookie = "bx=" + bias.x;
+                document.cookie = "by=" + bias.y;
             }
             oldPosition = new Point(event.pageX, event.pageY);
         }
@@ -104,14 +108,21 @@ function GraphicFrame() {
     };
     this.scaleUp = function () {
         scale += 0.1;
+        deleteCookie("scale");
+        document.cookie = "scale=" + scale;
         this.draw();
     };
     this.scaleDown = function () {
         scale -= 0.1;
+        deleteCookie("scale");
+        document.cookie = "scale=" + scale;
         this.draw();
     };
+    this.setScale = function(param){
+        scale=param;
+    };
     this.draw = function () {
-        context.fillStyle = "#222222";
+        context.fillStyle = "#999999";
         context.fillRect(0, 0, canvas.width, canvas.height);
         let lines = chartModel.getAllLines();
         for (let i = 0; i < lines.length; i++) {
@@ -155,7 +166,9 @@ function GraphicFrame() {
         context.stroke();
         context.closePath();
     };
-
+    this.setBais = function (point) {
+        bias = point;
+    };
     this.isEditable = function () {
         return chartModel.isEditable();
     };
@@ -257,7 +270,7 @@ function ChartModel(parser) {
             for (var j = 0; j < matrixIncidence.length; j++) {
                 if (matrixIncidence[i][j] !== " ") {
                     lines.push(new Line(chartObjects[i].getCenterPosition(TypeViewChartObject.PASSIVE)
-                            , chartObjects[j].getCenterPosition(TypeViewChartObject.PASSIVE), "#fff"));
+                            , chartObjects[j].getCenterPosition(TypeViewChartObject.PASSIVE), "#222"));
                 }
             }
         }
@@ -610,7 +623,7 @@ function DefaultRenderer(chartObject) {
     Renderer.call(this, chartObject);
     this.width = 180;
     this.height = 40;
-    this.fillColor = "#3e3e3e";
+    this.fillColor = "#e3e3e3";
     this.color = "#ff000f";
     this.fontSize = 14;
     this.draw = function (context, bias, scale) {
@@ -646,11 +659,12 @@ function DefaultRenderer(chartObject) {
 
 function DocumentPassiveRenderer(chartObject) {
     DefaultRenderer.call(this, chartObject);
-    this.color = "#ffffff";
+    this.color = "#000";
 }
 function DocumentActiveRenderer(chartObject) {
     DocumentPassiveRenderer.call(this, chartObject);
-    this.color = "#99ffb9";
+    this.color = "#3e3e3e";
+    this.fillColor = "#e3e3e3";
     this.draw = function (context, bias, scale) {
         let temp = new DocumentPassiveRenderer(chartObject);
         temp.color = this.color;
@@ -666,8 +680,8 @@ function DocumentActiveRenderer(chartObject) {
 
 function AccountPassiveRenderer(chartObject) {
     DefaultRenderer.call(this, chartObject);
-    this.fillColor = "#3e3e3e";
-    this.color = "#FFFFFF";
+    this.fillColor = "#e3e3e3";
+    this.color = "#000";
     var radius = 25;
     this.draw = function (context, bias, scale) {
         context.beginPath();
@@ -692,14 +706,15 @@ function AccountPassiveRenderer(chartObject) {
 function AccountActiveRenderer(chartObject) {
     AccountPassiveRenderer.call(this, chartObject);
     this.color = "#ffb9d4";
+    this.fillColor = "#7e7e7e";
 }
 
 function RolePassiveRenderer(chartObject) {
     DefaultRenderer.call(this, chartObject);
-    this.color = "#FFFFFF";
+    this.color = "#222";
     this.width = 30;
     this.height = 90;
-    this.fillColor = "#222222";
+    this.fillColor = "#999999";
     this.draw = function (context, bias, scale) {
         let biasCenter = new Point(bias.x, bias.y);
         context.strokeStyle = this.color;
@@ -724,8 +739,8 @@ function RolePassiveRenderer(chartObject) {
 }
 function RoleActiveRenderer(chartObject) {
     RolePassiveRenderer.call(this, chartObject);
-    this.fillColor = "#000000";
-    this.color = "#12ff4e";
+    this.fillColor = "#191919";
+    this.color = "#88cc88";
 }
 
 function CorrespondencePassiveRenderer(chartObject) {
@@ -764,11 +779,57 @@ var TypeViewChartObject = {
     PASSIVE: 0,
     ACTIVE: 1
 };
+
+
+function setCookie(name, value, options) {
+    options = options || {};
+
+    var expires = options.expires;
+
+    if (typeof expires == "number" && expires) {
+        var d = new Date();
+        d.setTime(d.getTime() + expires * 1000);
+        expires = options.expires = d;
+    }
+    if (expires && expires.toUTCString) {
+        options.expires = expires.toUTCString();
+    }
+
+    value = encodeURIComponent(value);
+
+    var updatedCookie = name + "=" + value;
+
+    for (var propName in options) {
+        updatedCookie += "; " + propName;
+        var propValue = options[propName];
+        if (propValue !== true) {
+            updatedCookie += "=" + propValue;
+        }
+    }
+
+    document.cookie = updatedCookie;
+}
+function getCookie(name) {
+    var matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+            ));
+    return matches ? decodeURIComponent(matches[1]) : 0;
+}
+function deleteCookie(name) {
+    setCookie(name, "", {
+        expires: -1
+    })
+}
 //</editor-fold>
 
 
 var graphicFrame = new GraphicFrame();
+
+graphicFrame.setBais(new Point(Number(getCookie("bx")), Number(getCookie("by"))));
+let scale = Number(getCookie("scale"));
+graphicFrame.setScale(scale===0?1:scale);
 graphicFrame.draw();
+
 
 
 graphicFrame.addEventListener(new function () {
@@ -793,8 +854,8 @@ graphicFrame.addEventListener(new function () {
     this.mouseExitedChartObject = function () {
         infoMessageBlock.style.display = "none";
     };
-    
-    this.selectChartObject = function(chartObject){
-        window.location.replace(chartObject.link);
+
+    this.selectChartObject = function (chartObject) {
+        window.location.href = chartObject.link;
     };
 });

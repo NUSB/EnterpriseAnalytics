@@ -61,7 +61,7 @@ public class ChartCorrespondence extends ChartObject {
                 .append("\", \"y\":\"").append(y)
                 .append("\", \"name\":\"").append("")
                 .append("\", \"info\":\"").append(info.toString())
-                .append("\", \"link\":\"").append("correspondence/1");
+                .append("\", \"link\":\"").append("info\\\\correspondence/1");
         sb.append("\"}");
         return sb.toString();
     }
