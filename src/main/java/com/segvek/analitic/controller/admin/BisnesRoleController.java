@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-@Controller
-@RequestMapping(value = "/admin/bisnesRole")
+@Controller@RequestMapping(value = "/admin/bisnesRole")
 public class BisnesRoleController {
 
     @Autowired

@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-@Controller
-@RequestMapping(value = "/admin/acount")
+@Controller@RequestMapping(value = "/admin/acount")
 public class AcountController {
     
     @Autowired

@@ -19,8 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-@Controller
-@RequestMapping(value = "/admin/correspondence")
+@Controller@RequestMapping(value = "/admin/correspondence")
 public class CorrecpondenceController {
 
     @Autowired

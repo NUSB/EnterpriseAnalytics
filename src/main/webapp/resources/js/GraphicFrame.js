@@ -6,6 +6,7 @@ saveButton.onclick = function () {
     saveButton.style.display = "none";
 };
 
+
 document.getElementById("scaleUp").onclick = function () {
     graphicFrame.scaleUp();
 };
@@ -88,6 +89,15 @@ function GraphicFrame() {
         workWithObject = null;
         oldPosition = null;
     });
+    canvas.addEventListener("dblclick", function (event) {
+        console.log(activeChartObject);
+        if (activeChartObject !== null) {
+            for (let i = 0; i < observers.length; i++) {
+                observers[i].selectChartObject(activeChartObject);
+            }
+        }
+    });
+
 
     this.addEventListener = function (eventListener) {
         observers.push(eventListener);
@@ -266,7 +276,7 @@ function ChartModel(parser) {
                         , chartObjects[i].getCenterPosition(TypeViewChartObject.ACTIVE), "#fff"));
                 if (chartObjects[i].type === 'crr') {
                     for (let j = 0; j < matrixIncidence.length; j++) {
-                        if (matrixIncidence[i][j] === "t" || matrixIncidence[i][i] === "t") {
+                        if (matrixIncidence[i][j] === "t" || matrixIncidence[j][i] === "t") {
                             lines.push(new Line(chartObjects[i].getCenterPosition(TypeViewChartObject.ACTIVE)
                                     , chartObjects[j].getCenterPosition(TypeViewChartObject.ACTIVE), "#fff"));
                         }
@@ -511,7 +521,7 @@ function Line(point1, point2, color) {
 }
 
 function Connector() {
-    this.url = "http://localhost:8084/Analitic/chart";
+    this.url = "http://localhost:7995/Analitic/chart";
     this.getStringFromServer = function () {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', this.url, false);
@@ -566,7 +576,7 @@ function JsonParser(serverAnswer) {
                         objects[i].name, objects[i].type, objects[i].info, objects[i].link, objects[i].id));
             }
             if (objects[i].type === 'crr') {
-                output.push(new Correspondence(new Point(Number(objects[i].x), Number(objects[i].y)),
+                output.push(new Correspondence(new Point(Number(objects[i].x) - 15, Number(objects[i].y) - 10),
                         objects[i].name, objects[i].type, objects[i].info, objects[i].link, objects[i].id));
             }
             if (objects[i].type === 'acc') {
@@ -766,7 +776,7 @@ graphicFrame.addEventListener(new function () {
     var infoMessageBlock = document.getElementById("info-chart-schema");
 
     this.moveChartObject = function (chartObject) {
-        if (graphicFrame.isEditable()==="true") {
+        if (graphicFrame.isEditable() === "true") {
             saveButton.style.display = "block";
         } else {
             document.getElementById("willNotSaveMessage").style.display = "block";
@@ -782,5 +792,9 @@ graphicFrame.addEventListener(new function () {
 
     this.mouseExitedChartObject = function () {
         infoMessageBlock.style.display = "none";
+    };
+    
+    this.selectChartObject = function(chartObject){
+        window.location.replace(chartObject.link);
     };
 });
